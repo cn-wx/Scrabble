@@ -9,7 +9,26 @@ public class Message implements Serializable{
     private String gameLocation;
     private String gameWord;
     private String clientName;
+    private int clientNum;
+
+    public int getClientNum() {
+        return clientNum;
+    }
+
+    public void setClientNum(int clientNum) {
+        this.clientNum = clientNum;
+    }
+
+    private String messageStatus;
     private int tableId;
+
+    public String getMessageStatus() {
+        return messageStatus;
+    }
+
+    public void setMessageStatus(String messageStatus) {
+        this.messageStatus = messageStatus;
+    }
 
     public MessageType getMessageType() {
         return messageType;
