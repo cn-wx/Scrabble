@@ -15,9 +15,7 @@ import org.slf4j.LoggerFactory;
 public class Server {
 
     /* Setting up variables */
-
-    // use to track client number
-    private static int clientNum = 0;
+    private static int clientNum = 0; // use to track client number
     private static int PORT = 8888;
     static Logger logger = LoggerFactory.getLogger(Server.class);
 
@@ -76,16 +74,4 @@ public class Server {
             }
         }
     }
-
-    public void createGameThread(Message m){
-        GameRoom game = new GameRoom(m.getClientName(),m.getTableId());
-        Thread GameRoom = new Thread(game);
-        GameRoom.start();
-        // server state
-    }
-
-    public void addNewPlayer(Message m){
-
-    }
-
 }

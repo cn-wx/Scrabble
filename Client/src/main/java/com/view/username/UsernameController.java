@@ -168,6 +168,7 @@ public class UsernameController implements Initializable {
         usernameTF.setText("happy_yasuo");
     }
 
+    //action for confirm button
     public void setUsername() throws IOException {
         String username = usernameTF.getText();
 
