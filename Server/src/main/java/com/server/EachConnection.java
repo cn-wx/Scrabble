@@ -136,8 +136,6 @@ public class EachConnection implements Runnable {
         if (m.getPlayerAction() == PlayerAction.READY){
             ready();
             m.setPlayerStatus(PlayerStatus.READY);
-            //TODO - 准备消息是不是只告诉在一个房间内的玩家 (?)
-            broadCast(clients);
         }
     }
 
@@ -159,7 +157,6 @@ public class EachConnection implements Runnable {
         }
         if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
             roombroadCast();
-            //TODO - start game
         }
 
     }
