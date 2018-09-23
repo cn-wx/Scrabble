@@ -599,11 +599,19 @@
                               </Label>
                            </children>
                         </HBox>
-                        <ImageView fx:id="player1Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                           <VBox.margin>
-                              <Insets left="140.0" />
-                           </VBox.margin>
-                        </ImageView>
+                        <HBox prefHeight="40.0" prefWidth="173.0">
+                           <children>
+                              <Label fx:id="player1Ready" alignment="CENTER" prefHeight="38.0" prefWidth="110.0" text="READY" textFill="#f89406">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="player1Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <HBox.margin>
+                                    <Insets left="30.0" top="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                           </children></HBox>
                      </children></VBox>
                 <VBox minHeight="0.0" minWidth="0.0" prefHeight="162.0" prefWidth="98.0">
                  <children>
@@ -622,7 +630,7 @@
                       <Insets left="10.0" right="10.0" top="15.0" />
                      </HBox.margin>
                     </Label>
-                    <Label fx:id="player2Score" text="22">
+                    <Label fx:id="player2Score" text="21">
                      <HBox.margin>
                       <Insets top="10.0" />
                      </HBox.margin>
@@ -632,16 +640,23 @@
                     </Label>
                    </children>
                   </HBox>
-                  <ImageView fx:id="player2Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                   <VBox.margin>
-                    <Insets left="140.0" />
-                   </VBox.margin>
-                  </ImageView>
+                  <HBox prefHeight="40.0" prefWidth="173.0">
+                   <children>
+                    <Label fx:id="player2Ready" alignment="CENTER" prefHeight="38.0" prefWidth="110.0" text="READY" textFill="#f89406">
+                     <font>
+                      <Font name="System Bold" size="20.0" />
+                     </font>
+                    </Label>
+                    <ImageView fx:id="player2Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <HBox.margin>
+                      <Insets left="30.0" top="5.0" />
+                     </HBox.margin>
+                    </ImageView>
+                   </children></HBox>
                  </children></VBox>
-       
                   <VBox layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="98.0">
                    <children>
-                    <Label fx:id="player3Name" prefHeight="46.0" prefWidth="147.0" text="Player 1 name">
+                    <Label fx:id="player3Name" prefHeight="46.0" prefWidth="147.0" text="Player 3 name">
                      <VBox.margin>
                       <Insets left="10.0" />
                      </VBox.margin>
@@ -656,7 +671,7 @@
                         <Insets left="10.0" right="10.0" top="15.0" />
                        </HBox.margin>
                       </Label>
-                      <Label fx:id="player3Score" text="23">
+                      <Label fx:id="player3Score" text="21">
                        <HBox.margin>
                         <Insets top="10.0" />
                        </HBox.margin>
@@ -666,11 +681,19 @@
                       </Label>
                      </children>
                     </HBox>
-                    <ImageView fx:id="player3Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <VBox.margin>
-                      <Insets left="140.0" />
-                     </VBox.margin>
-                    </ImageView>
+                    <HBox prefHeight="40.0" prefWidth="173.0">
+                     <children>
+                      <Label fx:id="player3Ready" alignment="CENTER" prefHeight="38.0" prefWidth="110.0" text="READY" textFill="#f89406">
+                       <font>
+                        <Font name="System Bold" size="20.0" />
+                       </font>
+                      </Label>
+                      <ImageView fx:id="player3Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                       <HBox.margin>
+                        <Insets left="30.0" top="5.0" />
+                       </HBox.margin>
+                      </ImageView>
+                     </children></HBox>
                    </children></VBox>
                   <VBox layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="99.0" prefWidth="198.0">
                    <children>
@@ -689,7 +712,7 @@
                         <Insets left="10.0" right="10.0" top="15.0" />
                        </HBox.margin>
                       </Label>
-                      <Label fx:id="player4Score" text="24">
+                      <Label fx:id="player4Score" text="21">
                        <HBox.margin>
                         <Insets top="10.0" />
                        </HBox.margin>
@@ -699,11 +722,19 @@
                       </Label>
                      </children>
                     </HBox>
-                    <ImageView fx:id="player4Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <VBox.margin>
-                      <Insets left="140.0" />
-                     </VBox.margin>
-                    </ImageView>
+                    <HBox prefHeight="40.0" prefWidth="173.0">
+                     <children>
+                      <Label fx:id="player4Ready" alignment="CENTER" prefHeight="38.0" prefWidth="110.0" text="READY" textFill="#f89406">
+                       <font>
+                        <Font name="System Bold" size="20.0" />
+                       </font>
+                      </Label>
+                      <ImageView fx:id="player4Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                       <HBox.margin>
+                        <Insets left="30.0" top="5.0" />
+                       </HBox.margin>
+                      </ImageView>
+                     </children></HBox>
                    </children></VBox>
               </items>
             </SplitPane>
