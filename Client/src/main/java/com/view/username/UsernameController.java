@@ -19,7 +19,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -44,7 +43,6 @@ public class UsernameController implements Initializable {
     public static final int NameHeight = 400;
     private static UsernameController instance;
 
-
     public UsernameController() {
         instance = this;
     }
@@ -52,7 +50,6 @@ public class UsernameController implements Initializable {
     public static UsernameController getInstance() {
         return instance;
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -164,7 +161,7 @@ public class UsernameController implements Initializable {
     }
 
     public void randomUsername(){
-        // TODO - random username
+        // TODO - front-end: random username
         usernameTF.setText("happy_yasuo");
     }
 
@@ -176,7 +173,7 @@ public class UsernameController implements Initializable {
         Parent window = (Pane) fxmlLoader.load();
         hallController = fxmlLoader.getController();
 
-        //TODO - check duplicate username
+        //TODO - send to server (playerStatus = set_name)
         // code for showing the 'game Hall Scene':   " UsernameController.getInstance().showHall(); "
         // comment "showHall()" below
         showHall();
@@ -195,6 +192,7 @@ public class UsernameController implements Initializable {
             stage.centerOnScreen();
             Player player = new Player(usernameTF.getText(),"Online");
             hallController.updateStatus(player);
+            //TODO - send to server (playerStatus = inHall)
         });
     }
 }

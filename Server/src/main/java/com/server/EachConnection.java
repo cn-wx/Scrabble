@@ -1,7 +1,6 @@
 package com.server;
 
 import com.game.GameRoom;
-import com.messages.GameStatus;
 import com.messages.Message;
 import com.messages.PlayerAction;
 import com.messages.PlayerStatus;

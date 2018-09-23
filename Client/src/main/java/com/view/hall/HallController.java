@@ -58,6 +58,7 @@ public class HallController implements Initializable {
     public Scene scene;
     private static HallController instance;
     private static Stage stage;
+    public static String tableNumber;
 
     public HallController() {
         instance = this;
@@ -113,7 +114,7 @@ public class HallController implements Initializable {
     }
 
     private void enterTable(int tableName) throws IOException{
-        String tableNumber = "Table "+String.valueOf(tableName);
+        tableNumber = "Table "+String.valueOf(tableName);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/table.fxml"));
         Parent window = (Pane) fxmlLoader.load();
