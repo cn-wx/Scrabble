@@ -128,7 +128,6 @@ public class HallController implements Initializable {
         Game.getPrimaryStage().hide();
         this.scene = new Scene(window);
 
-
     }
 
     private void showTable(){

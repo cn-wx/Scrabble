@@ -20,8 +20,8 @@ public class TableController implements Initializable{
 
     @FXML private BorderPane borderPane;
     @FXML public Label title;
-    public static final int TableWidth = 1000;
-    public static final int TableHeight = 700;
+    public static final int TableWidth = 1100;
+    public static final int TableHeight = 825;
     private double xOffset;
     private double yOffset;
 
