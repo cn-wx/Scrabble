@@ -141,6 +141,12 @@ public class HallController implements Initializable {
             stage.setScene(this.scene);
             stage.centerOnScreen();
             stage.show();
+            // Show ready stage
+            try {
+                TableController.getInstance().showReadyStage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 }

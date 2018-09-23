@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -570,12 +570,141 @@
    <left>
       <VBox prefHeight="550.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <SplitPane dividerPositions="0.25, 0.5, 0.75" orientation="VERTICAL" prefHeight="556.0" prefWidth="200.0">
+            <SplitPane dividerPositions="0.25, 0.5, 0.75" orientation="VERTICAL" prefHeight="556.0" prefWidth="200.0" snapToPixel="false">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="73.0" prefWidth="98.0" />
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="162.0" prefWidth="98.0" />
-                  <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="98.0" />
-                  <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="99.0" prefWidth="198.0" />
+                <VBox minHeight="0.0" minWidth="0.0" prefHeight="73.0" prefWidth="98.0">
+                     <children>
+                        <Label fx:id="player1Name" prefHeight="46.0" prefWidth="147.0" text="Player 1 name">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <HBox prefHeight="50.0" prefWidth="173.0">
+                           <children>
+                              <Label text="Score:">
+                                 <HBox.margin>
+                                    <Insets left="10.0" right="10.0" top="15.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label fx:id="player1Score" text="21">
+                                 <HBox.margin>
+                                    <Insets top="10.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="23.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <ImageView fx:id="player1Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets left="140.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children></VBox>
+                <VBox minHeight="0.0" minWidth="0.0" prefHeight="162.0" prefWidth="98.0">
+                 <children>
+                  <Label fx:id="player2Name" prefHeight="46.0" prefWidth="147.0" text="Player 2 name">
+                   <VBox.margin>
+                    <Insets left="10.0" />
+                   </VBox.margin>
+                   <font>
+                    <Font name="System Bold" size="16.0" />
+                   </font>
+                  </Label>
+                  <HBox prefHeight="50.0" prefWidth="173.0">
+                   <children>
+                    <Label text="Score:">
+                     <HBox.margin>
+                      <Insets left="10.0" right="10.0" top="15.0" />
+                     </HBox.margin>
+                    </Label>
+                    <Label fx:id="player2Score" text="22">
+                     <HBox.margin>
+                      <Insets top="10.0" />
+                     </HBox.margin>
+                     <font>
+                      <Font size="23.0" />
+                     </font>
+                    </Label>
+                   </children>
+                  </HBox>
+                  <ImageView fx:id="player2Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                   <VBox.margin>
+                    <Insets left="140.0" />
+                   </VBox.margin>
+                  </ImageView>
+                 </children></VBox>
+       
+                  <VBox layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="98.0">
+                   <children>
+                    <Label fx:id="player3Name" prefHeight="46.0" prefWidth="147.0" text="Player 1 name">
+                     <VBox.margin>
+                      <Insets left="10.0" />
+                     </VBox.margin>
+                     <font>
+                      <Font name="System Bold" size="16.0" />
+                     </font>
+                    </Label>
+                    <HBox prefHeight="50.0" prefWidth="173.0">
+                     <children>
+                      <Label text="Score:">
+                       <HBox.margin>
+                        <Insets left="10.0" right="10.0" top="15.0" />
+                       </HBox.margin>
+                      </Label>
+                      <Label fx:id="player3Score" text="23">
+                       <HBox.margin>
+                        <Insets top="10.0" />
+                       </HBox.margin>
+                       <font>
+                        <Font size="23.0" />
+                       </font>
+                      </Label>
+                     </children>
+                    </HBox>
+                    <ImageView fx:id="player3Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <VBox.margin>
+                      <Insets left="140.0" />
+                     </VBox.margin>
+                    </ImageView>
+                   </children></VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="99.0" prefWidth="198.0">
+                   <children>
+                    <Label fx:id="player4Name" prefHeight="46.0" prefWidth="147.0" text="Player 4 name">
+                     <VBox.margin>
+                      <Insets left="10.0" />
+                     </VBox.margin>
+                     <font>
+                      <Font name="System Bold" size="16.0" />
+                     </font>
+                    </Label>
+                    <HBox prefHeight="50.0" prefWidth="173.0">
+                     <children>
+                      <Label text="Score:">
+                       <HBox.margin>
+                        <Insets left="10.0" right="10.0" top="15.0" />
+                       </HBox.margin>
+                      </Label>
+                      <Label fx:id="player4Score" text="24">
+                       <HBox.margin>
+                        <Insets top="10.0" />
+                       </HBox.margin>
+                       <font>
+                        <Font size="23.0" />
+                       </font>
+                      </Label>
+                     </children>
+                    </HBox>
+                    <ImageView fx:id="player4Turn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <VBox.margin>
+                      <Insets left="140.0" />
+                     </VBox.margin>
+                    </ImageView>
+                   </children></VBox>
               </items>
             </SplitPane>
          </children>
@@ -588,19 +717,14 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="1100.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Confirm">
+                  <Button mnemonicParsing="false" onAction="#confirm" prefHeight="50.0" prefWidth="150.0" text="Confirm">
                      <HBox.margin>
-                        <Insets left="200.0" top="20.0" />
+                        <Insets left="300.0" top="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button layoutX="110.0" layoutY="30.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Reset">
+                  <Button layoutX="340.0" layoutY="30.0" mnemonicParsing="false" onAction="#pass" prefHeight="50.0" prefWidth="150.0" text="Pass">
                      <HBox.margin>
-                        <Insets left="80.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button layoutX="340.0" layoutY="30.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Pass">
-                     <HBox.margin>
-                        <Insets left="80.0" top="20.0" />
+                        <Insets left="150.0" top="20.0" />
                      </HBox.margin>
                   </Button>
                </children>
@@ -612,12 +736,12 @@
    <right>
       <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="170.0" text="Help">
+            <Button mnemonicParsing="false" onAction="#help" prefHeight="45.0" prefWidth="170.0" text="Help">
                <VBox.margin>
                   <Insets left="15.0" top="20.0" />
                </VBox.margin>
             </Button>
-            <Button layoutX="25.0" layoutY="301.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="170.0" text="Give Up">
+            <Button layoutX="25.0" layoutY="301.0" mnemonicParsing="false" onAction="#returnHall" prefHeight="45.0" prefWidth="170.0" text="Give Up">
                <VBox.margin>
                   <Insets left="15.0" top="20.0" />
                </VBox.margin>
@@ -628,5 +752,4 @@
          </padding>
       </VBox>
    </right>
-
 </BorderPane>
