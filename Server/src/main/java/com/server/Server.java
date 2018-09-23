@@ -57,7 +57,7 @@ public class Server {
                 eachConnection.start();
 
                 // Update the server state to reflect the new connected client
-                ServerState.getInstance().clientConnected(newConnection);
+                ServerState.getClientInstance().clientConnected(newConnection);
 //                System.out.println(ServerState.getInstance().getConnectedClients().size());
             }
         } catch (SocketException so){
