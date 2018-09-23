@@ -4,12 +4,24 @@ import java.io.Serializable;
 
 public class Message implements Serializable{
 
-    private MessageType messageType;
+    private PlayerAction playerAction;
+    private GameStatus gameStatus;
+    private PlayerStatus playerStatus;
     private Character gameCharacter;
     private String gameLocation;
     private String gameWord;
     private String clientName;
     private int clientNum;
+    private int tableId;
+
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
+    }
 
     public int getClientNum() {
         return clientNum;
@@ -19,23 +31,20 @@ public class Message implements Serializable{
         this.clientNum = clientNum;
     }
 
-    private String messageStatus;
-    private int tableId;
-
-    public String getMessageStatus() {
-        return messageStatus;
+    public PlayerStatus getPlayerStatus() {
+        return playerStatus;
     }
 
-    public void setMessageStatus(String messageStatus) {
-        this.messageStatus = messageStatus;
+    public void setPlayerStatus(PlayerStatus playerStatus) {
+        this.playerStatus = playerStatus;
     }
 
-    public MessageType getMessageType() {
-        return messageType;
+    public PlayerAction getPlayerAction() {
+        return playerAction;
     }
 
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
+    public void setPlayerAction(PlayerAction playerAction) {
+        this.playerAction = playerAction;
     }
 
     public Character getGameCharacter() {

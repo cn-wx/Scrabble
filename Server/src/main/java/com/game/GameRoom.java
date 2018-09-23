@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GameRoom{
     // assuming there are up to 10 players
-    private static int MAXIMUM_PLAYER_NUMBER = 10;
+    private static int MAXIMUM_PLAYER_NUMBER = 4;
     private static int MINIMUM_PLAYER_NUMBER = 2;
     // tracking number of total players in one game room
     private int numOfPlayer;
@@ -28,13 +28,6 @@ public class GameRoom{
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
         this.tableId = tableId;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-    public int getNumOfPlayer() {
-        return numOfPlayer;
     }
 
     // TODO - listening from clients' game info
@@ -81,6 +74,15 @@ public class GameRoom{
     //TODO gameResult format
     public void gameResult(){
 
+    }
+
+
+    public int getTableId() {
+        return tableId;
+    }
+
+    public int getNumOfPlayer() {
+        return numOfPlayer;
     }
 
     public static int getMaximumPlayerNumber() {

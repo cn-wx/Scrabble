@@ -1,8 +1,9 @@
 package com.server;
 
 import com.game.GameRoom;
+import com.messages.GameStatus;
 import com.messages.Message;
-import com.messages.MessageType;
+import com.messages.PlayerAction;
 import com.messages.PlayerStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +21,13 @@ public class EachConnection implements Runnable {
     private int score;
     private Socket clientSocket;
     private static Server server;
+    private PlayerStatus clientStatus;
     private int clientNum;
     private InputStream in;
     private OutputStream out;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
     private String clientName;
-    private PlayerStatus clientStatus;
     static Logger logger = LoggerFactory.getLogger(EachConnection.class);
     private Map<String, String> listToSend = new HashMap<String, String>();
 
@@ -53,24 +54,26 @@ public class EachConnection implements Runnable {
                 Message clientMsg = (Message) ois.readObject();
 
                 //TODO - Ethan & Eric
-                switch (this.clientStatus){
-                    case SET_NAME:
-                        inSetName(clientMsg);
-                        break;
-                    case IN_HALL:
-                        inHall(clientMsg);
-                        break;
-                    case IN_ROOM:
-                        inRoom(clientMsg);
-                        break;
-                    case IN_GAME:
-                        ingame(clientMsg);
-                        break;
+                if (clientMsg != null){
+                    switch (clientMsg.getPlayerStatus()){
+                        case SET_NAME:
+                            inSetName(clientMsg);
+                            break;
+                        case IN_HALL:
+                            inHall(clientMsg);
+                            break;
+                        case IN_ROOM:
+                            inRoom(clientMsg);
+                            break;
+                        case IN_GAME:
+                            ingame(clientMsg);
+                            break;
+                    }
                 }
+
             }
         } catch (SocketException socketException){
             logger.info("Client on port " + clientSocket.getPort() + " exited.");
-            //TODO clientNum -1
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -99,40 +102,46 @@ public class EachConnection implements Runnable {
 
 
     // in hall status
+    // inHall 的话，需不需要先判断一下，如果玩家操作是JoinGame再加入table , 然后再告诉所有玩家xxx进入了大厅?（看完可删掉此注释）
     private synchronized void inHall(Message m){
-        int tableId = m.getTableId();
-        join(tableId);
+        List<EachConnection> clients = ServerState.getInstance().getConnectedClients();
+
+        if (m.getPlayerAction() == PlayerAction.JOIN_GAME){
+            int tableId = m.getTableId();
+            join(tableId);
+            m.setPlayerStatus(PlayerStatus.IN_ROOM);
+            broadCast(clients);
+        }
     }
 
 
 
     private void join(int tableId){
-        List<EachConnection> clients = ServerState.getInstance().getConnectedClients();
 
-
-        // if game in list
+        // if player is connected & table is not full (maximum 4 players)
         if (game.getNumOfPlayer()<4){
             game.addPlayer(this.clientNum);
             setClientStatus(PlayerStatus.IN_ROOM);
-            broadCast(clients);
         }
         //change status
         // game not exist
-        this.game = new GameRoom(this.clientNum,tableId);
-        broadCast(clients);
+        game = new GameRoom(this.clientNum,tableId);
         // set non-valid m
         //
     }
 
     // in room status
     private synchronized void inRoom(Message m){
-        ready();
+        List<EachConnection> clients = ServerState.getInstance().getConnectedClients();
+        if (m.getPlayerAction() == PlayerAction.READY){
+            ready();
+            m.setPlayerStatus(PlayerStatus.READY);
+        }
     }
 
     private void ready(){
         // variables
         int numReady= 0;
-        List<EachConnection> clients = ServerState.getInstance().getConnectedClients();
         EachConnection[] players = game.getPlayerList();
 
         // logic part
@@ -146,17 +155,16 @@ public class EachConnection implements Runnable {
                 numReady +=1;
             }
         }
-        if (numReady == this.game.getNumOfPlayer() && numReady >= this.game.getMinimumPlayerNumber() ){
+        if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
             roombroadCast();
-            broadCast(clients);
-        }else{}
+        }
 
     }
 
     // in game status
 
     private synchronized void ingame(Message m){
-        switch (m.getMessageType()){
+        switch (m.getPlayerAction()){
             case GAME_CONTENT:
                 gameContent(m);
                 break;
@@ -202,6 +210,7 @@ public class EachConnection implements Runnable {
     }
     private void roombroadCast(){
         EachConnection[] players = game.getPlayerList();
+
         Message m = new Message();
         for (EachConnection player : players){
             player.write(m);
@@ -233,6 +242,14 @@ public class EachConnection implements Runnable {
         this.clientName = clientName;
     }
 
+    public int getClientNum() {
+        return clientNum;
+    }
+
+    public void setClientNum(int clientNum) {
+        this.clientNum = clientNum;
+    }
+
     public PlayerStatus getClientStatus() {
         return clientStatus;
     }
@@ -240,7 +257,6 @@ public class EachConnection implements Runnable {
     public void setClientStatus(PlayerStatus clientStatus) {
         this.clientStatus = clientStatus;
     }
-    public int getClientNum() {
-        return clientNum;
-    }
+
+
 }
