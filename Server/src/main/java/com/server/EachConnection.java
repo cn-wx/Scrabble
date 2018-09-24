@@ -74,6 +74,7 @@ public class EachConnection implements Runnable {
         } catch (SocketException socketException){
             if (clientName!=null){
                 ServerState.UserList.remove(clientName);
+                ServerState.clientList.remove(clientName);
             }
             logger.info("Client on port " + clientSocket.getPort() + " exited.");
         } catch (Exception e){
@@ -113,6 +114,8 @@ public class EachConnection implements Runnable {
             toClient.setClientName(name);
             toClient.setFeedBackMessage("ValidName");
             ServerState.UserList.add(name);
+            ServerState.clientList.put(clientName,"Online");
+            toClient.setConnectedClients(ServerState.clientList);
             oos.writeObject(toClient);
 
             /*
@@ -136,6 +139,11 @@ public class EachConnection implements Runnable {
                join(tableId);
            } else if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
                setClientStatus(PlayerStatus.IN_HALL);
+               Message toClient = new Message();
+               toClient.setPlayerStatus(PlayerStatus.IN_HALL);
+               ServerState.clientList.replace(clientName,"Online");
+               toClient.setConnectedClients(ServerState.clientList);
+               oos.writeObject(toClient);
                System.out.println("RETURN HALL");
                // TODO - update game list & user list
            }
@@ -159,6 +167,8 @@ public class EachConnection implements Runnable {
 //                   toClient.setServerAction(ServerAction.RESPONSE);
 //                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
                    toClient.setFeedBackMessage("ValidTable");
+                   ServerState.clientList.replace(clientName,"In Game");
+                   toClient.setConnectedClients(ServerState.clientList);
                    oos.writeObject(toClient);
                    break;
                case "TableNotExist":
@@ -172,6 +182,8 @@ public class EachConnection implements Runnable {
 //                   toClient.setServerAction(ServerAction.RESPONSE);
 //                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
                    toClient.setFeedBackMessage("ValidTable");
+                   ServerState.clientList.replace(clientName,"In Game");
+                   toClient.setConnectedClients(ServerState.clientList);
                    oos.writeObject(toClient);
                    break;
                case "InvalidTable":
