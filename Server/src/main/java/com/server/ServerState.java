@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.game.GameRoom;
 
-// TODO - add gamelist !!!
 public class ServerState {
 
     public static Map<String, String> clientList = new HashMap<String, String>();

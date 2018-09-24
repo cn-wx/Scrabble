@@ -1,7 +1,6 @@
 package com.messages;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 public class Message implements Serializable{

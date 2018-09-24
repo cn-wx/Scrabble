@@ -3,7 +3,9 @@ package com;
 import com.messages.Message;
 import com.model.player.Player;
 import com.view.hall.HallController;
+import com.view.login.LoginController;
 import com.view.username.UsernameController;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 
 import java.io.*;
@@ -27,15 +29,14 @@ public class Listener extends Thread {
     @Override
     public void run(){
         try {
-            //Read messages from the server while the end of the stream is not reached
+            //Read messages from the server
             while((msg = (Message) ois.readObject()) != null) {
-               //Print the messages to the console
-                System.out.println(msg);
                 switch (msg.getPlayerStatus()){
                         case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
                             Set<String> keys = msg.getConnectedClients().keySet();
                             Iterator<String> iterator = keys.iterator();
+                            HallController.getInstance().clearTable();
                             while (iterator.hasNext()) {
                                 String key = iterator.next().toString();
                                 Player player = new Player(key, msg.getConnectedClients().get(key));
@@ -45,27 +46,28 @@ public class Listener extends Thread {
                             UsernameController.getInstance().showHall();
                         }
                         else{
-                            //TODO show duplicate message.
+                            UsernameController.getInstance().duplicatedUsername();
                         }
                         break;
                     case IN_HALL:
                         Set<String> keys = msg.getConnectedClients().keySet();
                         Iterator<String> iterator = keys.iterator();
+                        HallController.getInstance().clearTable();
                         while (iterator.hasNext()) {
                             String key = iterator.next().toString();
                             Player player = new Player(key, msg.getConnectedClients().get(key));
                             HallController.getInstance().updateStatus(player);
                         }
                         HallController.getInstance().refreshTable();
-                        UsernameController.getInstance().showHall();
+                        break;
                     case JOIN_TABLE:
-                        if (msg.getFeedBackMessage().equals("ValidTable")) {
-                            HallController.getInstance().showTable();
+                        if ((msg.getFeedBackMessage()!=null) && (msg.getFeedBackMessage().equals("ValidTable"))) {
+                            Platform.runLater(()-> HallController.getInstance().showTable());
                         }
                         else{
-                            System.out.print("Failed");
-                            //TODO show join failed.
+                            HallController.getInstance().joinTableFailure();
                         }
+                        break;
                 }
                 /*StringTokenizer st = new StringTokenizer(msg, "|");
                 String operation = st.nextToken();
@@ -95,7 +97,7 @@ public class Listener extends Thread {
                 }*/
             }
         } catch (SocketException e) {
-            System.out.println("Socket closed because the user typed exit");
+            LoginController.getInstance().connectionLost("Connection lost!");
         } catch (Exception e) {
             e.printStackTrace();
         }

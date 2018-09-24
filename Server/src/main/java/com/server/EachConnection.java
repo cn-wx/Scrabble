@@ -50,7 +50,6 @@ public class EachConnection implements Runnable {
             while (true){
                 Message clientMsg = (Message) ois.readObject();
 
-                //TODO - Ethan & Eric
                 if (clientMsg != null){
                     switch (clientMsg.getPlayerStatus()){
                         case SET_NAME:
@@ -126,6 +125,7 @@ public class EachConnection implements Runnable {
             broadCast(clients,toALL);
             */
         }else{
+            toClient.setPlayerStatus(PlayerStatus.SET_NAME);
             toClient.setClientName(name);
             toClient.setFeedBackMessage("InvalidName");
             oos.writeObject(toClient);
@@ -144,14 +144,12 @@ public class EachConnection implements Runnable {
                ServerState.clientList.replace(clientName,"Online");
                toClient.setConnectedClients(ServerState.clientList);
                oos.writeObject(toClient);
-               System.out.println("RETURN HALL");
                // TODO - update game list & user list
            }
        }
 
 
        private void join(int tableId)throws IOException{
-           System.out.println("JOIN");
            Message toClient = new Message();
            Message toALL = new Message();
 //           List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();

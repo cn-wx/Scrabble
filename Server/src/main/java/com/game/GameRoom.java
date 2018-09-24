@@ -33,8 +33,6 @@ public class GameRoom{
         this.tableId = tableId;
     }
 
-    // TODO - listening from clients' game info
-
     public void addPlayer(int clientNum){
         List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients){

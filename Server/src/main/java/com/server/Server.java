@@ -45,9 +45,7 @@ public class Server {
                 Socket clientSocket = listeningSocket.accept();
                 clientNum++;
 
-                //TODO - output to UI
-                String uiOutput = "Client number" + clientNum + " has connected to the server";
-                logger.info("Client connection number: " + clientNum + " .");
+                logger.info("Client connection number " + clientNum + " has connected to the server.");
                 logger.info("Connected to client on "+ clientSocket.getInetAddress().getHostName()+":"+ clientSocket.getPort());
 
                 //3. One thread per connection
