@@ -60,6 +60,7 @@ public class ReadyController implements Initializable {
     public void returnHall() {
         HallController.getStage().close();
         Game.getPrimaryStage().show();
+        Game.returnToHall();
         //TODO - send to server (playerStatus = inHall)
     }
 

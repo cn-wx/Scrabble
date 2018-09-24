@@ -121,22 +121,13 @@ public class HallController implements Initializable {
         tableController = fxmlLoader.getController();
         tableController.title.setText(tableNumber);
 
-//        boolean valid = Game.entryTable(tableNumber);
-//        if (valid == true) {
+        Game.entryTable(tableName);
             // code for showing the 'game Table':   " HallController.getInstance().showTable(); "
             // comment "showTable()" below after implementing Listener
-            showTable();
-
-            Game.getPrimaryStage().hide();
-            this.scene = new Scene(window);
-//        }
-//        else {
-//            //TODO show entry failed
-//        }
-
+        this.scene = new Scene(window);
     }
 
-    private void showTable(){
+    public void showTable(){
         Platform.runLater(() -> {
             stage = new Stage();
             stage.setResizable(false);

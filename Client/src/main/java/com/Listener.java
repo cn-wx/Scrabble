@@ -1,6 +1,7 @@
 package com;
 
 import com.messages.Message;
+import com.view.hall.HallController;
 import com.view.username.UsernameController;
 import javafx.scene.Scene;
 
@@ -27,7 +28,7 @@ public class Listener extends Thread {
                //Print the messages to the console
                 System.out.println(msg);
                 switch (msg.getPlayerStatus()){
-                    case SET_NAME:
+                        case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
                             UsernameController.getInstance().showHall();
                         }
@@ -35,6 +36,14 @@ public class Listener extends Thread {
                             //TODO show duplicate message.
                         }
                         break;
+                    case JOIN_TABLE:
+                        if (msg.getFeedBackMessage().equals("ValidTable")){
+                            HallController.getInstance().showTable();
+                        }
+                        else{
+                            System.out.print("Failed");
+                            //TODO show join failed.
+                        }
                 }
                 /*StringTokenizer st = new StringTokenizer(msg, "|");
                 String operation = st.nextToken();
