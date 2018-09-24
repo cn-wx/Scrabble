@@ -29,13 +29,14 @@ public class Listener extends Thread {
     @Override
     public void run(){
         try {
-            //Read messages from the server while the end of the stream is not reached
+            //Read messages from the server
             while((msg = (Message) ois.readObject()) != null) {
                 switch (msg.getPlayerStatus()){
                         case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
                             Set<String> keys = msg.getConnectedClients().keySet();
                             Iterator<String> iterator = keys.iterator();
+                            HallController.getInstance().clearTable();
                             while (iterator.hasNext()) {
                                 String key = iterator.next().toString();
                                 Player player = new Player(key, msg.getConnectedClients().get(key));
@@ -51,6 +52,7 @@ public class Listener extends Thread {
                     case IN_HALL:
                         Set<String> keys = msg.getConnectedClients().keySet();
                         Iterator<String> iterator = keys.iterator();
+                        HallController.getInstance().clearTable();
                         while (iterator.hasNext()) {
                             String key = iterator.next().toString();
                             Player player = new Player(key, msg.getConnectedClients().get(key));

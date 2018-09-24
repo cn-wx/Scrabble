@@ -73,6 +73,10 @@ public class HallController implements Initializable {
         return stage;
     }
 
+    public void clearTable(){
+        data.clear();
+    }
+
     public void updateStatus(Player player) {
         data.add(player);
     }
@@ -126,7 +130,6 @@ public class HallController implements Initializable {
         tableController.title.setText(tableNumber);
 
         Game.entryTable(tableName);
-            // code for showing the 'game Table':   " HallController.getInstance().showTable(); "
         this.scene = new Scene(window);
     }
 
