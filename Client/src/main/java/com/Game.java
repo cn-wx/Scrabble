@@ -89,6 +89,7 @@ public class Game extends Application {
 //            sendmsg("votingresult|false");
 //        }
 //    }
+
     public static void sendmsg(Message msg) {
         try {
             oos.writeObject(msg);
@@ -97,11 +98,18 @@ public class Game extends Application {
             e.printStackTrace();
         }
     }
+
     public static String randomeUser(){
         Random rand = new Random();
         int i;
         i = rand.nextInt(namepool.length);
         return(namepool[i]);
+    }
+    public static void returnToHall(){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_HALL);
+        message.setPlayerAction(PlayerAction.RETURN_HALL);
+        sendmsg(message);
     }
     public static void setUsername(String username){
         Message message = new Message();
@@ -109,10 +117,13 @@ public class Game extends Application {
         message.setClientName(username);
         sendmsg(message);
     }
-//    public static boolean entryTable(String tableNumber){
-//        sendmsg(tableNumber);
-//        return checkValid(tableNumber);
-//    }
+    public static void entryTable(int tableNumber){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_HALL);
+        message.setPlayerAction(PlayerAction.JOIN_GAME);
+        message.setTableId(tableNumber);
+        sendmsg(message);
+    }
 //    public static boolean invitePlayer(String playername){
 //        sendmsg(playername);
 //        return checkValid(playername);
