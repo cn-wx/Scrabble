@@ -29,12 +29,12 @@ public class ServerState {
         return gameInstance;
     }
 
-    public synchronized void gameConnected(GameRoom client) {
-        createdGames.add(client);
+    public synchronized void gameConnected(GameRoom game) {
+        createdGames.add(game);
     }
 
-    public synchronized void clientDisconnected(GameRoom client) {
-        createdGames.remove(client);
+    public synchronized void clientDisconnected(GameRoom game) {
+        createdGames.remove(game);
     }
 
     public synchronized List<GameRoom> getConnectedGames() {

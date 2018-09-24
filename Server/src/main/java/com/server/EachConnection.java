@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
@@ -70,12 +71,16 @@ public class EachConnection implements Runnable {
                     }
                 }
             }
-        } catch (SocketException socketException){
-            if (clientName!=null){
+        } catch (SocketException socketException) {
+            if (clientName != null) {
                 ServerState.UserList.remove(clientName);
                 ServerState.clientList.remove(clientName);
             }
             logger.info("Client on port " + clientSocket.getPort() + " exited.");
+        }catch (EOFException e){
+            ServerState.getClientInstance().clientDisconnected(this);
+            ServerState.clientList.remove(clientName);
+            e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -99,8 +104,8 @@ public class EachConnection implements Runnable {
 
     private void nameCheck(String name) throws IOException{
         Message toClient = new Message();
-//        Message toALL = new Message();
-        //Map<String,String> clients = getClientLists();
+        Message toALL = new Message();
+        List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         //List<GameRoom> gameRooms = ServerState.getClientInstance().getConnectedGames();
 
         if (!ServerState.UserList.contains(name)){
@@ -108,7 +113,6 @@ public class EachConnection implements Runnable {
             setClientName(name);
             // TODO settting two lists
             toClient.setPlayerStatus(PlayerStatus.SET_NAME);
-            //toClient.setConnectedClients(clients);
             //toClient.setCreatedGames(gameRooms);
             toClient.setClientName(name);
             toClient.setFeedBackMessage("ValidName");
@@ -117,13 +121,13 @@ public class EachConnection implements Runnable {
             toClient.setConnectedClients(ServerState.clientList);
             oos.writeObject(toClient);
 
-            /*
+
             //broadcast
-            toALL.setServerAction(ServerAction.UPDATE);
-            toALL.setConnectedClients(clients);
-            toALL.setCreatedGames(gameRooms);
+            toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+            toALL.setConnectedClients(ServerState.clientList);
+            //toALL.setCreatedGames(gameRooms);
             broadCast(clients,toALL);
-            */
+
         }else{
             toClient.setPlayerStatus(PlayerStatus.SET_NAME);
             toClient.setClientName(name);
@@ -133,18 +137,26 @@ public class EachConnection implements Runnable {
     }
        // in hall status
        private synchronized void inHall(Message m) throws IOException{
+           Message toClient = new Message();
+           Message toALL = new Message();
+           List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
+           //List<GameRoom> gameRooms = ServerState.getClientInstance().getConnectedGames();
 
            if (m.getPlayerAction() == PlayerAction.JOIN_GAME){
                tableId = m.getTableId();
                join(tableId);
            } else if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
                setClientStatus(PlayerStatus.IN_HALL);
-               Message toClient = new Message();
                toClient.setPlayerStatus(PlayerStatus.IN_HALL);
                ServerState.clientList.replace(clientName,"Online");
                toClient.setConnectedClients(ServerState.clientList);
                oos.writeObject(toClient);
                // TODO - update game list & user list
+
+               toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+               toALL.setConnectedClients(ServerState.clientList);
+               //toALL.setCreatedGames(gameRooms);
+               broadCast(clients,toALL);
            }
        }
 
@@ -152,7 +164,6 @@ public class EachConnection implements Runnable {
        private void join(int tableId)throws IOException{
            Message toClient = new Message();
            Message toALL = new Message();
-//           List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
            List<GameRoom> gameRooms = ServerState.getGameInstance().getConnectedGames();
            int index = -1;
 
@@ -162,7 +173,6 @@ public class EachConnection implements Runnable {
                    gameRooms.get(index).addPlayer(this.clientNum);
                    setClientStatus(PlayerStatus.IN_ROOM);
                    toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
-//                   toClient.setServerAction(ServerAction.RESPONSE);
 //                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
                    toClient.setFeedBackMessage("ValidTable");
                    ServerState.clientList.replace(clientName,"In Game");
@@ -177,7 +187,6 @@ public class EachConnection implements Runnable {
                    gameRooms.get(index).addPlayer(this.clientNum);
                    setClientStatus(PlayerStatus.IN_ROOM);
                    toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
-//                   toClient.setServerAction(ServerAction.RESPONSE);
 //                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
                    toClient.setFeedBackMessage("ValidTable");
                    ServerState.clientList.replace(clientName,"In Game");
@@ -185,17 +194,16 @@ public class EachConnection implements Runnable {
                    oos.writeObject(toClient);
                    break;
                case "InvalidTable":
-//                   toClient.setServerAction(ServerAction.RESPONSE);
                    toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
                    toClient.setFeedBackMessage("InvalidTable");
                    oos.writeObject(toClient);
                    break;
            }
            // broadcast
-//           toALL.setServerAction(ServerAction.UPDATE);
-//           toALL.setConnectedClients(clients);
-//           toALL.setCreatedGames(ServerState.getGameInstance().getConnectedGames());
-//           broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
+           toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+           toALL.setConnectedClients(ServerState.clientList);
+           //toALL.setCreatedGames(ServerState.getGameInstance().getConnectedGames());
+           broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
        }
 
        private String tableValid(int tableId,List<GameRoom> gameRooms){
