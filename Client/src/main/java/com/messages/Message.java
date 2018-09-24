@@ -1,9 +1,14 @@
 package com.messages;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public class Message implements Serializable{
 
+    private Map<String,String> connectedClients;
+    //private List<GameRoom> createdGames;
+    //private EachConnection[] playerList;*/
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
@@ -11,9 +16,11 @@ public class Message implements Serializable{
     private String gameLocation;
     private String gameWord;
     private String clientName;
+    private String feedBackMessage;
     private int clientNum;
     private int tableId;
-
+    private int votingNum;
+    private static final long serialVersionUID = 1L;
 
     public GameStatus getGameStatus() {
         return gameStatus;
@@ -87,4 +94,44 @@ public class Message implements Serializable{
         this.tableId = tableId;
     }
 
+    public String getFeedBackMessage() {
+        return feedBackMessage;
+    }
+
+    public void setFeedBackMessage(String feedBackMessage) {
+        this.feedBackMessage = feedBackMessage;
+    }
+    /*
+    public List<GameRoom> getCreatedGames() {
+        return createdGames;
+    }
+
+    public void setCreatedGames(List<GameRoom> createdGames) {
+        this.createdGames = createdGames;
+    }*/
+
+    /*public EachConnection[] getPlayerList() {
+        return playerList;
+    }
+
+    public void setPlayerList(EachConnection[] playerList) {
+        this.playerList = playerList;
+    }*/
+
+    public int getVotingNum() {
+        return votingNum;
+    }
+
+    public void setVotingNum(int votingNum) {
+        this.votingNum = votingNum;
+    }
+
+    public Map<String, String> getConnectedClients() {
+        return connectedClients;
+    }
+
+    public void setConnectedClients(Map<String, String> connectedClients) {
+        this.connectedClients = connectedClients;
+    }
 }
+
