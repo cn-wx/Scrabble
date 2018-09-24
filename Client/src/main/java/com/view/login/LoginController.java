@@ -175,10 +175,7 @@ public class LoginController implements Initializable {
         // code for showing the 'Username Scene':   " LoginController.getInstance().showUsernameScene(); "
         // comment "showUsername()" below after implementing Listener
 //        showUsernameScene();
-        LoginListener loginListener = new LoginListener(hostname,port,usernameController);
-        Thread thread = new Thread(loginListener);
-        thread.start();
-
+        Game.connect(hostname,port);
         this.scene = new Scene(window);
     }
 
