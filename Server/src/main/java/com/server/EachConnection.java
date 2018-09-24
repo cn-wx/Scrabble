@@ -1,9 +1,7 @@
 package com.server;
 
 import com.game.GameRoom;
-import com.messages.Message;
-import com.messages.PlayerAction;
-import com.messages.PlayerStatus;
+import com.messages.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
