@@ -29,7 +29,6 @@ public class LoginListener implements Runnable {
         try{
             socket = new Socket(host, port);
             LoginController.getInstance().showUsernameScene();
-            //TODO
         }catch (IOException e){
             LoginController.getInstance().loginFailure("Could not connect to server");
             e.printStackTrace();
