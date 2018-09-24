@@ -184,8 +184,8 @@ public class UsernameController implements Initializable {
             stage.setHeight(HallController.HallHeight);
             stage.setScene(this.scene);
             stage.centerOnScreen();
-            Player player = new Player(usernameTF.getText(),"Online");
-            hallController.updateStatus(player);
+//            Player player = new Player(usernameTF.getText(),"Online");
+//            hallController.updateStatus(player);
             //TODO - send to server (playerStatus = inHall)
         });
     }

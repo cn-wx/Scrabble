@@ -74,6 +74,9 @@ public class HallController implements Initializable {
 
     public void updateStatus(Player player) {
         data.add(player);
+    }
+
+    public void refreshTable(){
         playerList.setItems(data);
     }
 
