@@ -6,5 +6,5 @@ package com.messages;
  * @date 2018/9/21 10:45
  */
 public enum PlayerStatus {
-    LOG_IN,SET_NAME, IN_HALL, IN_ROOM, READY, IN_GAME,UPDATE
+    LOG_IN,SET_NAME, IN_HALL, IN_ROOM, READY, IN_GAME,UPDATE,JOIN_TABLE
 }

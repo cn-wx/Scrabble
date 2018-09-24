@@ -56,10 +56,11 @@ public class EachConnection implements Runnable {
                         case SET_NAME:
                             inSetName(clientMsg);
                             break;
-                            /*
                         case IN_HALL:
                             inHall(clientMsg);
                             break;
+                                                        /*
+
                         case IN_ROOM:
                             inRoom(clientMsg);
                             break;
@@ -98,7 +99,7 @@ public class EachConnection implements Runnable {
 
     private void nameCheck(String name) throws IOException{
         Message toClient = new Message();
-        Message toALL = new Message();
+//        Message toALL = new Message();
         //Map<String,String> clients = getClientLists();
         //List<GameRoom> gameRooms = ServerState.getClientInstance().getConnectedGames();
 
@@ -127,20 +128,25 @@ public class EachConnection implements Runnable {
             oos.writeObject(toClient);
         }
     }
-    /*
        // in hall status
        private synchronized void inHall(Message m) throws IOException{
+
            if (m.getPlayerAction() == PlayerAction.JOIN_GAME){
                tableId = m.getTableId();
                join(tableId);
+           } else if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
+               setClientStatus(PlayerStatus.IN_HALL);
+               System.out.println("RETURN HALL");
+               // TODO - update game list & user list
            }
        }
 
 
        private void join(int tableId)throws IOException{
+           System.out.println("JOIN");
            Message toClient = new Message();
            Message toALL = new Message();
-           List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
+//           List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
            List<GameRoom> gameRooms = ServerState.getGameInstance().getConnectedGames();
            int index = -1;
 
@@ -149,35 +155,37 @@ public class EachConnection implements Runnable {
                    index = tableIndex(tableId,gameRooms);
                    gameRooms.get(index).addPlayer(this.clientNum);
                    setClientStatus(PlayerStatus.IN_ROOM);
-                   toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
-                   toClient.setServerAction(ServerAction.RESPONSE);
-                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
+                   toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
+//                   toClient.setServerAction(ServerAction.RESPONSE);
+//                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
                    toClient.setFeedBackMessage("ValidTable");
                    oos.writeObject(toClient);
                    break;
                case "TableNotExist":
                    GameRoom gameRoom = new GameRoom(this.clientNum,tableId);
+                   gameRooms.add(gameRoom);
                    // TODO- insert game into game list
                    index = tableIndex(tableId,gameRooms);
                    gameRooms.get(index).addPlayer(this.clientNum);
                    setClientStatus(PlayerStatus.IN_ROOM);
-                   toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
-                   toClient.setServerAction(ServerAction.RESPONSE);
-                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
+                   toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
+//                   toClient.setServerAction(ServerAction.RESPONSE);
+//                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
                    toClient.setFeedBackMessage("ValidTable");
                    oos.writeObject(toClient);
                    break;
                case "InvalidTable":
-                   toClient.setServerAction(ServerAction.RESPONSE);
+//                   toClient.setServerAction(ServerAction.RESPONSE);
+                   toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
                    toClient.setFeedBackMessage("InvalidTable");
                    oos.writeObject(toClient);
                    break;
            }
            // broadcast
-           toALL.setServerAction(ServerAction.UPDATE);
-           toALL.setConnectedClients(clients);
-           toALL.setCreatedGames(ServerState.getGameInstance().getConnectedGames());
-           broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
+//           toALL.setServerAction(ServerAction.UPDATE);
+//           toALL.setConnectedClients(clients);
+//           toALL.setCreatedGames(ServerState.getGameInstance().getConnectedGames());
+//           broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
        }
 
        private String tableValid(int tableId,List<GameRoom> gameRooms){
@@ -206,13 +214,13 @@ public class EachConnection implements Runnable {
 
 
        // in room status
-       private synchronized void inRoom(Message m) throws IOException{
+       /*private synchronized void inRoom(Message m) throws IOException{
            if (m.getPlayerAction() == PlayerAction.READY){
                ready();
            }
-       }
+       }*/
 
-       private void ready() throws IOException{
+       /*private void ready() throws IOException{
            Message toClient = new Message();
            Message toPlayers = new Message();
            int numReady= 0;
@@ -243,10 +251,10 @@ public class EachConnection implements Runnable {
                toPlayers.setPlayerList(game.getPlayerList());
                roombroadCast(players,toPlayers);
            }
-       }
+       }*/
 
        // in game status
-       private synchronized void inGame(Message m){
+       /*private synchronized void inGame(Message m){
            switch (m.getPlayerAction()){
                case GAME_CONTENT:
                    gameContent(m);
@@ -259,9 +267,9 @@ public class EachConnection implements Runnable {
                    break;
            }
            getCurrentGame().addOneTurn();
-       }
+       }*/
 
-       private void sequenceDecision(){
+       /*private void sequenceDecision(){
            //return the messages that who should go first
            Message toClient = new Message();
            toClient.setServerAction(ServerAction.RESPONSE);
@@ -286,9 +294,9 @@ public class EachConnection implements Runnable {
 
 
 
-       }
+       }*/
 
-       private void gameContent(Message m){
+    /*   private void gameContent(Message m){
            EachConnection[] players = getPlayerList();
            Message toPlayers = new Message();
 
@@ -299,9 +307,9 @@ public class EachConnection implements Runnable {
            toPlayers.setPlayerAction(PlayerAction.GAME_CONTENT);
            toPlayers.setServerAction(ServerAction.UPDATE);
            roombroadCast(players,toPlayers);
-       }
+       }*/
 
-       private void voting(Message m){
+      /* private void voting(Message m){
            EachConnection[] players = getPlayerList();
            GameRoom game = getCurrentGame();
            Message toPlayers = new Message();
@@ -330,10 +338,10 @@ public class EachConnection implements Runnable {
                // return game result
                game.gameResult();
            }
-       }
+       }*/
 
        //TODO pass logic is wrong
-       private void pass(){
+       /*private void pass(){
            EachConnection[] players = getPlayerList();
            GameRoom game = getCurrentGame();
            Message toPlayers = new Message();
@@ -354,9 +362,8 @@ public class EachConnection implements Runnable {
                case "inProgress":
                    break;
            }
-       }
+       }*/
 
-       */
     private void roombroadCast(EachConnection[] players,Message m){
         for (EachConnection player : players){
             player.write(m);
