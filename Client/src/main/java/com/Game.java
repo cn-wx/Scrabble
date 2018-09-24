@@ -37,7 +37,13 @@ public class Game extends Application {
             "Master Yi","Miss Fortune","Mordekaiser","Morgana","Nami","Nasus","Nautilus",
             "Nidalee","Nocturne","Nunu","Olaf","Orianna","Ornn","Pantheon",
             "Poppy","Pyke","Quinn","Rakan","Rammus","Rek\'Sai","Renekton",
-            "Rengar","Riven","Rumble","Ryze","Sejuani","Shaco","Shen"
+            "Rengar","Riven","Rumble","Ryze","Sejuani","Shaco","Shen",
+            "Shyvana","Singed","Sion","Sivir","Skarner","Sona","Soraka",
+            "Swain","Syndra","Tahm Kench","Taliyah","Talon","Taric","Teemo",
+            "Thresh","Tristana","Trundle","Tryndamere","Twisted Fate","Twitch","Udyr",
+            "Urgot","Varus","Vayne","Veigar","Vel\'Koz","Vi","Viktor",
+            "Vladimir","Volibear","Warwick","Wukong","Xayah","Xerath","Xin Zhao",
+            "Yasuo","Yorick","Zed","Ziggs","Zilean","Zoe","Zyra"
     };
     //</editor-fold>
 
