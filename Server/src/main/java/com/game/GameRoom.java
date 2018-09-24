@@ -22,7 +22,11 @@ public class GameRoom{
     private OutputStream out;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
+    private int votingNum = 0;
     private int spaceRemain = 400;
+    private int turnNum = 0;
+    private int passNum = 0;
+    private int totalTurn = 0;
 
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
@@ -32,7 +36,7 @@ public class GameRoom{
     // TODO - listening from clients' game info
 
     public void addPlayer(int clientNum){
-        List<EachConnection> clients = ServerState.getInstance().getConnectedClients();
+        List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients){
             if (client.getClientNum() == clientNum){
                 playerList[numOfPlayer] = client;
@@ -62,6 +66,32 @@ public class GameRoom{
         }
         return -1;
     }
+
+    public String votingResult(){
+        if (turnNum == 4 && votingNum == MAXIMUM_PLAYER_NUMBER){
+            setTurnNum(0);
+            return "Accept";
+        }else if (turnNum == 4 && votingNum != MAXIMUM_PLAYER_NUMBER){
+            setTurnNum(0);
+            return "Reject";
+        }else{
+            return "inProgress";
+        }
+    }
+
+    public String passResult(){
+        if (turnNum == 4 && passNum == MAXIMUM_PLAYER_NUMBER){
+            setTurnNum(0);
+            return "GameEnd";
+        }else if (turnNum == 4 && passNum != MAXIMUM_PLAYER_NUMBER){
+            setTurnNum(0);
+            return "GameContinue";
+        }else{
+            return "inProgress";
+        }
+    }
+
+
 
     public boolean gameEnd(){
         if (numOfPlayer < MINIMUM_PLAYER_NUMBER || spaceRemain == 0){
@@ -114,5 +144,43 @@ public class GameRoom{
 
     public void setPlayerList(EachConnection[] playerList) {
         this.playerList = playerList;
+    }
+
+    public int getVotingNum() {
+        return votingNum;
+    }
+
+    public void voting(int votingNum) {
+        this.votingNum += votingNum;
+        this.turnNum += 1;
+    }
+
+    public int getTurnNum() {
+        return turnNum;
+    }
+
+    public void setTurnNum(int turnNum) {
+        this.turnNum = turnNum;
+    }
+
+    public int getPassNum() {
+        return passNum;
+    }
+
+    public void pass(int passNum) {
+        this.passNum += passNum;
+        this.turnNum += 1;
+    }
+
+    public int getTotalTurn() {
+        return totalTurn;
+    }
+
+    public void setTotalTurn(int totalTurn) {
+        this.totalTurn = totalTurn;
+    }
+
+    public void addOneTurn(){
+        this.totalTurn += 1;
     }
 }
