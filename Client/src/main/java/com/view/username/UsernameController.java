@@ -161,8 +161,7 @@ public class UsernameController implements Initializable {
     }
 
     public void randomUsername(){
-        // TODO - front-end: random username
-        usernameTF.setText("happy_yasuo");
+        usernameTF.setText(Game.randomeUser());
     }
 
     //action for confirm button
@@ -173,13 +172,18 @@ public class UsernameController implements Initializable {
         Parent window = (Pane) fxmlLoader.load();
         hallController = fxmlLoader.getController();
 
-        //TODO - send to server (playerStatus = set_name)
+        Game.sendmsg("Username:"+username);
+        boolean valid = Game.setUsername(username);
         // code for showing the 'game Hall Scene':   " UsernameController.getInstance().showHall(); "
         // comment "showHall()" below
-        showHall();
-
-        this.scene = new Scene(window);
-
+        if (valid) {
+            showHall();
+            this.scene = new Scene(window);
+        }
+        else{
+            System.out.print("Wrong name \n");
+            //TODO show duplicate error.
+        }
     }
 
     public void showHall() {
