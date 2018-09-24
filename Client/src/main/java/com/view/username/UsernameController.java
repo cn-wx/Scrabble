@@ -1,6 +1,7 @@
 package com.view.username;
 
 import com.Game;
+import com.Listener;
 import com.model.player.Player;
 import com.view.hall.HallController;
 import javafx.animation.KeyFrame;
@@ -171,19 +172,8 @@ public class UsernameController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/hall.fxml"));
         Parent window = (Pane) fxmlLoader.load();
         hallController = fxmlLoader.getController();
-
-        Game.sendmsg("Username:"+username);
-        boolean valid = Game.setUsername(username);
-        // code for showing the 'game Hall Scene':   " UsernameController.getInstance().showHall(); "
-        // comment "showHall()" below
-        if (valid) {
-            showHall();
-            this.scene = new Scene(window);
-        }
-        else{
-            System.out.print("Wrong name \n");
-            //TODO show duplicate error.
-        }
+        this.scene = new Scene(window);
+        Game.setUsername(username);
     }
 
     public void showHall() {
