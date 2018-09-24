@@ -1,7 +1,6 @@
 package com.view.login;
 
 import com.Game;
-import com.model.login.LoginListener;
 import com.view.username.UsernameController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -164,19 +163,15 @@ public class LoginController implements Initializable {
     }
 
     public void loginButtonAction() throws IOException{
+        //TODO - handle empty post&host
         String hostname = hostAddressTF.getText();
         int port = Integer.parseInt(portNumberTF.getText());
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/username.fxml"));
         Parent window = (Pane) fxmlLoader.load();
         usernameController =  fxmlLoader.getController();
-        // TODO - add a listener for connection & start a Thread
-        // The Listener implements Runnable, creates a thread for connecting the game server,
-        // code for showing the 'Username Scene':   " LoginController.getInstance().showUsernameScene(); "
-        // comment "showUsername()" below after implementing Listener
-//        showUsernameScene();
+
         Game.connect(hostname,port);
-        showUsernameScene();
         this.scene = new Scene(window);
     }
 
@@ -188,7 +183,18 @@ public class LoginController implements Initializable {
             alert.setContentText("Please check for firewall issues and check if the server is running.");
             alert.showAndWait();
         });
+    }
 
+    public void connectionLost(String message){
+        Platform.runLater(()-> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Connection lost!");
+            alert.setHeaderText(message);
+            alert.setContentText("Please check for firewall issues and check if the server is running.");
+            alert.showAndWait();
+            Platform.exit();
+            System.exit(-1);
+        });
     }
 
     public void showUsernameScene() {
@@ -204,10 +210,7 @@ public class LoginController implements Initializable {
             });
             stage.setScene(this.scene);
             stage.centerOnScreen();
-
         });
-
     }
-
 
 }

@@ -1,8 +1,6 @@
 package com.view.username;
 
 import com.Game;
-import com.Listener;
-import com.model.player.Player;
 import com.view.hall.HallController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -14,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -167,13 +166,30 @@ public class UsernameController implements Initializable {
 
     //action for confirm button
     public void setUsername() throws IOException {
-        String username = usernameTF.getText();
+        String username = usernameTF.getText().trim();
+        if (username.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Please enter your username!");
+            alert.setContentText("Please enter your username or random one on the right.");
+            alert.showAndWait();
+        }else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/hall.fxml"));
+            Parent window = (Pane) fxmlLoader.load();
+            hallController = fxmlLoader.getController();
+            this.scene = new Scene(window);
+            Game.setUsername(username);
+        }
+    }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/hall.fxml"));
-        Parent window = (Pane) fxmlLoader.load();
-        hallController = fxmlLoader.getController();
-        this.scene = new Scene(window);
-        Game.setUsername(username);
+    public void duplicatedUsername(){
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Username already exist");
+            alert.setContentText("Please change a username.");
+            alert.showAndWait();
+        });
     }
 
     public void showHall() {
@@ -184,9 +200,6 @@ public class UsernameController implements Initializable {
             stage.setHeight(HallController.HallHeight);
             stage.setScene(this.scene);
             stage.centerOnScreen();
-//            Player player = new Player(usernameTF.getText(),"Online");
-//            hallController.updateStatus(player);
-            //TODO - send to server (playerStatus = inHall)
         });
     }
 }

@@ -126,6 +126,7 @@ public class EachConnection implements Runnable {
             broadCast(clients,toALL);
             */
         }else{
+            toClient.setPlayerStatus(PlayerStatus.SET_NAME);
             toClient.setClientName(name);
             toClient.setFeedBackMessage("InvalidName");
             oos.writeObject(toClient);

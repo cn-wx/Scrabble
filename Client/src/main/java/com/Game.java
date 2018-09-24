@@ -21,7 +21,26 @@ import com.messages.*;
  * @date 2018/9/17 19:24
  */
 public class Game extends Application {
-    private static String[] namepool={"a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","b2","b3","c1","c2","c3"};
+
+    //<editor-fold defaultstate="collapsed" desc="//namePool">
+    private static String[] namepool={
+            "Ahri","Akali","Alistar","Amumu","Anivia","Annie",
+            "Ashe","Aurelion Sol","Azir","Bard","Blitzcrank","Brand","Braum",
+            "Caitlyn","Camille","Cassiopeia","Cho\'Gath","Corki","Darius","Diana",
+            "Mundo","Draven","Ekko","Elise","Evelynn","Ezreal","Fiddlesticks",
+            "Fiora","Fizz","Galio","Gangplank","Garen","Gnar","Gragas",
+            "Graves","Hecarim","Heimerdinger","Illaoi","Irelia","Ivern","Janna",
+            "Jarvan","Jax","Jayce","Jhin","Jinx","Kai\'Sa","Kalista",
+            "Karma","Karthus","Kassadin","Katarina","Kayle","Kayn","Kennen",
+            "Kha\'Zix","Kindred","Kled","Kog\'Maw","LeBlanc","Lee Sin","Leona",
+            "Lissandra","Lucian","Lulu","Lux","Malphite","Malzahar","Maokai",
+            "Master Yi","Miss Fortune","Mordekaiser","Morgana","Nami","Nasus","Nautilus",
+            "Nidalee","Nocturne","Nunu","Olaf","Orianna","Ornn","Pantheon",
+            "Poppy","Pyke","Quinn","Rakan","Rammus","Rek\'Sai","Renekton",
+            "Rengar","Riven","Rumble","Ryze","Sejuani","Shaco","Shen"
+    };
+    //</editor-fold>
+
     private static Stage primaryStageObj;
     public static final int LoginWidth = 500;
     public static final int LoginHeight = 600;
@@ -32,7 +51,6 @@ public class Game extends Application {
     public static Socket socket;
     public static boolean turn = false;
     public static Listener m1;
-//    public static Message msg = null;
 
 
     public void start(Stage primaryStage) throws Exception {

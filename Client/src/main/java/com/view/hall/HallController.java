@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -126,7 +127,6 @@ public class HallController implements Initializable {
 
         Game.entryTable(tableName);
             // code for showing the 'game Table':   " HallController.getInstance().showTable(); "
-            // comment "showTable()" below after implementing Listener
         this.scene = new Scene(window);
     }
 
@@ -143,10 +143,22 @@ public class HallController implements Initializable {
             stage.show();
             // Show ready stage
             try {
+                Game.getPrimaryStage().hide();
                 TableController.getInstance().showReadyStage();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
     }
+
+    public void joinTableFailure(){
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Enter table failure");
+            alert.setContentText("Please change a table.");
+            alert.showAndWait();
+        });
+    }
+
 }
