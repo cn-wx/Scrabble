@@ -167,6 +167,7 @@ public class TableController implements Initializable{
             HallController.getStage().close();
             Game.getPrimaryStage().show();
             //TODO - send to server (playerStatus = inHall)
+            Game.returnToHall();
         }
     }
 
