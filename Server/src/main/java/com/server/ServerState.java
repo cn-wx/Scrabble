@@ -17,6 +17,7 @@ public class ServerState {
     private ServerState() {
         connectedClients = new ArrayList<>();
         createdGames = new ArrayList<>();
+        UserList.add("sss");
     }
 
     public static synchronized ServerState getGameInstance() {
