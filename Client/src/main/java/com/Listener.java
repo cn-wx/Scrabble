@@ -1,26 +1,42 @@
 package com;
 
-import java.io.BufferedReader;
+import com.messages.Message;
+import com.view.username.UsernameController;
+import javafx.scene.Scene;
+
+import java.io.*;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.StringTokenizer;
 
 public class Listener extends Thread {
 
-    private BufferedReader reader;
-    private String msg = null;
-    public Listener(BufferedReader reader) {
-        this.reader = reader;
+    private static boolean nameValid;
+    private ObjectInputStream ois;
+    public static String name;
+    public static Message msg = null;
+    public Listener(ObjectInputStream ois) {
+        this.ois = ois;
     }
 
     @Override
-    public void run() {
-
+    public void run(){
         try {
             //Read messages from the server while the end of the stream is not reached
-            while((msg = reader.readLine()) != null) {
-                //Print the messages to the console
+            while((msg = (Message) ois.readObject()) != null) {
+               //Print the messages to the console
                 System.out.println(msg);
-                StringTokenizer st = new StringTokenizer(msg, "|");
+                switch (msg.getPlayerStatus()){
+                    case SET_NAME:
+                        if (msg.getFeedBackMessage().equals("ValidName")){
+                            UsernameController.getInstance().showHall();
+                        }
+                        else{
+                            //TODO show duplicate message.
+                        }
+                        break;
+                }
+                /*StringTokenizer st = new StringTokenizer(msg, "|");
                 String operation = st.nextToken();
                 String msg = st.nextToken();
                 if (operation.equals("hallplayer")){
@@ -45,7 +61,7 @@ public class Listener extends Thread {
                     else{
                         Game.turn =false;
                     }
-                }
+                }*/
             }
         } catch (SocketException e) {
             System.out.println("Socket closed because the user typed exit");
@@ -53,7 +69,11 @@ public class Listener extends Thread {
             e.printStackTrace();
         }
     }
-    public String getMessage(){
+    public Message getMessage(){
         return msg;
     }
+    public static boolean checkNameValid(){
+        return nameValid;
+    }
+
 }

@@ -176,6 +176,7 @@ public class LoginController implements Initializable {
         // comment "showUsername()" below after implementing Listener
 //        showUsernameScene();
         Game.connect(hostname,port);
+        showUsernameScene();
         this.scene = new Scene(window);
     }
 
