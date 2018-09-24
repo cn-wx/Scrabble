@@ -1,6 +1,7 @@
 package com.server;
 import java.net.*;
 import java.io.*;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class Server {
                 //TODO - output to UI
                 String uiOutput = "Client number" + clientNum + " has connected to the server";
                 logger.info("Client connection number: " + clientNum + " .");
-                logger.info("Connected to client on port "+ clientSocket.getInetAddress().getHostName()+ clientSocket.getPort());
+                logger.info("Connected to client on "+ clientSocket.getInetAddress().getHostName()+":"+ clientSocket.getPort());
 
                 //3. One thread per connection
                 EachConnection newConnection = new EachConnection(clientSocket,clientNum);

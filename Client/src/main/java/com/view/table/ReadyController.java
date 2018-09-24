@@ -2,11 +2,19 @@ package com.view.table;
 
 import com.Game;
 import com.view.hall.HallController;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,6 +29,9 @@ public class ReadyController implements Initializable {
     private double xOffset;
     private double yOffset;
     @FXML public Label title;
+    @FXML private VBox vBox;
+    @FXML private Button inviteBtn;
+    private boolean toggle = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -54,6 +65,19 @@ public class ReadyController implements Initializable {
     @FXML
     private void invite(){
         //TODO - invite
+        if (toggle){
+            inviteBtn.setText("INVITE");
+            vBox.setPadding(new Insets(30,0,0,0));
+
+            toggle = false;
+        }else if (!toggle){
+            vBox.setPadding(new Insets(300,0,0,0));
+            inviteBtn.setText("CANCEL");
+
+
+            toggle = true;
+        }
+
     }
 
     // return to game hall

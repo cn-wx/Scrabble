@@ -6,5 +6,5 @@ package com.messages;
  * @date 2018/9/21 0:38
  */
 public enum PlayerAction {
-    JOIN_GAME, READY, GAME_CONTENT, VOTING, PASS
+    JOIN_GAME, READY, GAME_CONTENT, VOTING, PASS, RETURN_HALL
 }

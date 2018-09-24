@@ -49,13 +49,13 @@
       </GridPane>
    </top>
    <center>
-      <VBox prefHeight="200.0" prefWidth="896.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="vBox" prefHeight="200.0" prefWidth="896.0" BorderPane.alignment="CENTER">
          <children>
-            <Button styleClass="radiusBtn" stylesheets="@../css/global.css" mnemonicParsing="false" onAction="#ready" prefHeight="60.0" prefWidth="150.0" text="READY">
+            <Button mnemonicParsing="false" onAction="#ready" prefHeight="60.0" prefWidth="150.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="READY">
                <VBox.margin>
                   <Insets left="125.0" />
                </VBox.margin></Button>
-            <Button styleClass="radiusBtn" stylesheets="@../css/global.css" layoutX="135.0" layoutY="310.0" mnemonicParsing="false" onAction="#invite" prefHeight="60.0" prefWidth="150.0" text="INVITE">
+            <Button fx:id="inviteBtn" layoutX="135.0" layoutY="310.0" mnemonicParsing="false" onAction="#invite" prefHeight="60.0" prefWidth="150.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="INVITE">
                <VBox.margin>
                   <Insets left="125.0" top="30.0" />
                </VBox.margin>
