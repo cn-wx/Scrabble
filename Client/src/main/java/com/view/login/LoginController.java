@@ -163,16 +163,22 @@ public class LoginController implements Initializable {
     }
 
     public void loginButtonAction() throws IOException{
-        //TODO - handle empty post&host
-        String hostname = hostAddressTF.getText();
-        int port = Integer.parseInt(portNumberTF.getText());
+        String hostname = hostAddressTF.getText().trim();
+        int port = Integer.parseInt(portNumberTF.getText().trim());
+        if ((hostname.isEmpty())||(portNumberTF.getText().trim().isEmpty())){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Please enter a right ip address!");
+            alert.setContentText("Please check the host address or port number.");
+            alert.showAndWait();
+        }else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/username.fxml"));
+            Parent window = (Pane) fxmlLoader.load();
+            usernameController =  fxmlLoader.getController();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/username.fxml"));
-        Parent window = (Pane) fxmlLoader.load();
-        usernameController =  fxmlLoader.getController();
-
-        Game.connect(hostname,port);
-        this.scene = new Scene(window);
+            Game.connect(hostname,port);
+            this.scene = new Scene(window);
+        }
     }
 
     public void loginFailure(String message){
