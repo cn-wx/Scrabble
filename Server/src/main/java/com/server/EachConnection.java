@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
@@ -46,7 +47,6 @@ public class EachConnection implements Runnable {
     @Override
     public void run() {
         try {
-            logInFeedBack();
             while (true){
                 Message clientMsg = (Message) ois.readObject();
 
@@ -58,11 +58,10 @@ public class EachConnection implements Runnable {
                         case IN_HALL:
                             inHall(clientMsg);
                             break;
-                                                        /*
-
                         case IN_ROOM:
                             inRoom(clientMsg);
                             break;
+                            /*
                         case IN_GAME:
                             inGame(clientMsg);
                             break;
@@ -70,25 +69,25 @@ public class EachConnection implements Runnable {
                     }
                 }
             }
-        } catch (SocketException socketException){
-            if (clientName!=null){
+        } catch (SocketException socketException) {
+            if (clientName != null) {
                 ServerState.UserList.remove(clientName);
                 ServerState.clientList.remove(clientName);
             }
             logger.info("Client on port " + clientSocket.getPort() + " exited.");
+        }catch (EOFException e){
+            Message toALL = new Message();
+            ServerState.getClientInstance().clientDisconnected(this);
+            ServerState.clientList.remove(clientName);
+            updateGameList();
+            toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+            toALL.setConnectedClients(ServerState.clientList);
+            toALL.setCreatedGames(ServerState.gameList);
+            broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
         } catch (Exception e){
             e.printStackTrace();
         }
 
-    }
-    // log-in status
-    private synchronized void logInFeedBack() throws IOException{
-        Message m = new Message();
-        m.setPlayerStatus(PlayerStatus.LOG_IN);
-        m.setClientName("test");
-        m.setFeedBackMessage("success");
-        oos.writeObject(m);
-        oos.flush();
     }
 
     // in setName status
@@ -99,17 +98,16 @@ public class EachConnection implements Runnable {
 
     private void nameCheck(String name) throws IOException{
         Message toClient = new Message();
-//        Message toALL = new Message();
-        //Map<String,String> clients = getClientLists();
-        //List<GameRoom> gameRooms = ServerState.getClientInstance().getConnectedGames();
+        Message toALL = new Message();
+        List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
 
         if (!ServerState.UserList.contains(name)){
             setClientStatus(PlayerStatus.IN_HALL);
             setClientName(name);
             // TODO settting two lists
             toClient.setPlayerStatus(PlayerStatus.SET_NAME);
-            //toClient.setConnectedClients(clients);
-            //toClient.setCreatedGames(gameRooms);
+            updateGameList();
+            toClient.setCreatedGames(ServerState.gameList);
             toClient.setClientName(name);
             toClient.setFeedBackMessage("ValidName");
             ServerState.UserList.add(name);
@@ -117,13 +115,14 @@ public class EachConnection implements Runnable {
             toClient.setConnectedClients(ServerState.clientList);
             oos.writeObject(toClient);
 
-            /*
+
             //broadcast
-            toALL.setServerAction(ServerAction.UPDATE);
-            toALL.setConnectedClients(clients);
-            toALL.setCreatedGames(gameRooms);
+            updateGameList();
+            toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+            toALL.setConnectedClients(ServerState.clientList);
+            toALL.setCreatedGames(ServerState.gameList);
             broadCast(clients,toALL);
-            */
+
         }else{
             toClient.setPlayerStatus(PlayerStatus.SET_NAME);
             toClient.setClientName(name);
@@ -131,252 +130,261 @@ public class EachConnection implements Runnable {
             oos.writeObject(toClient);
         }
     }
-       // in hall status
-       private synchronized void inHall(Message m) throws IOException{
+   // in hall status
+   private synchronized void inHall(Message m) throws IOException{
+       Message toClient = new Message();
+       Message toALL = new Message();
+       List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
 
-           if (m.getPlayerAction() == PlayerAction.JOIN_GAME){
-               tableId = m.getTableId();
-               join(tableId);
-           } else if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
-               setClientStatus(PlayerStatus.IN_HALL);
-               Message toClient = new Message();
-               toClient.setPlayerStatus(PlayerStatus.IN_HALL);
-               ServerState.clientList.replace(clientName,"Online");
+       if (m.getPlayerAction() == PlayerAction.JOIN_GAME){
+           tableId = m.getTableId();
+           join(tableId);
+       } else if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
+           setClientStatus(PlayerStatus.IN_HALL);
+           toClient.setPlayerStatus(PlayerStatus.IN_HALL);
+           ServerState.clientList.replace(clientName,"Online");
+           toClient.setConnectedClients(ServerState.clientList);
+           oos.writeObject(toClient);
+           // TODO - update game list & user list
+           GameRoom game = getCurrentGame();
+           game.deletePlayer(clientNum);
+           updateGameList();
+           toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+           toALL.setConnectedClients(ServerState.clientList);
+           toALL.setCreatedGames(ServerState.gameList);
+           broadCast(clients,toALL);
+       }
+   }
+
+
+   private void join(int tableId)throws IOException{
+       Message toClient = new Message();
+       Message toALL = new Message();
+       List<GameRoom> gameRooms = ServerState.getGameInstance().getConnectedGames();
+
+       switch (tableValid(tableId,gameRooms)){
+           case "ValidTable":
+               this.tableId = tableId;
+               GameRoom game = getCurrentGame();
+               game.addPlayer(this.clientNum);
+               setClientStatus(PlayerStatus.IN_ROOM);
+               toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
+               toClient.setPlayerList(this.getPlayerList());
+               toClient.setFeedBackMessage("ValidTable");
+               ServerState.clientList.replace(clientName,"In Game");
                toClient.setConnectedClients(ServerState.clientList);
                oos.writeObject(toClient);
-               // TODO - update game list & user list
-           }
-       }
+               break;
+           case "TableNotExist":
+               GameRoom gameRoom = new GameRoom(this.clientNum,tableId);
+               ServerState.getGameInstance().gameConnected(gameRoom);
+               this.tableId = tableId;
+               // TODO- insert game into game list
+               setClientStatus(PlayerStatus.IN_ROOM);
 
-
-       private void join(int tableId)throws IOException{
-           Message toClient = new Message();
-           Message toALL = new Message();
-//           List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
-           List<GameRoom> gameRooms = ServerState.getGameInstance().getConnectedGames();
-           int index = -1;
-
-           switch (tableValid(tableId,gameRooms)){
-               case "ValidTable":
-                   index = tableIndex(tableId,gameRooms);
-                   gameRooms.get(index).addPlayer(this.clientNum);
-                   setClientStatus(PlayerStatus.IN_ROOM);
-                   toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
-//                   toClient.setServerAction(ServerAction.RESPONSE);
-//                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
-                   toClient.setFeedBackMessage("ValidTable");
-                   ServerState.clientList.replace(clientName,"In Game");
-                   toClient.setConnectedClients(ServerState.clientList);
-                   oos.writeObject(toClient);
-                   break;
-               case "TableNotExist":
-                   GameRoom gameRoom = new GameRoom(this.clientNum,tableId);
-                   gameRooms.add(gameRoom);
-                   // TODO- insert game into game list
-                   index = tableIndex(tableId,gameRooms);
-                   gameRooms.get(index).addPlayer(this.clientNum);
-                   setClientStatus(PlayerStatus.IN_ROOM);
-                   toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
-//                   toClient.setServerAction(ServerAction.RESPONSE);
-//                   toClient.setPlayerList(gameRooms.get(index).getPlayerList());
-                   toClient.setFeedBackMessage("ValidTable");
-                   ServerState.clientList.replace(clientName,"In Game");
-                   toClient.setConnectedClients(ServerState.clientList);
-                   oos.writeObject(toClient);
-                   break;
-               case "InvalidTable":
-//                   toClient.setServerAction(ServerAction.RESPONSE);
-                   toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
-                   toClient.setFeedBackMessage("InvalidTable");
-                   oos.writeObject(toClient);
-                   break;
-           }
-           // broadcast
-//           toALL.setServerAction(ServerAction.UPDATE);
-//           toALL.setConnectedClients(clients);
-//           toALL.setCreatedGames(ServerState.getGameInstance().getConnectedGames());
-//           broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
-       }
-
-       private String tableValid(int tableId,List<GameRoom> gameRooms){
-           for (int i = 0; i < gameRooms.size(); i++) {
-               if (gameRooms.get(i).getTableId()== tableId
-                       && gameRooms.get(i).getNumOfPlayer() < gameRooms.get(i).getMaximumPlayerNumber()){
-                   return "ValidTable";
-               }else if (gameRooms.get(i).getTableId()== tableId
-                       && gameRooms.get(i).getNumOfPlayer() == gameRooms.get(i).getMaximumPlayerNumber()){
-                   return "InvalidTable";
-               }
-           }
-           return "TableNotExist";
-       }
-
-       private int tableIndex(int tableId,List<GameRoom> gameRooms) {
-           int index = -1;
-           for (int i = 0; i < gameRooms.size(); i++) {
-               if (gameRooms.get(i).getTableId() == tableId) {
-                   index = i;
-                   return index;
-               }
-           }
-           return index;
-       }
-
-
-       // in room status
-       /*private synchronized void inRoom(Message m) throws IOException{
-           if (m.getPlayerAction() == PlayerAction.READY){
-               ready();
-           }
-       }*/
-
-       /*private void ready() throws IOException{
-           Message toClient = new Message();
-           Message toPlayers = new Message();
-           int numReady= 0;
-           EachConnection[] players = getPlayerList();
-           GameRoom game = getCurrentGame();
-
-           // logic part
-           setClientStatus(PlayerStatus.READY);
-           //check how many players are in ready condition
-           for (EachConnection player : players){
-               if (player.getClientStatus().equals(PlayerStatus.READY)){
-                   numReady +=1;
-               }
-           }
-           if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
-               //TODO game status - all ready
-               toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-               toPlayers.setPlayerAction(PlayerAction.READY);
-               toPlayers.setServerAction(ServerAction.RESPONSE);
-               roombroadCast(players,toPlayers);
-               sequenceDecision();
-           }else {
-               toClient.setPlayerStatus(PlayerStatus.READY);
-               toClient.setServerAction(ServerAction.RESPONSE);
-               toClient.setPlayerList(game.getPlayerList());
+               // set message
+               toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
+               toClient.setPlayerList(this.getPlayerList());
+               toClient.setFeedBackMessage("ValidTable");
+               ServerState.clientList.replace(clientName,"In Game");
+               toClient.setConnectedClients(ServerState.clientList);
                oos.writeObject(toClient);
-               toPlayers.setServerAction(ServerAction.UPDATE);
-               toPlayers.setPlayerList(game.getPlayerList());
-               roombroadCast(players,toPlayers);
+               break;
+           case "InvalidTable":
+               toClient.setPlayerStatus(PlayerStatus.JOIN_TABLE);
+               toClient.setFeedBackMessage("InvalidTable");
+               oos.writeObject(toClient);
+               break;
+       }
+       // broadcast
+       updateGameList();
+       toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+       toALL.setConnectedClients(ServerState.clientList);
+       toALL.setCreatedGames(ServerState.gameList);
+       broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
+   }
+
+   private String tableValid(int tableId,List<GameRoom> gameRooms){
+       for (int i = 0; i < gameRooms.size(); i++) {
+           if (gameRooms.get(i).getTableId()== tableId
+                   && gameRooms.get(i).getNumOfPlayer() < gameRooms.get(i).getMaximumPlayerNumber()){
+               return "ValidTable";
+           }else if (gameRooms.get(i).getTableId()== tableId
+                   && gameRooms.get(i).getNumOfPlayer() == gameRooms.get(i).getMaximumPlayerNumber()){
+               return "InvalidTable";
            }
-       }*/
+       }
+       return "TableNotExist";
+   }
 
-       // in game status
-       /*private synchronized void inGame(Message m){
-           switch (m.getPlayerAction()){
-               case GAME_CONTENT:
-                   gameContent(m);
-                   break;
-               case VOTING:
-                   voting(m);
-                   break;
-               case PASS:
-                   pass();
-                   break;
+   private int tableIndex(int tableId,List<GameRoom> gameRooms) {
+       int index = -1;
+       for (int i = 0; i < gameRooms.size(); i++) {
+           if (gameRooms.get(i).getTableId() == tableId) {
+               index = i;
+               return index;
            }
-           getCurrentGame().addOneTurn();
-       }*/
+       }
+       return index;
+   }
 
-       /*private void sequenceDecision(){
-           //return the messages that who should go first
-           Message toClient = new Message();
-           toClient.setServerAction(ServerAction.RESPONSE);
-           toClient.setFeedBackMessage("It's your turn");
-           EachConnection[] players = getPlayerList();
-           GameRoom game = getCurrentGame();
 
-           switch (game.getTotalTurn() % game.getMaximumPlayerNumber()){
-               case 0:
-                   players[0].write(toClient);
-                   break;
-               case 1:
-                   players[1].write(toClient);
-                   break;
-               case 2:
-                   players[2].write(toClient);
-                   break;
-               case 3:
-                   players[3].write(toClient);
-                   break;
+   // in room status
+   private synchronized void inRoom(Message m) throws IOException{
+       if (m.getPlayerAction() == PlayerAction.READY){
+           ready();
+       }
+   }
+
+   private void ready() throws IOException{
+       Message toClient = new Message();
+       Message toPlayers = new Message();
+       int numReady= 0;
+       GameRoom game = getCurrentGame();
+       EachConnection[] players = game.getPlayerList();
+
+       // logic part
+       setClientStatus(PlayerStatus.READY);
+
+       //check how many players are in ready condition
+       for (int i = 0; i < game.getNumOfPlayer(); i++) {
+           if (players[i].getClientStatus().equals(PlayerStatus.READY)){
+               numReady +=1;
            }
+       }
 
-
-
-       }*/
-
-    /*   private void gameContent(Message m){
-           EachConnection[] players = getPlayerList();
-           Message toPlayers = new Message();
-
-           toPlayers.setGameCharacter(m.getGameCharacter());
-           toPlayers.setGameLocation(m.getGameLocation());
-           toPlayers.setGameWord(m.getGameWord());
-           toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-           toPlayers.setPlayerAction(PlayerAction.GAME_CONTENT);
-           toPlayers.setServerAction(ServerAction.UPDATE);
+       if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
+           //TODO game status - all ready
+           toPlayers.setGameStatus(GameStatus.ALL_READY);
+           setClientStatus(PlayerStatus.IN_GAME);
+           toPlayers.setPlayerStatus(PlayerStatus.IN_ROOM);
+           toPlayers.setPlayerAction(PlayerAction.READY);
            roombroadCast(players,toPlayers);
-       }*/
+           //sequenceDecision();
+       }else {
+           toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
+           oos.writeObject(toClient);
+           toPlayers.setPlayerList(this.getPlayerList());
+           roombroadCast(players,toPlayers);
+       }
+   }
+    /*
+   // in game status
+   private synchronized void inGame(Message m){
+       switch (m.getPlayerAction()){
+           case GAME_CONTENT:
+               gameContent(m);
+               break;
+           case VOTING:
+               voting(m);
+               break;
+           case PASS:
+               pass();
+               break;
 
-      /* private void voting(Message m){
-           EachConnection[] players = getPlayerList();
-           GameRoom game = getCurrentGame();
-           Message toPlayers = new Message();
-           int votingNum = m.getVotingNum();
-           game.voting(votingNum);
-           toPlayers.setServerAction(ServerAction.RESPONSE);
-           toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-           toPlayers.setPlayerAction(PlayerAction.VOTING);
-           switch (game.votingResult()){
-               case "Accpet":
-                   score += m.getGameWord().length();
-                   toPlayers.setFeedBackMessage("WordAccepted");
-                   roombroadCast(players,toPlayers);
-                   break;
-               case "Reject":
-                   toPlayers.setFeedBackMessage("WordRejected");
-                   roombroadCast(players,toPlayers);
-                   break;
-               case "inProgress":
-                   break;
-           }
-           if (!game.gameEnd()){
+       }
+       getCurrentGame().addOneTurn();
+   }
+
+   private void sequenceDecision(){
+       //return the messages that who should go first
+       Message toClient = new Message();
+       toClient.setFeedBackMessage("It's your turn");
+       EachConnection[] players = getPlayerList();
+       GameRoom game = getCurrentGame();
+
+       switch (game.getTotalTurn() % game.getMaximumPlayerNumber()){
+           case 0:
+               players[0].write(toClient);
+               break;
+           case 1:
+               players[1].write(toClient);
+               break;
+           case 2:
+               players[2].write(toClient);
+               break;
+           case 3:
+               players[3].write(toClient);
+               break;
+       }
+
+
+
+   }
+
+    private void gameContent(Message m){
+       EachConnection[] players = getPlayerList();
+       Message toPlayers = new Message();
+
+       toPlayers.setGameCharacter(m.getGameCharacter());
+       toPlayers.setGameLocation(m.getGameLocation());
+       toPlayers.setGameWord(m.getGameWord());
+       toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+       toPlayers.setPlayerAction(PlayerAction.GAME_CONTENT);
+       toPlayers.setServerAction(ServerAction.UPDATE);
+       roombroadCast(players,toPlayers);
+   }
+
+   private void voting(Message m){
+       EachConnection[] players = getPlayerList();
+       GameRoom game = getCurrentGame();
+       Message toPlayers = new Message();
+       int votingNum = m.getVotingNum();
+       game.voting(votingNum);
+       toPlayers.setServerAction(ServerAction.RESPONSE);
+       toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+       toPlayers.setPlayerAction(PlayerAction.VOTING);
+       switch (game.votingResult()){
+           case "Accpet":
+               score += m.getGameWord().length();
+               toPlayers.setFeedBackMessage("WordAccepted");
+               roombroadCast(players,toPlayers);
+               break;
+           case "Reject":
+               toPlayers.setFeedBackMessage("WordRejected");
+               roombroadCast(players,toPlayers);
+               break;
+           case "inProgress":
+               break;
+       }
+       if (!game.gameEnd()){
+           sequenceDecision();
+       }else{
+           //TODO Game END part
+           // return game result
+           game.gameResult();
+       }
+   }
+   */
+
+   //TODO pass logic is wrong
+   /*private void pass(){
+       EachConnection[] players = getPlayerList();
+       GameRoom game = getCurrentGame();
+       Message toPlayers = new Message();
+       game.pass(1);
+       toPlayers.setServerAction(ServerAction.RESPONSE);
+       toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+       toPlayers.setPlayerAction(PlayerAction.VOTING);
+       switch (game.passResult()){
+           case "GameEnd":
+               toPlayers.setFeedBackMessage("GameEnd");
+               roombroadCast(players,toPlayers);
+               break;
+           case "GameContinue":
+               toPlayers.setFeedBackMessage("GameContinue");
+               roombroadCast(players,toPlayers);
                sequenceDecision();
-           }else{
-               //TODO Game END part
-               // return game result
-               game.gameResult();
-           }
-       }*/
-
-       //TODO pass logic is wrong
-       /*private void pass(){
-           EachConnection[] players = getPlayerList();
-           GameRoom game = getCurrentGame();
-           Message toPlayers = new Message();
-           game.pass(1);
-           toPlayers.setServerAction(ServerAction.RESPONSE);
-           toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-           toPlayers.setPlayerAction(PlayerAction.VOTING);
-           switch (game.passResult()){
-               case "GameEnd":
-                   toPlayers.setFeedBackMessage("GameEnd");
-                   roombroadCast(players,toPlayers);
-                   break;
-               case "GameContinue":
-                   toPlayers.setFeedBackMessage("GameContinue");
-                   roombroadCast(players,toPlayers);
-                   sequenceDecision();
-                   break;
-               case "inProgress":
-                   break;
-           }
-       }*/
+               break;
+           case "inProgress":
+               break;
+       }
+   }*/
 
     private void roombroadCast(EachConnection[] players,Message m){
-        for (EachConnection player : players){
-            player.write(m);
+        GameRoom game = getCurrentGame();
+        for (int i = 0; i < game.getNumOfPlayer(); i++) {
+            players[i].write(m);
         }
     }
 
@@ -429,11 +437,24 @@ public class EachConnection implements Runnable {
         return clientLists;
     }
 
-    /*
-    private EachConnection[] getPlayerList (){
+
+    private Map<String,String> getPlayerList (){
+        Map<String,String> playerList = new HashMap<>();
+        GameRoom game = getCurrentGame();
+        EachConnection[] players= game.getPlayerList();
+        for (int i = 0; i < game.getNumOfPlayer(); i++) {
+            playerList.put(players[i].getClientName(),
+                    players[i].getClientStatus().toString());
+        }
+        return playerList;
+    }
+
+
+    private void updateGameList(){
         List<GameRoom> gameRooms = ServerState.getGameInstance().getConnectedGames();
-        int index = tableIndex(tableId,gameRooms);
-        return gameRooms.get(index).getPlayerList();
+        for (GameRoom gameRoom : gameRooms){
+            ServerState.gameList.put(gameRoom.getTableId(),gameRoom.getNumOfPlayer());
+        }
     }
 
     private GameRoom getCurrentGame (){
@@ -441,7 +462,6 @@ public class EachConnection implements Runnable {
         int index = tableIndex(tableId,gameRooms);
         return gameRooms.get(index);
     }
-    */
 
     public int getScore() {
         return score;

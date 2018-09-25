@@ -1,5 +1,6 @@
 package com;
 
+import com.model.exception.ExceptionDialog;
 import com.view.login.LoginController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -90,7 +91,6 @@ public class Game extends Application {
             m1.start();
         }catch (IOException e){
             LoginController.getInstance().loginFailure("Could not connect to server");
-            e.printStackTrace();
         }
     }
 //    public static void ready(){
@@ -122,6 +122,7 @@ public class Game extends Application {
             e.printStackTrace();
         }
     }
+
 
     public static String randomeUser(){
         Random rand = new Random();
