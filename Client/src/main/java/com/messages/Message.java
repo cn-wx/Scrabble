@@ -6,8 +6,8 @@ import java.util.Map;
 public class Message implements Serializable{
 
     private Map<String,String> connectedClients;
-    //private List<GameRoom> createdGames;
-    //private EachConnection[] playerList;*/
+    private Map<Integer,Integer> createdGames;
+    private Map<String,String> playerList;
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
@@ -131,6 +131,22 @@ public class Message implements Serializable{
 
     public void setConnectedClients(Map<String, String> connectedClients) {
         this.connectedClients = connectedClients;
+    }
+
+    public Map<Integer, Integer> getCreatedGames() {
+        return createdGames;
+    }
+
+    public void setCreatedGames(Map<Integer, Integer> createdGames) {
+        this.createdGames = createdGames;
+    }
+
+    public Map<String, String> getPlayerList() {
+        return playerList;
+    }
+
+    public void setPlayerList(Map<String, String> playerList) {
+        this.playerList = playerList;
     }
 }
 

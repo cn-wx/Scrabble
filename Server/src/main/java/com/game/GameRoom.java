@@ -8,10 +8,12 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class GameRoom{
-    // assuming there are up to 10 players
+    // assuming there are up to 4 players
     private static int MAXIMUM_PLAYER_NUMBER = 4;
     private static int MINIMUM_PLAYER_NUMBER = 2;
     // tracking number of total players in one game room
@@ -43,8 +45,8 @@ public class GameRoom{
         this.numOfPlayer+=1;
     }
 
-    public void deletePlayer(Message m){
-        int index = indexOf(m.getClientNum());
+    public void deletePlayer(int clientNum){
+        int index = indexOf(clientNum);
         if (index != -1){
             playerList[index] = null;
             for (int x = 0; x < numOfPlayer ; x++) {
@@ -99,8 +101,20 @@ public class GameRoom{
     }
 
     //TODO gameResult format
-    public void gameResult(){
+    public String[] gameResult(){
+        EachConnection[] ranks = new EachConnection[numOfPlayer];
+        System.arraycopy(playerList,0,ranks,0,numOfPlayer);
 
+        Arrays.sort(ranks,new descComparator());               // ranking on DESC
+
+        String[] result = new String[numOfPlayer];
+        for (int i = 0; i < numOfPlayer; i++) {
+            if (i==0){
+            result[i] = playerList[i].getClientName()+playerList[i].getScore()+"Winner";}
+            else {
+            result[i] = playerList[i].getClientName()+playerList[i].getScore();}
+        }
+        return result;
     }
 
 
@@ -180,5 +194,35 @@ public class GameRoom{
 
     public void addOneTurn(){
         this.totalTurn += 1;
+    }
+
+    private int nameCompare(String s1, String s2){   // method using for customized comparison functions below
+        int bigger = 1, smaller = -1, equal = 0;
+        if (s1.compareTo(s2) >0)
+            return bigger;
+        else if (s1.compareTo(s2) <0)
+            return smaller;
+        return equal;
+    }
+
+    private int winRateCompare(double w1, double w2){ // method using for customized comparison functions below
+        int bigger = 1, smaller = -1, equal = 0;
+        if (w1 > w2)
+            return bigger;
+        else if (w1 < w2)
+            return smaller;
+        return equal;
+    }
+
+    class descComparator implements Comparator<EachConnection> {
+        int equal =0, reverse = -1;
+        // comparison function using for sort array in descending order
+        @Override
+        public int compare(EachConnection p1, EachConnection p2) {
+            int value = winRateCompare(p1.getScore(),p2.getClientNum());
+            if (value == equal)         // if win rate is equal, sort in alphabetical order
+                return nameCompare(p1.getClientName(),p2.getClientName());
+            return value*(reverse);     // reverse the value return from ascComparator and get desc one
+        }
     }
 }
