@@ -36,7 +36,7 @@ public class Listener extends Thread {
                         if (msg.getFeedBackMessage().equals("ValidName")){
                             Set<String> keys = msg.getConnectedClients().keySet();
                             Iterator<String> iterator = keys.iterator();
-                            HallController.getInstance().clearTable();
+
                             while (iterator.hasNext()) {
                                 String key = iterator.next().toString();
                                 Player player = new Player(key, msg.getConnectedClients().get(key));
@@ -58,7 +58,13 @@ public class Listener extends Thread {
                             Player player = new Player(key, msg.getConnectedClients().get(key));
                             HallController.getInstance().updateStatus(player);
                         }
-                        HallController.getInstance().refreshTable();
+                        Set<Integer> tableKeys = msg.getCreatedGames().keySet();
+                        Iterator<Integer> iteratorTable = tableKeys.iterator();
+                        while (iteratorTable.hasNext()) {
+                            int tableKey = iteratorTable.next();
+                            int playerInTable = msg.getCreatedGames().get(tableKey);
+                            HallController.getInstance().refreshTableNum(tableKey,playerInTable);
+                        }
                         break;
                     case JOIN_TABLE:
                         if ((msg.getFeedBackMessage()!=null) && (msg.getFeedBackMessage().equals("ValidTable"))) {
