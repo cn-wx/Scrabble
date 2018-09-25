@@ -10,6 +10,7 @@ import com.game.GameRoom;
 public class ServerState {
 
     public static Map<String, String> clientList = new HashMap<String, String>();
+    public static Map<Integer,Integer> gameList = new HashMap<>();
     private static ServerState clientInstance;
     private static ServerState gameInstance;
     private List<EachConnection> connectedClients;
