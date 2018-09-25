@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +122,14 @@ public class EachConnection implements Runnable {
             toALL.setPlayerStatus(PlayerStatus.IN_HALL);
             toALL.setConnectedClients(ServerState.clientList);
             toALL.setCreatedGames(ServerState.gameList);
-            broadCast(clients,toALL);
+            // to all in-hall
+            List<EachConnection> inHall = new ArrayList<>();
+            for (EachConnection inhall : clients){
+                if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
+                    inHall.add(inhall);
+                }
+            }
+            broadCast(inHall,toALL);
 
         }else{
             toClient.setPlayerStatus(PlayerStatus.SET_NAME);
