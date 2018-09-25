@@ -183,7 +183,7 @@ public class LoginController implements Initializable {
 
     public void loginFailure(String message){
         Platform.runLater(()-> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Warning!");
             alert.setHeaderText(message);
             alert.setContentText("Please check for firewall issues and check if the server is running.");

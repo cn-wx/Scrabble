@@ -30,7 +30,7 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="282.0" GridPane.columnIndex="2">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="82.0" text="HELP">
+                  <Button mnemonicParsing="false" onAction="#help" prefHeight="38.0" prefWidth="82.0" text="HELP">
                      <HBox.margin>
                         <Insets right="40.0" />
                      </HBox.margin>
@@ -60,17 +60,21 @@
                     <rowConstraints>
                       <RowConstraints maxHeight="212.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="197.0" minHeight="0.0" prefHeight="170.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="566.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="566.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                          <!--table 1 - 3-->
-                         <Button alignment="CENTER" onAction="#handleButton1" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css">
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton1" styleClass="emptyTable" stylesheets="@../css/global.css">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -78,8 +82,8 @@
                               <Insets left="40.0" top="15.0" />
                            </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 1 -" GridPane.rowIndex="1" />
-                         <Button alignment="CENTER" onAction="#handleButton2" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 1 -" GridPane.rowIndex="2" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton2" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -87,8 +91,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 2 -" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                         <Button alignment="CENTER" onAction="#handleButton3" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 2 -" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton3" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -96,11 +100,55 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 3 -" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+
+                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+                             <children>
+                                 <Label fx:id="table1Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                             <children>
+                                 <Label fx:id="table2Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                             <children>
+                                 <Label fx:id="table3Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 3 -" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
 
                          <!--table 4 - 6-->
-                         <Button alignment="CENTER" onAction="#handleButton4" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.rowIndex="2">
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton4" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.rowIndex="3">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -108,8 +156,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 4 -" GridPane.rowIndex="3"/>
-                         <Button alignment="CENTER" onAction="#handleButton5" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 4 -" GridPane.rowIndex="5" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton5" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -117,8 +165,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 5 -" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                         <Button alignment="CENTER" onAction="#handleButton6" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 5 -" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton6" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2" GridPane.rowIndex="3">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -126,10 +174,53 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 6 -" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
+                             <children>
+                                 <Label fx:id="table4Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                             <children>
+                                 <Label fx:id="table5Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                             <children>
+                                 <Label fx:id="table6Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 6 -" GridPane.columnIndex="2" GridPane.rowIndex="5" />
 
                          <!--table 7 - 9-->
-                         <Button alignment="CENTER" onAction="#handleButton7" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.rowIndex="4">
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton7" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.rowIndex="6">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -137,8 +228,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 7 -" GridPane.rowIndex="5" />
-                         <Button alignment="CENTER" onAction="#handleButton8" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 7 -" GridPane.rowIndex="8" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton8" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1" GridPane.rowIndex="6">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -146,8 +237,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 8 -" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                         <Button alignment="CENTER" onAction="#handleButton9" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 8 -" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton9" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2" GridPane.rowIndex="6">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -155,11 +246,55 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 9 -" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+
+                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="7">
+                             <children>
+                                 <Label fx:id="table7Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                             <children>
+                                 <Label fx:id="table8Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                             <children>
+                                 <Label fx:id="table9Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 9 -" GridPane.columnIndex="2" GridPane.rowIndex="8" />
 
 
                          <!--table 10 - 12-->
-                         <Button alignment="CENTER" onAction="#handleButton10" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.rowIndex="6">
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton10" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.rowIndex="9">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -167,8 +302,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 10 -" GridPane.rowIndex="7" />
-                         <Button alignment="CENTER" onAction="#handleButton11" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 10 -" GridPane.rowIndex="11" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton11" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="1" GridPane.rowIndex="9">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -176,8 +311,8 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 11 -" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-                         <Button alignment="CENTER" onAction="#handleButton12" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 11 -" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                         <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleButton12" styleClass="emptyTable" stylesheets="@../css/global.css" GridPane.columnIndex="2" GridPane.rowIndex="9">
                              <cursor>
                                  <Cursor fx:constant="HAND" />
                              </cursor>
@@ -185,7 +320,50 @@
                                  <Insets left="40.0" top="15.0" />
                              </GridPane.margin>
                          </Button>
-                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 12 -" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
+                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="240.0" text="- 12 -" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+
+                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="10">
+                             <children>
+                                 <Label fx:id="table10Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                             <children>
+                                 <Label fx:id="table11Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
+                         <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                             <children>
+                                 <Label fx:id="table12Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                                 <Label prefHeight="25.0" prefWidth="154.0" text="/4" textFill="#f89406">
+                                     <font>
+                                         <Font name="System Bold" size="17.0" />
+                                     </font>
+                                 </Label>
+                             </children>
+                         </HBox>
 
                      </children>
                   </GridPane>
