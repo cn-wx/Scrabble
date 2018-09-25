@@ -105,7 +105,7 @@ public class TableController implements Initializable{
         player4Score.setText("0");
 
         //player ready
-        player1Ready.setVisible(false);
+        player1Ready.setVisible(true);
         player2Ready.setVisible(false);
         player3Ready.setVisible(false);
         player4Ready.setVisible(false);
@@ -166,7 +166,6 @@ public class TableController implements Initializable{
         if (result.get() == ButtonType.OK) {
             HallController.getStage().close();
             Game.getPrimaryStage().show();
-            //TODO - send to server (playerStatus = inHall)
             Game.returnToHall();
         }
     }

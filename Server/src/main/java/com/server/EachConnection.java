@@ -75,6 +75,14 @@ public class EachConnection implements Runnable {
                 ServerState.UserList.remove(clientName);
                 ServerState.clientList.remove(clientName);
             }
+            Message toALL = new Message();
+            ServerState.getClientInstance().clientDisconnected(this);
+            ServerState.clientList.remove(clientName);
+            updateGameList();
+            toALL.setPlayerStatus(PlayerStatus.IN_HALL);
+            toALL.setConnectedClients(ServerState.clientList);
+            toALL.setCreatedGames(ServerState.gameList);
+            broadCast(ServerState.getClientInstance().getConnectedClients(),toALL);
             logger.info("Client on port " + clientSocket.getPort() + " exited.");
         }catch (EOFException e){
             Message toALL = new Message();
