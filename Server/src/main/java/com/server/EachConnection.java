@@ -47,7 +47,6 @@ public class EachConnection implements Runnable {
     @Override
     public void run() {
         try {
-            logInFeedBack();
             while (true){
                 Message clientMsg = (Message) ois.readObject();
 
@@ -85,15 +84,6 @@ public class EachConnection implements Runnable {
             e.printStackTrace();
         }
 
-    }
-    // log-in status
-    private synchronized void logInFeedBack() throws IOException{
-        Message m = new Message();
-        m.setPlayerStatus(PlayerStatus.LOG_IN);
-        m.setClientName("test");
-        m.setFeedBackMessage("success");
-        oos.writeObject(m);
-        oos.flush();
     }
 
     // in setName status
