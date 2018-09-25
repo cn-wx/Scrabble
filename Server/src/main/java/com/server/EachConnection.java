@@ -267,6 +267,7 @@ public class EachConnection implements Runnable {
            setClientStatus(PlayerStatus.IN_GAME);
            toPlayers.setPlayerStatus(PlayerStatus.IN_ROOM);
            toPlayers.setPlayerAction(PlayerAction.READY);
+           //toPlayers.set
            roombroadCast(players,toPlayers);
            //sequenceDecision();
        }else {
@@ -276,7 +277,7 @@ public class EachConnection implements Runnable {
            roombroadCast(players,toPlayers);
        }
    }
-    /*
+   /*
    // in game status
    private synchronized void inGame(Message m){
        switch (m.getPlayerAction()){
@@ -286,9 +287,11 @@ public class EachConnection implements Runnable {
            case VOTING:
                voting(m);
                break;
+               /*
            case PASS:
                pass();
                break;
+
 
        }
        getCurrentGame().addOneTurn();
@@ -297,9 +300,8 @@ public class EachConnection implements Runnable {
    private void sequenceDecision(){
        //return the messages that who should go first
        Message toClient = new Message();
-       toClient.setFeedBackMessage("It's your turn");
-       EachConnection[] players = getPlayerList();
        GameRoom game = getCurrentGame();
+       EachConnection[] players = game.getPlayerList();
 
        switch (game.getTotalTurn() % game.getMaximumPlayerNumber()){
            case 0:
@@ -315,13 +317,11 @@ public class EachConnection implements Runnable {
                players[3].write(toClient);
                break;
        }
-
-
-
    }
 
     private void gameContent(Message m){
-       EachConnection[] players = getPlayerList();
+        GameRoom game = getCurrentGame();
+        EachConnection[] players = game.getPlayerList();
        Message toPlayers = new Message();
 
        toPlayers.setGameCharacter(m.getGameCharacter());
@@ -329,17 +329,15 @@ public class EachConnection implements Runnable {
        toPlayers.setGameWord(m.getGameWord());
        toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
        toPlayers.setPlayerAction(PlayerAction.GAME_CONTENT);
-       toPlayers.setServerAction(ServerAction.UPDATE);
        roombroadCast(players,toPlayers);
    }
 
    private void voting(Message m){
-       EachConnection[] players = getPlayerList();
        GameRoom game = getCurrentGame();
+       EachConnection[] players = game.getPlayerList();
        Message toPlayers = new Message();
        int votingNum = m.getVotingNum();
        game.voting(votingNum);
-       toPlayers.setServerAction(ServerAction.RESPONSE);
        toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
        toPlayers.setPlayerAction(PlayerAction.VOTING);
        switch (game.votingResult()){
@@ -363,7 +361,6 @@ public class EachConnection implements Runnable {
            game.gameResult();
        }
    }
-   */
 
    //TODO pass logic is wrong
    /*private void pass(){
@@ -456,6 +453,16 @@ public class EachConnection implements Runnable {
         }
         return playerList;
     }
+
+//    private Map<String,String> getGameInfo(){
+//        Map<String,String> gameInfo = new HashMap<>();
+//        GameRoom game = getCurrentGame();
+//        EachConnection[] players= game.getPlayerList();
+//        for (int i = 0; i < game.getNumOfPlayer(); i++) {
+//            gameInfo.put(players[i].getClientName(), );
+//        }
+//        return gameInfo;
+//    }
 
 
     private void updateGameList(){
