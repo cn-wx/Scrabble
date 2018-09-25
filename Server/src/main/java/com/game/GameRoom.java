@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class GameRoom{
-    // assuming there are up to 10 players
+    // assuming there are up to 4 players
     private static int MAXIMUM_PLAYER_NUMBER = 4;
     private static int MINIMUM_PLAYER_NUMBER = 2;
     // tracking number of total players in one game room
@@ -43,8 +43,8 @@ public class GameRoom{
         this.numOfPlayer+=1;
     }
 
-    public void deletePlayer(Message m){
-        int index = indexOf(m.getClientNum());
+    public void deletePlayer(int clientNum){
+        int index = indexOf(clientNum);
         if (index != -1){
             playerList[index] = null;
             for (int x = 0; x < numOfPlayer ; x++) {
