@@ -19,7 +19,6 @@ public class Server {
     static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws Exception {
-
         try {
             if (args.length == 1) {
                 PORT = Integer.parseInt(args[0]);

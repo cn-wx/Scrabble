@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.game.GameRoom;
-
 public class ServerState {
 
     public static Map<String, String> clientList = new HashMap<String, String>();
