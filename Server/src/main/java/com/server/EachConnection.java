@@ -70,7 +70,7 @@ public class EachConnection implements Runnable {
                     }
                 }
             }
-        } catch (SocketException socketException) {
+        } catch (Exception e) {
             if (clientName != null) {
                 ServerState.UserList.remove(clientName);
                 ServerState.clientList.remove(clientName);
@@ -93,14 +93,6 @@ public class EachConnection implements Runnable {
             updateGameList();
             hall_information();
             logger.info("Client on port " + clientSocket.getPort() + " exited.");
-        }catch (EOFException e){
-            setClientStatus(PlayerStatus.LEAVING);
-            ServerState.getClientInstance().clientDisconnected(this);
-            ServerState.clientList.remove(clientName);
-            updateGameList();
-            hall_information();
-        } catch (Exception e){
-            e.printStackTrace();
         }
     }
 

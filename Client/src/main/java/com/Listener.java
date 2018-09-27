@@ -6,9 +6,11 @@ import com.messages.PlayerAction;
 import com.model.player.Player;
 import com.view.hall.HallController;
 import com.view.login.LoginController;
+import com.view.table.TableController;
 import com.view.username.UsernameController;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 
 import java.io.*;
 import java.net.Socket;
@@ -78,10 +80,11 @@ public class Listener extends Thread {
                         if (msg.getPlayerAction() == PlayerAction.GAME_WAITING){
                             Set<String> keys_player = msg.getPlayerList().keySet();
                             Iterator<String> iterator_player = keys_player.iterator();
-                            while (iterator_player.hasNext()) {
-                                String key_player = iterator_player.next().toString();
-                                //TODO show the player information in the table
-                                HallController.getInstance().refreshTable();
+                            TableController.getInstance().resetPlayerStatus();
+                            while (iterator_player.hasNext()) {            
+                                String key_player = iterator_player.next();
+                                String playerStatus = msg.getPlayerList().get(key_player);
+                                TableController.getInstance().refreshPlayerStatus(key_player,playerStatus);
                             }
                         }
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
