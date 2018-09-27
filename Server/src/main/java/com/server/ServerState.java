@@ -1,5 +1,7 @@
 package com.server;
 
+import com.game.GameRoom;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

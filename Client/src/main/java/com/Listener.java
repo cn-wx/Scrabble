@@ -1,6 +1,8 @@
 package com;
 
+import com.messages.GameStatus;
 import com.messages.Message;
+import com.messages.PlayerAction;
 import com.model.player.Player;
 import com.view.hall.HallController;
 import com.view.login.LoginController;
@@ -34,6 +36,22 @@ public class Listener extends Thread {
                 switch (msg.getPlayerStatus()){
                         case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
+                            UsernameController.getInstance().showHall();
+                        }
+                        else{
+                            UsernameController.getInstance().duplicatedUsername();
+                        }
+                        break;
+                    case IN_HALL:
+                        if (msg.getPlayerAction() == PlayerAction.JOIN_TABLE){
+                            if ((msg.getFeedBackMessage()!=null) && (msg.getFeedBackMessage().equals("ValidTable"))) {
+                                Platform.runLater(()-> HallController.getInstance().showTable());
+                            }
+                            else{
+                                HallController.getInstance().joinTableFailure();
+                            }
+                        }
+                        if (msg.getPlayerAction() == PlayerAction.HALL_WAITING) {
                             Set<String> keys = msg.getConnectedClients().keySet();
                             Iterator<String> iterator = keys.iterator();
                             HallController.getInstance().clearTable();
@@ -43,31 +61,36 @@ public class Listener extends Thread {
                                 HallController.getInstance().updateStatus(player);
                             }
                             HallController.getInstance().refreshTable();
-                            UsernameController.getInstance().showHall();
+                            Set<Integer> tableKeys = msg.getCreatedGames().keySet();
+                            Iterator<Integer> iteratorTable = tableKeys.iterator();
+                            while (iteratorTable.hasNext()) {
+                                int tableKey = iteratorTable.next();
+                                int playerInTable = msg.getCreatedGames().get(tableKey);
+                                HallController.getInstance().refreshTableNum(tableKey, playerInTable);
+                            }
                         }
-                        else{
-                            UsernameController.getInstance().duplicatedUsername();
-                        }
-                        break;
-                    case IN_HALL:
-                        Set<String> keys = msg.getConnectedClients().keySet();
-                        Iterator<String> iterator = keys.iterator();
-                        HallController.getInstance().clearTable();
-                        while (iterator.hasNext()) {
-                            String key = iterator.next().toString();
-                            Player player = new Player(key, msg.getConnectedClients().get(key));
-                            HallController.getInstance().updateStatus(player);
-                        }
-                        HallController.getInstance().refreshTable();
-                        break;
-                    case JOIN_TABLE:
-                        if ((msg.getFeedBackMessage()!=null) && (msg.getFeedBackMessage().equals("ValidTable"))) {
-                            Platform.runLater(()-> HallController.getInstance().showTable());
-                        }
-                        else{
-                            HallController.getInstance().joinTableFailure();
+                        if (msg.getPlayerAction() == PlayerAction.INVITE){
+
                         }
                         break;
+                    case IN_ROOM:
+                        if (msg.getPlayerAction() == PlayerAction.GAME_WAITING){
+                            Set<String> keys_player = msg.getPlayerList().keySet();
+                            Iterator<String> iterator_player = keys_player.iterator();
+                            while (iterator_player.hasNext()) {
+                                String key_player = iterator_player.next().toString();
+                                Player player = new Player(key_player, msg.getPlayerList().get(key_player));
+                                //TODO show the player information in the table
+                                HallController.getInstance().refreshTable();
+                            }
+                        }
+                        if (msg.getGameStatus() == GameStatus.ALL_READY){
+                            //TODO show game will start in 3 sec.
+                        }
+                        break;
+                    case IN_GAME:
+
+
                 }
                 /*StringTokenizer st = new StringTokenizer(msg, "|");
                 String operation = st.nextToken();

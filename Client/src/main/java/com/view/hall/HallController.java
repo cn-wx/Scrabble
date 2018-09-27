@@ -13,6 +13,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -49,6 +50,51 @@ public class HallController implements Initializable {
     @FXML private void handleButton10() throws IOException {enterTable(10);}
     @FXML private void handleButton11() throws IOException {enterTable(11);}
     @FXML private void handleButton12() throws IOException {enterTable(12);}
+
+    @FXML public Label tableNum1;
+    @FXML public Label tableNum2;
+    @FXML public Label tableNum3;
+    @FXML public Label tableNum4;
+    @FXML public Label tableNum5;
+    @FXML public Label tableNum6;
+    @FXML public Label tableNum7;
+    @FXML public Label tableNum8;
+    @FXML public Label tableNum9;
+    @FXML public Label tableNum10;
+    @FXML public Label tableNum11;
+    @FXML public Label tableNum12;
+
+    public void refreshTableNum(int tableName, int playerInTable){
+        String name = "tableNum"+tableName;
+        String players = Integer.toString(playerInTable);
+        Platform.runLater(()->{
+            if (name.equals(tableNum1.getId())){
+                tableNum1.setText(players);
+            }else if (name.equals(tableNum2.getId())){
+                tableNum2.setText(players);
+            }else if (name.equals(tableNum3.getId())){
+                tableNum3.setText(players);
+            }else if (name.equals(tableNum4.getId())){
+                tableNum4.setText(players);
+            }else if (name.equals(tableNum5.getId())){
+                tableNum5.setText(players);
+            }else if (name.equals(tableNum6.getId())){
+                tableNum6.setText(players);
+            }else if (name.equals(tableNum7.getId())){
+                tableNum7.setText(players);
+            }else if (name.equals(tableNum8.getId())){
+                tableNum8.setText(players);
+            }else if (name.equals(tableNum9.getId())){
+                tableNum9.setText(players);
+            }else if (name.equals(tableNum10.getId())){
+                tableNum10.setText(players);
+            }else if (name.equals(tableNum11.getId())){
+                tableNum11.setText(players);
+            }else if (name.equals(tableNum12.getId())){
+                tableNum12.setText(players);
+            }
+        });
+    }
 
     public static final int HallWidth = 1100;
     public static final int HallHeight = 800;

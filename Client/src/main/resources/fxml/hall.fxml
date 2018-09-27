@@ -103,7 +103,7 @@
 
                          <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
                              <children>
-                                 <Label fx:id="table1Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum1" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -117,7 +117,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                              <children>
-                                 <Label fx:id="table2Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum2" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -131,7 +131,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                              <children>
-                                 <Label fx:id="table3Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum3" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -176,7 +176,7 @@
                          </Button>
                          <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
                              <children>
-                                 <Label fx:id="table4Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum4" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -190,7 +190,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                              <children>
-                                 <Label fx:id="table5Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum5" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -204,7 +204,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                              <children>
-                                 <Label fx:id="table6Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum6" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -249,7 +249,7 @@
 
                          <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="7">
                              <children>
-                                 <Label fx:id="table7Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum7" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -263,7 +263,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                              <children>
-                                 <Label fx:id="table8Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum8" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -277,7 +277,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
                              <children>
-                                 <Label fx:id="table9Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum9" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -324,7 +324,7 @@
 
                          <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="10">
                              <children>
-                                 <Label fx:id="table10Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum10" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -338,7 +338,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
                              <children>
-                                 <Label fx:id="table11Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum11" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>
@@ -352,7 +352,7 @@
                          </HBox>
                          <HBox layoutX="10.0" layoutY="175.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="10">
                              <children>
-                                 <Label fx:id="table12Num" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
+                                 <Label fx:id="tableNum12" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="150.0" text="0" textFill="#f89406">
                                      <font>
                                          <Font name="System Bold" size="17.0" />
                                      </font>

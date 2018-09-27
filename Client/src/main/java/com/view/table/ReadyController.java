@@ -54,6 +54,7 @@ public class ReadyController implements Initializable {
     @FXML
     private void ready(){
         TableController.getInstance().getReadyStage().close();
+        Game.ready();
         //TODO - send to server (playerAction = ready)
     }
 
@@ -61,13 +62,13 @@ public class ReadyController implements Initializable {
     private void invite(){
         //TODO - invite
         if (toggle){
-            inviteBtn.setText("INVITE");
+            inviteBtn.setText("CANCEL");
             vBox.setPadding(new Insets(30,0,0,0));
 
             toggle = false;
         }else if (!toggle){
             vBox.setPadding(new Insets(300,0,0,0));
-            inviteBtn.setText("CANCEL");
+            inviteBtn.setText("INVITE");
 
 
             toggle = true;
@@ -80,7 +81,6 @@ public class ReadyController implements Initializable {
         HallController.getStage().close();
         Game.getPrimaryStage().show();
         Game.returnToHall();
-        //TODO - send to server (playerStatus = inHall)
     }
 
     // Minimize Window
