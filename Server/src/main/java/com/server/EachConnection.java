@@ -258,7 +258,6 @@ public class EachConnection implements Runnable {
            }
        }
        if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
-           //TODO game status - all ready
            Message toPlayers = new Message();
            toPlayers.setPlayerStatus(PlayerStatus.IN_HALL);
            toPlayers.setGameStatus(GameStatus.ALL_READY);
