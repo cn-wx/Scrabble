@@ -16,7 +16,7 @@ public class Message implements Serializable{
     private Map<Integer,Integer> createdGames;
     private Map<String,String> playerList;
     private Map<String,String> gameInfo;
-    private String[] gameResult;
+    private  Map<String,Integer> gameResult;
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
@@ -168,11 +168,11 @@ public class Message implements Serializable{
         this.gameInfo = gameInfo;
     }
 
-    public String[] getGameResult() {
+    public Map<String, Integer> getGameResult() {
         return gameResult;
     }
 
-    public void setGameResult(String[] gameResult) {
+    public void setGameResult(Map<String, Integer> gameResult) {
         this.gameResult = gameResult;
     }
 

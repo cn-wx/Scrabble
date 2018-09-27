@@ -18,10 +18,6 @@ public class GameRoom{
     private int numOfPlayer;
     private int tableId;
     private EachConnection[] playerList = new EachConnection[MAXIMUM_PLAYER_NUMBER];
-    private InputStream in;
-    private OutputStream out;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
     private int votingNum = 0;
     private int spaceRemain = 400;
     private int turnNum = 0;
@@ -37,15 +33,16 @@ public class GameRoom{
         initialBoard();
         this.tableId = tableId;
     }
+
+    // name + turn / not turn
     public void initialGame(){
+        addOneTurn();
         for (String key : playerStatus.keySet()) {
                 playerStatus.replace(key, "NotTurn");
             }
-        String[] keys = playerStatus.keySet().toArray(new String[0]);
-        Random random = new Random();
-        String randomKey = keys[random.nextInt(keys.length)];
-        playerStatus.replace(randomKey,"Turn");
+        playerStatus.replace(playerList[0].getClientName(),"Turn");
     }
+
 
     public void initialBoard(){
         board = new String[400];
@@ -65,6 +62,7 @@ public class GameRoom{
     public Map<String,Integer> getPlayerScore(){
         return playerScore;
     }
+
     public void addPlayer(int clientNum){
         List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients){
@@ -96,6 +94,12 @@ public class GameRoom{
         playerStatus.replace(name,"Ready");
     }
 
+    public void turnPass(){
+        int index = totalTurn % numOfPlayer - 1;
+        playerTurn(playerList[index].getClientName());
+    }
+
+    //TODO - quit ?
     public void playerTurn(String name) {
         playerStatus.replace(name,"Turn");
         for (String key : playerStatus.keySet()) {
@@ -129,17 +133,14 @@ public class GameRoom{
         }
     }
 
-//    public String passResult(){
-//        if (turnNum == numOfPlayer && passNum == MAXIMUM_PLAYER_NUMBER){
-//            setTurnNum(0);
-//            return "GameEnd";
-//        }else if (turnNum == numOfPlayer && passNum != MAXIMUM_PLAYER_NUMBER){
-//            setTurnNum(0);
-//            return "GameContinue";
-//        }
-//    }
-
-
+    public String passResult() {
+        if (turnNum == numOfPlayer && passNum == MAXIMUM_PLAYER_NUMBER) {
+            setTurnNum(0);
+            return "GameEnd";
+        } else {
+            return "GameContinue";
+        }
+    }
 
     public boolean gameEnd(){
         if (numOfPlayer < MINIMUM_PLAYER_NUMBER || spaceRemain == 0){
@@ -150,18 +151,22 @@ public class GameRoom{
 
     //TODO gameResult format
 
-    public String[] gameResult(){
+    public Map<String,Integer> gameResult(){
         EachConnection[] ranks = new EachConnection[numOfPlayer];
         System.arraycopy(playerList,0,ranks,0,numOfPlayer);
+        Arrays.sort(ranks,new descComparator());               // ranking on DESC
+        int rank = 1;
 
-        String[] result = new String[numOfPlayer];
+        Map<String,Integer> resultF = new HashMap<>();
         for (int i = 0; i < numOfPlayer; i++) {
-//            if (i==0 ){
-//                result[i] = playerList[i].getClientName()+playerList[i].getScore()+"Winner";}
-//            else {
-            result[i] = playerList[i].getClientName()+playerList[i].getScore();
+            if (ranks[i].getScore() > ranks[i].getScore()) {
+                resultF.put(ranks[i].getClientName(), rank);
+                rank +=1;
+            }else {
+                resultF.put(ranks[i].getClientName(), rank);
+            }
         }
-        return result;
+        return resultF;
     }
     public int getTableId() {
         return tableId;
@@ -191,8 +196,8 @@ public class GameRoom{
         return spaceRemain;
     }
 
-    public void setSpaceRemain(int spaceRemain) {
-        this.spaceRemain = spaceRemain;
+    public void setSpaceRemain(int wordLength) {
+        this.spaceRemain -= wordLength;
     }
 
     public EachConnection[] getPlayerList() {
@@ -207,8 +212,8 @@ public class GameRoom{
         return votingNum;
     }
 
-    public void voting(int votingNum) {
-        this.votingNum += votingNum;
+    public void voting() {
+        this.votingNum += 1;
         this.turnNum += 1;
     }
 
@@ -225,6 +230,7 @@ public class GameRoom{
     }
 
     public void pass() {
+        addOneTurn();
         this.passNum += 1;
         this.turnNum += 1;
     }
@@ -248,4 +254,35 @@ public class GameRoom{
     public void setGameStart(boolean gameStart) {
         this.gameStart = gameStart;
     }
+
+    private int nameCompare(String s1, String s2){   // method using for customized comparison functions below
+        int bigger = 1, smaller = -1, equal = 0;
+        if (s1.compareTo(s2) >0)
+            return bigger;
+        else if (s1.compareTo(s2) <0)
+            return smaller;
+        return equal;
+    }
+
+    private int winRateCompare(double w1, double w2){ // method using for customized comparison functions below
+        int bigger = 1, smaller = -1, equal = 0;
+        if (w1 > w2)
+            return bigger;
+        else if (w1 < w2)
+            return smaller;
+        return equal;
+    }
+
+    class descComparator implements Comparator<EachConnection> {
+        int equal =0, reverse = -1;
+        // comparison function using for sort array in descending order
+        @Override
+        public int compare(EachConnection p1, EachConnection p2) {
+            int value = winRateCompare(p1.getScore(),p2.getClientNum());
+            if (value == equal)         // if win rate is equal, sort in alphabetical order
+                return nameCompare(p1.getClientName(),p2.getClientName());
+            return value*(reverse);     // reverse the value return from ascComparator and get desc one
+        }
+    }
+
 }

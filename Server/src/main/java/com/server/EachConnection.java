@@ -17,8 +17,8 @@ import java.util.Map;
 public class EachConnection implements Runnable {
 
     private int score;
+    private boolean myTurn;
     private Socket clientSocket;
-    private static Server server;
     private PlayerStatus clientStatus;
     private int clientNum;
     private InputStream in;
@@ -28,8 +28,6 @@ public class EachConnection implements Runnable {
     private String clientName;
     private int tableId;
     static Logger logger = LoggerFactory.getLogger(EachConnection.class);
-    private Map<String, String> listToSend = new HashMap<String, String>();
-
 
 
     public EachConnection(Socket clientSocket, int clientNum) throws IOException{
@@ -65,7 +63,6 @@ public class EachConnection implements Runnable {
                         case IN_GAME:
                             inGame(clientMsg);
                             break;
-
                     }
                 }
             }
@@ -231,21 +228,24 @@ public class EachConnection implements Runnable {
    }
    // in room status
    private synchronized void inRoom(Message m) throws IOException{
-       if (m.getPlayerAction() == PlayerAction.READY){
-           ready();
-       }else if (m.getPlayerAction() == PlayerAction.INVITE) {
-           invite();
-       }else if (m.getPlayerAction() == PlayerAction.INVITE_PLAYER){
 
-           invitePlayer(m);
-       }else if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
-           setClientStatus(PlayerStatus.IN_HALL);
-           ServerState.clientList.replace(clientName,"Online");
-           GameRoom game = getCurrentGame();
-           game.deletePlayer(clientNum,clientName);
-           hall_information();
-           table_information();
-       }
+        switch (m.getPlayerAction()){
+            case READY:
+                ready();
+            case INVITE:
+                invite();
+            case INVITE_PLAYER:
+                invitePlayer(m);
+            case RETURN_HALL:
+                setClientStatus(PlayerStatus.IN_HALL);
+                ServerState.clientList.replace(clientName,"Online");
+                GameRoom game = getCurrentGame();
+                game.deletePlayer(clientNum,clientName);
+                hall_information();
+                table_information();
+            case INTO_GAME:
+                setClientStatus(PlayerStatus.IN_GAME);      // TODO - client need to send this m after all ready
+        }
    }
    private void invite() throws IOException{
        Map<String,String> freePlayers = new HashMap<>();
@@ -302,14 +302,13 @@ public class EachConnection implements Runnable {
            case SET_CHARACTER:
                gameContent(m);
                break;
-//           case VOTING:
-//               voting(m);
-//               break;
-//           case PASS:
-//               pass();
-//               break;
+           case VOTING:
+               voting(m);
+               break;
+           case PASS:
+               pass();
+               break;
        }
-       getCurrentGame().addOneTurn();
    }
 
     private void gameContent(Message m){
@@ -327,66 +326,70 @@ public class EachConnection implements Runnable {
         roombroadCast(players,toPlayers);
     }
 
-//    private void voting(Message m){
-//        GameRoom game = getCurrentGame();
-//        EachConnection[] players = game.getPlayerList();
-//        Message toPlayers = new Message();
-//        // add voting number
-//        int votingNum = m.getVotingNum();
-//        game.voting(votingNum);
-//
-//        switch (game.votingResult()){
-//            case "Accpet":
-//                score += m.getGameWord().length();
-//                toPlayers.setFeedBackMessage("WordAccepted");
-//                break;
-//            case "Reject":
-//                toPlayers.setFeedBackMessage("WordRejected");
-//                break;
-//            case "inProgress":
-//                break;
-//        }
-//        // check if game end
-//        if (!game.gameEnd()){
-//            toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-//            toPlayers.setPlayerAction(PlayerAction.VOTING);
-//            // turn
-//            game_information();
-//        }else{
-//            //TODO Game END part
-//            // return game result
-//            String [] result = game.gameResult();
-//            toPlayers.setGameStatus(GameStatus.ENDING);
-//            toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-//            toPlayers.setGameResult(result);
-//            roombroadCast(players,toPlayers);
-//        }
-//    }
-//
-//    //TODO pass logic
-//    private void pass(){
-//        GameRoom game = getCurrentGame();
-//        EachConnection[] players = game.getPlayerList();
-//        Message toPlayers = new Message();
-//        game.pass();
-//        toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-//        toPlayers.setPlayerAction(PlayerAction.PASS);
-//        switch (game.passResult()){
-//            case "GameEnd":
-//                // return game result
-//                String [] result = game.gameResult();
-//                toPlayers.setGameStatus(GameStatus.ENDING);
-//                toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
-//                toPlayers.setGameResult(result);
-//                roombroadCast(players,toPlayers);
-//                break;
-//            case "GameContinue":
-//                game_information();
-//                break;
-//            case "inProgress":
-//                break;
-//        }
-//    }
+    private void voting(Message m){
+        GameRoom game = getCurrentGame();
+        EachConnection[] players = game.getPlayerList();
+        Message toPlayers = new Message();
+        // voting +1
+        game.voting();
+
+        switch (game.votingResult()){
+            case "Accept":
+                score += m.getGameWord().length();
+                game.setSpaceRemain(m.getGameWord().length());
+                toPlayers.setFeedBackMessage("WordAccepted");
+                game.addOneTurn();
+                game.turnPass();
+                break;
+            case "Reject":
+                toPlayers.setFeedBackMessage("WordRejected");
+                game.addOneTurn();
+                game.turnPass();
+                break;
+            case "inProgress":
+                break;
+        }
+        // check if game end
+        if (!game.gameEnd()){
+            toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+            toPlayers.setPlayerAction(PlayerAction.VOTING);
+            game_information();
+        }else{
+            //TODO Game END part
+            // return game result
+            Map<String,Integer> result = game.gameResult();
+            toPlayers.setGameStatus(GameStatus.ENDING);
+            toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+            toPlayers.setGameResult(result);
+            roombroadCast(players,toPlayers);
+        }
+    }
+
+    //TODO pass logic
+    private void pass(){
+        GameRoom game = getCurrentGame();
+        EachConnection[] players = game.getPlayerList();
+        Message toPlayers = new Message();
+        // # of pass +1
+        game.pass();
+        toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+        toPlayers.setPlayerAction(PlayerAction.PASS);
+        switch (game.passResult()){
+            case "GameEnd":
+                // return game result
+                Map<String,Integer>  result = game.gameResult();
+                toPlayers.setGameStatus(GameStatus.ENDING);
+                toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
+                toPlayers.setGameResult(result);
+                roombroadCast(players,toPlayers);
+                break;
+            case "GameContinue":
+                //TODO - turn pass
+                game.turnPass();
+                game_information();
+                break;
+        }
+    }
 
     private void roombroadCast(EachConnection[] players,Message m){
         GameRoom game = getCurrentGame();
@@ -467,4 +470,11 @@ public class EachConnection implements Runnable {
         this.score = score;
     }
 
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
+    }
 }
