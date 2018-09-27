@@ -263,6 +263,7 @@ public class EachConnection implements Runnable {
            toPlayers.setPlayerStatus(PlayerStatus.IN_HALL);
            toPlayers.setGameStatus(GameStatus.ALL_READY);
            roombroadCast(players,toPlayers);
+           game.initialGame();
            game_information();
        }
    }
