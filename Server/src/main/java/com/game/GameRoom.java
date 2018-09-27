@@ -8,9 +8,9 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameRoom{
     // assuming there are up to 4 players
@@ -29,24 +29,39 @@ public class GameRoom{
     private int turnNum = 0;
     private int passNum = 0;
     private int totalTurn = 0;
-
+    private Map<String,String> playerStatus = new HashMap();
+    private String[] board;
+    private Map<String,Integer> playerScore = new HashMap();
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
         this.tableId = tableId;
     }
-
+    public void addCharacter(int index,String character){
+        board[index] = character;
+    }
+    public String[] getBoard(){
+        return board;
+    }
+    public void setPlayerScore(String name,Integer score){
+        playerScore.replace(name,score);
+    }
+    public Map<String,Integer> getPlayerScore(){
+        return playerScore;
+    }
     public void addPlayer(int clientNum){
         List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients){
             if (client.getClientNum() == clientNum){
                 playerList[numOfPlayer] = client;
+                playerStatus.put(client.getClientName(),"NotReady");
             }
         }
         this.numOfPlayer+=1;
     }
 
-    public void deletePlayer(int clientNum){
+    public void deletePlayer(int clientNum,String name){
         int index = indexOf(clientNum);
+        playerStatus.remove(name);
         if (index != -1){
             playerList[index] = null;
             for (int x = 0; x < numOfPlayer ; x++) {
@@ -58,6 +73,21 @@ public class GameRoom{
         this.numOfPlayer-=1;
     }
 
+    public void playerReady(String name){
+        playerStatus.replace(name,"Ready");
+    }
+
+    public void playerTurn(String name) {
+        playerStatus.replace(name,"Turn");
+        for (String key : playerStatus.keySet()) {
+            if (!key.equals(name)) {
+                playerStatus.replace(key, "NotTurn");
+            }
+        }
+    }
+    public Map getPlayerStatus(){
+        return playerStatus;
+    }
     private int indexOf(int clientNum){
         for (int i = 0; i <numOfPlayer ; i++) {
             if (playerList[i].getClientNum() == clientNum){
@@ -101,22 +131,9 @@ public class GameRoom{
     }
 
     //TODO gameResult format
-    public String[] gameResult(){
-        EachConnection[] ranks = new EachConnection[numOfPlayer];
-        System.arraycopy(playerList,0,ranks,0,numOfPlayer);
+    public void gameResult(){
 
-        Arrays.sort(ranks,new descComparator());               // ranking on DESC
-
-        String[] result = new String[numOfPlayer];
-        for (int i = 0; i < numOfPlayer; i++) {
-            if (i==0){
-            result[i] = playerList[i].getClientName()+playerList[i].getScore()+"Winner";}
-            else {
-            result[i] = playerList[i].getClientName()+playerList[i].getScore();}
-        }
-        return result;
     }
-
 
     public int getTableId() {
         return tableId;
@@ -194,35 +211,5 @@ public class GameRoom{
 
     public void addOneTurn(){
         this.totalTurn += 1;
-    }
-
-    private int nameCompare(String s1, String s2){   // method using for customized comparison functions below
-        int bigger = 1, smaller = -1, equal = 0;
-        if (s1.compareTo(s2) >0)
-            return bigger;
-        else if (s1.compareTo(s2) <0)
-            return smaller;
-        return equal;
-    }
-
-    private int winRateCompare(double w1, double w2){ // method using for customized comparison functions below
-        int bigger = 1, smaller = -1, equal = 0;
-        if (w1 > w2)
-            return bigger;
-        else if (w1 < w2)
-            return smaller;
-        return equal;
-    }
-
-    class descComparator implements Comparator<EachConnection> {
-        int equal =0, reverse = -1;
-        // comparison function using for sort array in descending order
-        @Override
-        public int compare(EachConnection p1, EachConnection p2) {
-            int value = winRateCompare(p1.getScore(),p2.getClientNum());
-            if (value == equal)         // if win rate is equal, sort in alphabetical order
-                return nameCompare(p1.getClientName(),p2.getClientName());
-            return value*(reverse);     // reverse the value return from ascComparator and get desc one
-        }
     }
 }

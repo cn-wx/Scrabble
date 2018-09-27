@@ -58,7 +58,14 @@ public class TableController implements Initializable{
     private static TableController instance;
     private static Stage readyStage;
     public static ReadyController readyController;
-
+    private String playerName1 = "Empty";
+    private String playerName2 = "Empty";
+    private String playerName3 = "Empty";
+    private String playerName4 = "Empty";
+    private String playerScore1 = "0";
+    private String playerScore2 = "0";
+    private String playerScore3 = "0";
+    private String playerScore4 = "0";
     public TableController(){
         instance = this;
     }
@@ -93,19 +100,19 @@ public class TableController implements Initializable{
         //</editor-fold>
 
         //player name
-        player1Name.setText("Player 1");
-        player2Name.setText("Player 2");
-        player3Name.setText("Player 3");
-        player4Name.setText("Player 4");
+        player1Name.setText(playerName1);
+        player2Name.setText(playerName2);
+        player3Name.setText(playerName3);
+        player4Name.setText(playerName4);
 
         //player score
-        player1Score.setText("0");
-        player2Score.setText("0");
-        player3Score.setText("0");
-        player4Score.setText("0");
+        player1Score.setText(playerScore1);
+        player2Score.setText(playerScore2);
+        player3Score.setText(playerScore3);
+        player4Score.setText(playerScore4);
 
         //player ready
-        player1Ready.setVisible(true);
+        player1Ready.setVisible(false);
         player2Ready.setVisible(false);
         player3Ready.setVisible(false);
         player4Ready.setVisible(false);
@@ -116,7 +123,11 @@ public class TableController implements Initializable{
         player3Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
         player4Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
     }
+    public void showPlayer(String[] name,String[] status){
 
+        if (player1Name.equals("Empty")){
+        }
+    }
     @FXML
     public void showReadyStage() throws IOException {
 

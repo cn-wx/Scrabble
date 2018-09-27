@@ -54,6 +54,7 @@ public class ReadyController implements Initializable {
     @FXML
     private void ready(){
         TableController.getInstance().getReadyStage().close();
+        Game.ready();
         //TODO - send to server (playerAction = ready)
     }
 
