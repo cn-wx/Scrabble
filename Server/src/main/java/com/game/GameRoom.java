@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class GameRoom{
     // assuming there are up to 4 players
@@ -34,7 +35,23 @@ public class GameRoom{
     private Map<String,Integer> playerScore = new HashMap();
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
+        initialBoard();
         this.tableId = tableId;
+    }
+    public void initialGame(){
+        for (String key : playerStatus.keySet()) {
+                playerStatus.replace(key, "NotTurn");
+            }
+        String[] keys = playerStatus.keySet().toArray(new String[0]);
+        Random random = new Random();
+        String randomKey = keys[random.nextInt(keys.length)];
+        playerStatus.replace(randomKey,"Turn");
+    }
+    public void initialBoard(){
+        board = new String[400];
+        for (int i =0; i<400;i++){
+            board[i] = "0";
+        }
     }
     public void addCharacter(int index,String character){
         board[index] = character;
@@ -54,6 +71,7 @@ public class GameRoom{
             if (client.getClientNum() == clientNum){
                 playerList[numOfPlayer] = client;
                 playerStatus.put(client.getClientName(),"NotReady");
+                playerScore.put(client.getClientName(),0);
             }
         }
         this.numOfPlayer+=1;
@@ -62,6 +80,7 @@ public class GameRoom{
     public void deletePlayer(int clientNum,String name){
         int index = indexOf(clientNum);
         playerStatus.remove(name);
+        playerScore.remove(name);
         if (index != -1){
             playerList[index] = null;
             for (int x = 0; x < numOfPlayer ; x++) {
