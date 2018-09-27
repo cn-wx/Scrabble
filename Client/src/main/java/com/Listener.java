@@ -39,6 +39,7 @@ public class Listener extends Thread {
                         case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
                             UsernameController.getInstance().showHall();
+                            name = msg.getClientName();
                         }
                         else{
                             UsernameController.getInstance().duplicatedUsername();
@@ -80,7 +81,7 @@ public class Listener extends Thread {
                             Set<String> keys_player = msg.getPlayerList().keySet();
                             Iterator<String> iterator_player = keys_player.iterator();
                             TableController.getInstance().resetPlayerStatus();
-                            while (iterator_player.hasNext()) {
+                            while (iterator_player.hasNext()) {            
                                 String key_player = iterator_player.next();
                                 String playerStatus = msg.getPlayerList().get(key_player);
                                 TableController.getInstance().refreshPlayerStatus(key_player,playerStatus);
@@ -91,9 +92,27 @@ public class Listener extends Thread {
                         }
                         break;
                     case IN_GAME:
-
-
-                }
+                        if (msg.getPlayerAction() == PlayerAction.GAME_CONTENT) {
+                            Set<String> keys_player = msg.getPlayerList().keySet();
+                            Iterator<String> iterator_player = keys_player.iterator();
+                            while (iterator_player.hasNext()) {
+                                String key_player = iterator_player.next();
+                                if (msg.getPlayerList().get(key_player).equals("Turn")){
+                                    Game.turn = true;
+                                }
+                                else{
+                                    Game.turn = false;
+                                }
+                            }
+                            Set<String> keys_score = msg.getPlayerScore().keySet();
+                            Iterator<String> iterator_score = keys_score.iterator();
+                            while (iterator_score.hasNext()) {
+                                String key_score = iterator_score.next();
+                                }
+                            }
+                            msg.getBoard();
+                        break;
+                    }
                 /*StringTokenizer st = new StringTokenizer(msg, "|");
                 String operation = st.nextToken();
                 String msg = st.nextToken();

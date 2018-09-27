@@ -82,8 +82,7 @@ public class EachConnection implements Runnable {
                 table_information();
             }
             if (clientStatus == PlayerStatus.IN_ROOM)
-            {
-                setClientStatus(PlayerStatus.LEAVING);
+            { setClientStatus(PlayerStatus.LEAVING);
                 GameRoom game = getCurrentGame();
                 game.deletePlayer(clientNum,clientName);
                 table_information();
@@ -245,7 +244,6 @@ public class EachConnection implements Runnable {
    }
 
    private void ready() throws IOException{
-       Message toPlayers = new Message();
        int numReady= 0;
        GameRoom game = getCurrentGame();
        EachConnection[] players = game.getPlayerList();
@@ -261,13 +259,11 @@ public class EachConnection implements Runnable {
        }
        if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
            //TODO game status - all ready
+           Message toPlayers = new Message();
+           toPlayers.setPlayerStatus(PlayerStatus.IN_HALL);
            toPlayers.setGameStatus(GameStatus.ALL_READY);
-           setClientStatus(PlayerStatus.IN_GAME);
-           //TODO set all players status to IN_GAME
-           toPlayers.setPlayerStatus(PlayerStatus.IN_ROOM);
-           toPlayers.setPlayerAction(PlayerAction.READY);
            roombroadCast(players,toPlayers);
-           //sequenceDecision();
+           game_information();
        }
    }
     /*
