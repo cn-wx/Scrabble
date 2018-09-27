@@ -8,10 +8,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class GameRoom{
     // assuming there are up to 4 players
@@ -30,9 +27,11 @@ public class GameRoom{
     private int turnNum = 0;
     private int passNum = 0;
     private int totalTurn = 0;
+    private boolean gameStart = false;
     private Map<String,String> playerStatus = new HashMap();
     private String[] board;
     private Map<String,Integer> playerScore = new HashMap();
+
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
         initialBoard();
@@ -47,6 +46,7 @@ public class GameRoom{
         String randomKey = keys[random.nextInt(keys.length)];
         playerStatus.replace(randomKey,"Turn");
     }
+
     public void initialBoard(){
         board = new String[400];
         for (int i =0; i<400;i++){
@@ -104,6 +104,7 @@ public class GameRoom{
             }
         }
     }
+
     public Map getPlayerStatus(){
         return playerStatus;
     }
@@ -117,10 +118,10 @@ public class GameRoom{
     }
 
     public String votingResult(){
-        if (turnNum == 4 && votingNum == MAXIMUM_PLAYER_NUMBER){
+        if (turnNum == numOfPlayer && votingNum == MAXIMUM_PLAYER_NUMBER){
             setTurnNum(0);
             return "Accept";
-        }else if (turnNum == 4 && votingNum != MAXIMUM_PLAYER_NUMBER){
+        }else if (turnNum == numOfPlayer && votingNum != MAXIMUM_PLAYER_NUMBER){
             setTurnNum(0);
             return "Reject";
         }else{
@@ -128,17 +129,15 @@ public class GameRoom{
         }
     }
 
-    public String passResult(){
-        if (turnNum == 4 && passNum == MAXIMUM_PLAYER_NUMBER){
-            setTurnNum(0);
-            return "GameEnd";
-        }else if (turnNum == 4 && passNum != MAXIMUM_PLAYER_NUMBER){
-            setTurnNum(0);
-            return "GameContinue";
-        }else{
-            return "inProgress";
-        }
-    }
+//    public String passResult(){
+//        if (turnNum == numOfPlayer && passNum == MAXIMUM_PLAYER_NUMBER){
+//            setTurnNum(0);
+//            return "GameEnd";
+//        }else if (turnNum == numOfPlayer && passNum != MAXIMUM_PLAYER_NUMBER){
+//            setTurnNum(0);
+//            return "GameContinue";
+//        }
+//    }
 
 
 
@@ -150,10 +149,20 @@ public class GameRoom{
     }
 
     //TODO gameResult format
-    public void gameResult(){
 
+    public String[] gameResult(){
+        EachConnection[] ranks = new EachConnection[numOfPlayer];
+        System.arraycopy(playerList,0,ranks,0,numOfPlayer);
+
+        String[] result = new String[numOfPlayer];
+        for (int i = 0; i < numOfPlayer; i++) {
+//            if (i==0 ){
+//                result[i] = playerList[i].getClientName()+playerList[i].getScore()+"Winner";}
+//            else {
+            result[i] = playerList[i].getClientName()+playerList[i].getScore();
+        }
+        return result;
     }
-
     public int getTableId() {
         return tableId;
     }
@@ -215,8 +224,8 @@ public class GameRoom{
         return passNum;
     }
 
-    public void pass(int passNum) {
-        this.passNum += passNum;
+    public void pass() {
+        this.passNum += 1;
         this.turnNum += 1;
     }
 
@@ -230,5 +239,13 @@ public class GameRoom{
 
     public void addOneTurn(){
         this.totalTurn += 1;
+    }
+
+    public boolean isGameStart() {
+        return gameStart;
+    }
+
+    public void setGameStart(boolean gameStart) {
+        this.gameStart = gameStart;
     }
 }
