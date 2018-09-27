@@ -13,11 +13,12 @@ public class Message implements Serializable{
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
-    private Character gameCharacter;
-    private String gameLocation;
+    private String gameCharacter;
+    private int gameLocation;
     private String gameWord;
     private String clientName;
     private String feedBackMessage;
+    private boolean votingResult;
     private int clientNum;
     private int tableId;
     private int votingNum;
@@ -27,12 +28,18 @@ public class Message implements Serializable{
         return gameStatus;
     }
 
+    public void setVotingResult(boolean votingResult){
+        this.votingResult = votingResult;
+    }
+    public boolean getVotingResult(){
+        return votingResult;
+    }
     public void setPlayerScore(Map<String,Integer> playerScore){
         this.playerScore = playerScore;
     }
 
     public Map<String,Integer> getPlayerScore(){
-        return getPlayerScore();
+        return playerScore;
     }
 
     public void setBoard(String[] board) {
@@ -70,19 +77,19 @@ public class Message implements Serializable{
         this.playerAction = playerAction;
     }
 
-    public Character getGameCharacter() {
+    public String getGameCharacter() {
         return gameCharacter;
     }
 
-    public void setGameCharacter(Character gameCharacter) {
+    public void setGameCharacter(String gameCharacter) {
         this.gameCharacter = gameCharacter;
     }
 
-    public String getGameLocation() {
+    public int getGameLocation() {
         return gameLocation;
     }
 
-    public void setGameLocation(String gameLocation) {
+    public void setGameLocation(int gameLocation) {
         this.gameLocation = gameLocation;
     }
 

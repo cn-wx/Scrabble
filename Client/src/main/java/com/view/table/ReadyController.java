@@ -60,7 +60,7 @@ public class ReadyController implements Initializable {
 
     @FXML
     private void invite(){
-        //TODO - invite
+        Game.invite();
         if (toggle){
             inviteBtn.setText("CANCEL");
             vBox.setPadding(new Insets(30,0,0,0));

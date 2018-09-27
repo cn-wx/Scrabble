@@ -65,6 +65,7 @@ public class GameRoom{
     public Map<String,Integer> getPlayerScore(){
         return playerScore;
     }
+
     public void addPlayer(int clientNum){
         List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients){

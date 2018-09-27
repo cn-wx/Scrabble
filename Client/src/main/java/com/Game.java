@@ -135,6 +135,28 @@ public class Game extends Application {
         message.setPlayerAction(PlayerAction.INVITE);
         sendmsg(message);
     }
+    public static void pass(){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_GAME);
+        message.setPlayerAction(PlayerAction.PASS);
+        sendmsg(message);
+    }
+    public static void sendCharacter(int index,String character,String word){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_GAME);
+        message.setPlayerAction(PlayerAction.SET_CHARACTER);
+        message.setGameLocation(index);
+        message.setGameCharacter(character);
+        message.setGameWord(word);
+        sendmsg(message);
+    }
+    public static void voting(boolean votingResult){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_GAME);
+        message.setPlayerAction(PlayerAction.VOTING);
+        message.setVotingResult(votingResult);
+        sendmsg(message);
+    }
     public static void invitePlayer(String name){
         Message message = new Message();
         message.setPlayerStatus(PlayerStatus.IN_ROOM);
@@ -142,6 +164,7 @@ public class Game extends Application {
         message.setClientName(name);
         sendmsg(message);
     }
+
     public static void ready(){
         Message message = new Message();
         message.setPlayerStatus(PlayerStatus.IN_ROOM);
