@@ -19,7 +19,6 @@ public class Server {
     static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws Exception {
-
         try {
             if (args.length == 1) {
                 PORT = Integer.parseInt(args[0]);
@@ -32,7 +31,6 @@ public class Server {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         //1. Open the server
         ServerSocket listeningSocket = new ServerSocket(PORT);
         logger.info("The game server is running on port " + PORT);
@@ -40,7 +38,6 @@ public class Server {
 
         try {
             while (true) {
-
                 // 2. Wait and listen for new connections
                 Socket clientSocket = listeningSocket.accept();
                 clientNum++;

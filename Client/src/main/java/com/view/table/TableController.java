@@ -93,16 +93,18 @@ public class TableController implements Initializable{
         //</editor-fold>
 
         //player name
-        player1Name.setText("Player 1");
-        player2Name.setText("Player 2");
-        player3Name.setText("Player 3");
-        player4Name.setText("Player 4");
+        String emptyPlayerName = "Empty";
+        player1Name.setText(emptyPlayerName);
+        player2Name.setText(emptyPlayerName);
+        player3Name.setText(emptyPlayerName);
+        player4Name.setText(emptyPlayerName);
 
         //player score
-        player1Score.setText("0");
-        player2Score.setText("0");
-        player3Score.setText("0");
-        player4Score.setText("0");
+        String emptyPlayerScore = "0";
+        player1Score.setText(emptyPlayerScore);
+        player2Score.setText(emptyPlayerScore);
+        player3Score.setText(emptyPlayerScore);
+        player4Score.setText(emptyPlayerScore);
 
         //player ready
         player1Ready.setVisible(false);
@@ -110,13 +112,71 @@ public class TableController implements Initializable{
         player3Ready.setVisible(false);
         player4Ready.setVisible(false);
 
-        //player turn
-        player1Turn.setImage(new Image(getClass().getClassLoader().getResource("images/true.png").toString()));
+        //player turn                                              change src to "images/true.png" to show green light
+        player1Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
         player2Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
         player3Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
         player4Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
     }
 
+    public void resetPlayerStatus(){
+        Platform.runLater(()->{
+            String emptyPlayerName = "Empty";
+            player1Name.setText(emptyPlayerName);
+            player2Name.setText(emptyPlayerName);
+            player3Name.setText(emptyPlayerName);
+            player4Name.setText(emptyPlayerName);
+
+            String emptyPlayerScore = "0";
+            player1Score.setText(emptyPlayerScore);
+            player2Score.setText(emptyPlayerScore);
+            player3Score.setText(emptyPlayerScore);
+            player4Score.setText(emptyPlayerScore);
+
+            player1Ready.setVisible(false);
+            player2Ready.setVisible(false);
+            player3Ready.setVisible(false);
+            player4Ready.setVisible(false);
+        });
+
+    }
+
+    public void refreshPlayerStatus(String name,String status){
+        String playerName = name;
+        String readyStatus = status;
+        Platform.runLater(()->{
+
+            if (player1Name.getText().equals("Empty")){
+                player1Name.setText(playerName);
+                if (readyStatus.equals("NotReady")){
+                    player1Ready.setVisible(false);
+                }else if (readyStatus.equals("Ready")){
+                    player1Ready.setVisible(true);
+                }
+            }else if (player2Name.getText().equals("Empty")){
+                player2Name.setText(playerName);
+                if (readyStatus.equals("NotReady")){
+                    player2Ready.setVisible(false);
+                }else if (readyStatus.equals("Ready")){
+                    player2Ready.setVisible(true);
+                }
+            }else if (player3Name.getText().equals("Empty")){
+                player3Name.setText(playerName);
+                if (readyStatus.equals("NotReady")){
+                    player3Ready.setVisible(false);
+                }else if (readyStatus.equals("Ready")){
+                    player3Ready.setVisible(true);
+                }
+            }else if (player4Name.getText().equals("Empty")){
+                player4Name.setText(playerName);
+                if (readyStatus.equals("NotReady")){
+                    player4Ready.setVisible(false);
+                }else if (readyStatus.equals("Ready")){
+                    player4Ready.setVisible(true);
+                }
+            }
+        });
+    }
     @FXML
     public void showReadyStage() throws IOException {
 
@@ -166,7 +226,6 @@ public class TableController implements Initializable{
         if (result.get() == ButtonType.OK) {
             HallController.getStage().close();
             Game.getPrimaryStage().show();
-            //TODO - send to server (playerStatus = inHall)
             Game.returnToHall();
         }
     }

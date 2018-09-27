@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Message implements Serializable{
-
+    private String[] board;
+    private Map<String,Integer> playerScore;
     private Map<String,String> connectedClients;
     private Map<Integer,Integer> createdGames;
     private Map<String,String> playerList;
@@ -32,6 +33,22 @@ public class Message implements Serializable{
 
     public GameStatus getGameStatus() {
         return gameStatus;
+    }
+
+    public void setPlayerScore(Map<String,Integer> playerScore){
+        this.playerScore = playerScore;
+    }
+
+    public Map<String,Integer> getPlayerScore(){
+        return getPlayerScore();
+    }
+
+    public void setBoard(String[] board) {
+        this.board = board;
+    }
+
+    public String[] getBoard() {
+        return board;
     }
 
     public void setGameStatus(GameStatus gameStatus) {
