@@ -93,9 +93,7 @@ public class Game extends Application {
             LoginController.getInstance().loginFailure("Could not connect to server");
         }
     }
-//    public static void ready(){
-//        sendmsg("game|ready");
-//    }
+
 //    public static void sendcharacter(String character, String location, String word){
 //        sendmsg("setCharacter|" + character+" " + location +" "+word);
 //    }
@@ -130,9 +128,29 @@ public class Game extends Application {
         i = rand.nextInt(namepool.length);
         return(namepool[i]);
     }
+
+    public static void invite(){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_ROOM);
+        message.setPlayerAction(PlayerAction.INVITE);
+        sendmsg(message);
+    }
+    public static void invitePlayer(String name){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_ROOM);
+        message.setPlayerAction(PlayerAction.INVITE_PLAYER);
+        message.setClientName(name);
+        sendmsg(message);
+    }
+    public static void ready(){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_ROOM);
+        message.setPlayerAction(PlayerAction.READY);
+        sendmsg(message);
+    }
     public static void returnToHall(){
         Message message = new Message();
-        message.setPlayerStatus(PlayerStatus.IN_HALL);
+        message.setPlayerStatus(PlayerStatus.IN_ROOM);
         message.setPlayerAction(PlayerAction.RETURN_HALL);
         sendmsg(message);
     }
@@ -145,7 +163,7 @@ public class Game extends Application {
     public static void entryTable(int tableNumber){
         Message message = new Message();
         message.setPlayerStatus(PlayerStatus.IN_HALL);
-        message.setPlayerAction(PlayerAction.JOIN_GAME);
+        message.setPlayerAction(PlayerAction.JOIN_TABLE);
         message.setTableId(tableNumber);
         sendmsg(message);
     }

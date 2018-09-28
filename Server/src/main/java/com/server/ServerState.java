@@ -1,11 +1,15 @@
 package com.server;
 
+import com.game.GameRoom;
+import com.messages.PlayerStatus;
+import org.junit.Test;
+import org.junit.internal.matchers.Each;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.game.GameRoom;
 
 public class ServerState {
 
@@ -20,7 +24,7 @@ public class ServerState {
     private ServerState() {
         connectedClients = new ArrayList<>();
         createdGames = new ArrayList<>();
-        UserList.add("sss");
+        UserList.add("Empty");
     }
 
     public static synchronized ServerState getGameInstance() {
@@ -60,5 +64,27 @@ public class ServerState {
 
     public synchronized List<EachConnection> getConnectedClients() {
         return connectedClients;
+    }
+
+    public synchronized List<EachConnection>  clientForSearch(String name) {
+        List<EachConnection> clientForList = new ArrayList<>();
+        for (EachConnection client: getConnectedClients()){
+            if (client.getClientName().equals(name)){
+                clientForList.add(client);
+                return clientForList;
+            }
+        }
+        return clientForList;
+    }
+
+    public synchronized List<EachConnection>  clientAreFree() {
+        List<EachConnection> clientForList = new ArrayList<>();
+        for (EachConnection client: getConnectedClients()){
+            if (client.getClientStatus() == PlayerStatus.IN_HALL){
+                clientForList.add(client);
+                return clientForList;
+            }
+        }
+        return clientForList;
     }
 }
