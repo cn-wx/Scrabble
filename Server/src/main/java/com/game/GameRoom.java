@@ -8,10 +8,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class GameRoom{
     // assuming there are up to 4 players
@@ -21,32 +18,32 @@ public class GameRoom{
     private int numOfPlayer;
     private int tableId;
     private EachConnection[] playerList = new EachConnection[MAXIMUM_PLAYER_NUMBER];
-    private InputStream in;
-    private OutputStream out;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
     private int votingNum = 0;
     private int spaceRemain = 400;
     private int turnNum = 0;
     private int passNum = 0;
     private int totalTurn = 0;
+    private boolean gameStart = false;
     private Map<String,String> playerStatus = new HashMap();
     private String[] board;
     private Map<String,Integer> playerScore = new HashMap();
+
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
         initialBoard();
         this.tableId = tableId;
     }
+
+    // name + turn / not turn
     public void initialGame(){
+        addOneTurn();
         for (String key : playerStatus.keySet()) {
                 playerStatus.replace(key, "NotTurn");
             }
-        String[] keys = playerStatus.keySet().toArray(new String[0]);
-        Random random = new Random();
-        String randomKey = keys[random.nextInt(keys.length)];
-        playerStatus.replace(randomKey,"Turn");
+        playerStatus.replace(playerList[0].getClientName(),"Turn");
     }
+
+
     public void initialBoard(){
         board = new String[400];
         for (int i =0; i<400;i++){
@@ -65,6 +62,7 @@ public class GameRoom{
     public Map<String,Integer> getPlayerScore(){
         return playerScore;
     }
+
     public void addPlayer(int clientNum){
         List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients){
@@ -96,6 +94,12 @@ public class GameRoom{
         playerStatus.replace(name,"Ready");
     }
 
+    public void turnPass(){
+        int index = totalTurn % numOfPlayer - 1;
+        playerTurn(playerList[index].getClientName());
+    }
+
+    //TODO - quit ?
     public void playerTurn(String name) {
         playerStatus.replace(name,"Turn");
         for (String key : playerStatus.keySet()) {
@@ -104,6 +108,7 @@ public class GameRoom{
             }
         }
     }
+
     public Map getPlayerStatus(){
         return playerStatus;
     }
@@ -117,10 +122,10 @@ public class GameRoom{
     }
 
     public String votingResult(){
-        if (turnNum == 4 && votingNum == MAXIMUM_PLAYER_NUMBER){
+        if (turnNum == numOfPlayer && votingNum == MAXIMUM_PLAYER_NUMBER){
             setTurnNum(0);
             return "Accept";
-        }else if (turnNum == 4 && votingNum != MAXIMUM_PLAYER_NUMBER){
+        }else if (turnNum == numOfPlayer && votingNum != MAXIMUM_PLAYER_NUMBER){
             setTurnNum(0);
             return "Reject";
         }else{
@@ -128,19 +133,14 @@ public class GameRoom{
         }
     }
 
-    public String passResult(){
-        if (turnNum == 4 && passNum == MAXIMUM_PLAYER_NUMBER){
+    public String passResult() {
+        if (turnNum == numOfPlayer && passNum == MAXIMUM_PLAYER_NUMBER) {
             setTurnNum(0);
             return "GameEnd";
-        }else if (turnNum == 4 && passNum != MAXIMUM_PLAYER_NUMBER){
-            setTurnNum(0);
+        } else {
             return "GameContinue";
-        }else{
-            return "inProgress";
         }
     }
-
-
 
     public boolean gameEnd(){
         if (numOfPlayer < MINIMUM_PLAYER_NUMBER || spaceRemain == 0){
@@ -150,10 +150,24 @@ public class GameRoom{
     }
 
     //TODO gameResult format
-    public void gameResult(){
 
+    public Map<String,Integer> gameResult(){
+        EachConnection[] ranks = new EachConnection[numOfPlayer];
+        System.arraycopy(playerList,0,ranks,0,numOfPlayer);
+        Arrays.sort(ranks,new descComparator());               // ranking on DESC
+        int rank = 1;
+
+        Map<String,Integer> resultF = new HashMap<>();
+        for (int i = 0; i < numOfPlayer; i++) {
+            if (ranks[i].getScore() > ranks[i].getScore()) {
+                resultF.put(ranks[i].getClientName(), rank);
+                rank +=1;
+            }else {
+                resultF.put(ranks[i].getClientName(), rank);
+            }
+        }
+        return resultF;
     }
-
     public int getTableId() {
         return tableId;
     }
@@ -182,8 +196,8 @@ public class GameRoom{
         return spaceRemain;
     }
 
-    public void setSpaceRemain(int spaceRemain) {
-        this.spaceRemain = spaceRemain;
+    public void setSpaceRemain(int wordLength) {
+        this.spaceRemain -= wordLength;
     }
 
     public EachConnection[] getPlayerList() {
@@ -198,8 +212,8 @@ public class GameRoom{
         return votingNum;
     }
 
-    public void voting(int votingNum) {
-        this.votingNum += votingNum;
+    public void voting() {
+        this.votingNum += 1;
         this.turnNum += 1;
     }
 
@@ -215,8 +229,9 @@ public class GameRoom{
         return passNum;
     }
 
-    public void pass(int passNum) {
-        this.passNum += passNum;
+    public void pass() {
+        addOneTurn();
+        this.passNum += 1;
         this.turnNum += 1;
     }
 
@@ -231,4 +246,43 @@ public class GameRoom{
     public void addOneTurn(){
         this.totalTurn += 1;
     }
+
+    public boolean isGameStart() {
+        return gameStart;
+    }
+
+    public void setGameStart(boolean gameStart) {
+        this.gameStart = gameStart;
+    }
+
+    private int nameCompare(String s1, String s2){   // method using for customized comparison functions below
+        int bigger = 1, smaller = -1, equal = 0;
+        if (s1.compareTo(s2) >0)
+            return bigger;
+        else if (s1.compareTo(s2) <0)
+            return smaller;
+        return equal;
+    }
+
+    private int winRateCompare(double w1, double w2){ // method using for customized comparison functions below
+        int bigger = 1, smaller = -1, equal = 0;
+        if (w1 > w2)
+            return bigger;
+        else if (w1 < w2)
+            return smaller;
+        return equal;
+    }
+
+    class descComparator implements Comparator<EachConnection> {
+        int equal =0, reverse = -1;
+        // comparison function using for sort array in descending order
+        @Override
+        public int compare(EachConnection p1, EachConnection p2) {
+            int value = winRateCompare(p1.getScore(),p2.getClientNum());
+            if (value == equal)         // if win rate is equal, sort in alphabetical order
+                return nameCompare(p1.getClientName(),p2.getClientName());
+            return value*(reverse);     // reverse the value return from ascComparator and get desc one
+        }
+    }
+
 }
