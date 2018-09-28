@@ -24,8 +24,8 @@ public class Listener extends Thread {
 
     private static boolean nameValid;
     private ObjectInputStream ois;
-    public static String name;
-    public static Message msg = null;
+    private static String name;
+    private static Message msg = null;
     public Listener(ObjectInputStream ois) {
         this.ois = ois;
     }

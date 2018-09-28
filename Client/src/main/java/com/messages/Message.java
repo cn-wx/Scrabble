@@ -164,7 +164,6 @@ public class Message implements Serializable{
     public void setGameInfo(Map<String, String> gameInfo) {
         this.gameInfo = gameInfo;
     }
-
     public Map<String, Integer> getGameResult() {
         return gameResult;
     }
