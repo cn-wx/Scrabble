@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
  */
 public class HallController implements Initializable {
 
+    //<editor-fold defaultstate="collapsed" desc="// initialize for Game Hall (Do not open)" >
     @FXML private BorderPane borderPane;
     @FXML private TableView<Player> playerList;
     @FXML private TableColumn username;
@@ -50,7 +51,6 @@ public class HallController implements Initializable {
     @FXML private void handleButton10() throws IOException {enterTable(10);}
     @FXML private void handleButton11() throws IOException {enterTable(11);}
     @FXML private void handleButton12() throws IOException {enterTable(12);}
-
     @FXML public Label tableNum1;
     @FXML public Label tableNum2;
     @FXML public Label tableNum3;
@@ -63,10 +63,13 @@ public class HallController implements Initializable {
     @FXML public Label tableNum10;
     @FXML public Label tableNum11;
     @FXML public Label tableNum12;
+    //</editor-fold>
 
     public void refreshTableNum(int tableName, int playerInTable){
         String name = "tableNum"+tableName;
         String players = Integer.toString(playerInTable);
+        // <editor-fold defaultstate="collapsed" desc="//Refresh players in Table">
+
         Platform.runLater(()->{
             if (name.equals(tableNum1.getId())){
                 tableNum1.setText(players);
@@ -93,6 +96,7 @@ public class HallController implements Initializable {
             }else if (name.equals(tableNum12.getId())){
                 tableNum12.setText(players);
             }
+            // </editor-fold>
         });
     }
 

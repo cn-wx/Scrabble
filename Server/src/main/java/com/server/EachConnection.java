@@ -17,8 +17,8 @@ import java.util.Map;
 public class EachConnection implements Runnable {
 
     private int score;
+    private boolean myTurn;
     private Socket clientSocket;
-    private static Server server;
     private PlayerStatus clientStatus;
     private PlayerAction clientAction;
     private int clientNum;
@@ -29,8 +29,6 @@ public class EachConnection implements Runnable {
     private String clientName;
     private int tableId;
     static Logger logger = LoggerFactory.getLogger(EachConnection.class);
-    private Map<String, String> listToSend = new HashMap<String, String>();
-
 
 
     public EachConnection(Socket clientSocket, int clientNum) throws IOException{
@@ -207,7 +205,9 @@ public class EachConnection implements Runnable {
            }else if (gameRooms.get(i).getTableId()== tableId
                    && gameRooms.get(i).getNumOfPlayer() == gameRooms.get(i).getMaximumPlayerNumber()){
                return "InvalidTable";
-           }
+           }else if (gameRooms.get(i).getTableId()== tableId
+                   && gameRooms.get(i).isGameStart())
+               return "InvalidTable";
        }
        return "TableNotExist";
    }
@@ -257,7 +257,6 @@ public class EachConnection implements Runnable {
            }
        }
        if ( (numReady == game.getNumOfPlayer()) && (numReady >= GameRoom.getMinimumPlayerNumber()) ){
-           //TODO game status - all ready
            Message toPlayers = new Message();
            toPlayers.setPlayerStatus(PlayerStatus.IN_ROOM);
            toPlayers.setGameStatus(GameStatus.ALL_READY);
@@ -266,6 +265,7 @@ public class EachConnection implements Runnable {
            game_information();
        }
    }
+
    private synchronized void inGame(Message m){
        switch (m.getPlayerAction()){
            case SET_CHARACTER:
@@ -411,16 +411,6 @@ public class EachConnection implements Runnable {
         return clientAction;
     }
 
-    private Map<String,String> getClientLists(){
-        Map<String,String> clientLists = new HashMap<>();
-        List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
-        for (EachConnection client : clients){
-            clientLists.put(client.getClientName(),client.getClientStatus().toString());
-        }
-        return clientLists;
-    }
-
-
     private Map<String,String> getPlayerList (){
         Map<String,String> playerList = new HashMap<>();
         GameRoom game = getCurrentGame();
@@ -431,7 +421,6 @@ public class EachConnection implements Runnable {
         }
         return playerList;
     }
-
 
     private void updateGameList(){
         List<GameRoom> gameRooms = ServerState.getGameInstance().getConnectedGames();
@@ -452,5 +441,13 @@ public class EachConnection implements Runnable {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
     }
 }

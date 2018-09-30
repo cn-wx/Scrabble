@@ -25,6 +25,7 @@ public class Message implements Serializable{
     private String gameWord;
     private String clientName;
     private String feedBackMessage;
+    private boolean votingResult;
     private int clientNum;
     private int tableId;
     private int votingNum;
@@ -173,5 +174,13 @@ public class Message implements Serializable{
 
     public void setGameResult(Map<String,Integer> gameResult) {
         this.gameResult = gameResult;
+    }
+
+    public boolean getVotingResult() {
+        return votingResult;
+    }
+
+    public void setVotingResult(boolean votingResult) {
+        this.votingResult = votingResult;
     }
 }

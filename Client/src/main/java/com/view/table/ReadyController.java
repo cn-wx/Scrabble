@@ -20,12 +20,15 @@ import java.util.ResourceBundle;
  * @date 2018/9/23 23:45
  */
 public class ReadyController implements Initializable {
+    //<editor-fold defaultstate="collapsed" desc="//initialize for Ready Scene" >
     @FXML private BorderPane borderPane;
-    private double xOffset;
-    private double yOffset;
     @FXML public Label title;
     @FXML private VBox vBox;
     @FXML private Button inviteBtn;
+    //</editor-fold>
+    private double xOffset;
+    private double yOffset;
+
     private boolean toggle = true;
 
     @Override
@@ -55,7 +58,6 @@ public class ReadyController implements Initializable {
     private void ready(){
         TableController.getInstance().getReadyStage().close();
         Game.ready();
-        //TODO - send to server (playerAction = ready)
     }
 
     @FXML
