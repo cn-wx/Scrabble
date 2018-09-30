@@ -23,6 +23,9 @@ public class Message implements Serializable{
     private int tableId;
     private int votingNum;
     private static final long serialVersionUID = 1L;
+    private Map<String,String> gameInfo;
+    private String[] gameResult;
+
 
     public GameStatus getGameStatus() {
         return gameStatus;

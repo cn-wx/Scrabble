@@ -97,10 +97,12 @@ public class Listener extends Thread {
                         }
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
                             //TODO show game will start in 3 sec.
+                            Game.gameStart();
                         }
                         break;
                     case IN_GAME:
                         if (msg.getPlayerAction() == PlayerAction.GAME_CONTENT) {
+                            //TODO SHOW GAME INFROMATION, INCLUDE SCORE, TRUN, BOARD
                             Set<String> keys_player = msg.getPlayerList().keySet();
                             Iterator<String> iterator_player = keys_player.iterator();
                             while (iterator_player.hasNext()) {
