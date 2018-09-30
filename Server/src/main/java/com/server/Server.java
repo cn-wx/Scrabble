@@ -15,7 +15,7 @@ public class Server {
 
     /* Setting up variables */
     private static int clientNum = 0; // use to track client number
-    private static int PORT = 8887;
+    private static int PORT = 8888;
     static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws Exception {

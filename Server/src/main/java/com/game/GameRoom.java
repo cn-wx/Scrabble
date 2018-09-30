@@ -18,6 +18,10 @@ public class GameRoom {
     private int numOfPlayer;
     private int tableId;
     private EachConnection[] playerList = new EachConnection[MAXIMUM_PLAYER_NUMBER];
+    private InputStream in;
+    private OutputStream out;
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
     private int votingNum = 0;
     private int spaceRemain = 400;
     private int turnNum = 0;
@@ -27,7 +31,7 @@ public class GameRoom {
     private String[] board;
     private Map<String, Integer> playerScore = new HashMap();
     private boolean gameStart = false;
-  
+
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
         initialBoard();
@@ -101,12 +105,6 @@ public class GameRoom {
         playerTurn(playerList[index].getClientName());
     }
 
-    public void turnPass(){
-        int index = totalTurn % numOfPlayer - 1;
-        playerTurn(playerList[index].getClientName());
-    }
-
-    //TODO - quit ?
     public void playerTurn(String name) {
         playerStatus.replace(name, "Turn");
         for (String key : playerStatus.keySet()) {
@@ -153,6 +151,7 @@ public class GameRoom {
         }
     }
 
+
     public boolean gameEnd() {
         if (numOfPlayer < MINIMUM_PLAYER_NUMBER || spaceRemain == 0) {
             return true;
@@ -160,6 +159,7 @@ public class GameRoom {
         return false;
     }
 
+    //TODO gameResult format
     public Map<String, Integer> gameResult() {
         EachConnection[] ranks = new EachConnection[numOfPlayer];
         System.arraycopy(playerList, 0, ranks, 0, numOfPlayer);
@@ -176,6 +176,7 @@ public class GameRoom {
         }
         return resultF;
     }
+
     public int getTableId() {
         return tableId;
     }
@@ -204,8 +205,8 @@ public class GameRoom {
         return spaceRemain;
     }
 
-    public void setSpaceRemain(int wordLength) {
-        this.spaceRemain -= wordLength;
+    public void setSpaceRemain(int spaceRemain) {
+        this.spaceRemain = spaceRemain;
     }
 
     public EachConnection[] getPlayerList() {
@@ -281,7 +282,8 @@ public class GameRoom {
         return equal;
     }
 
-    class DescComparator implements Comparator<EachConnection> {
+
+    class descComparator implements Comparator<EachConnection> {
         int equal = 0, reverse = -1;
         // comparison function using for sort array in descending order
         @Override

@@ -24,8 +24,8 @@ public class Listener extends Thread {
 
     private static boolean nameValid;
     private ObjectInputStream ois;
-    private static String name;
-    private static Message msg = null;
+    public static String name;
+    public static Message msg = null;
     public Listener(ObjectInputStream ois) {
         this.ois = ois;
     }
@@ -36,7 +36,7 @@ public class Listener extends Thread {
             //Read messages from the server
             while((msg = (Message) ois.readObject()) != null) {
                 switch (msg.getPlayerStatus()){
-                        case SET_NAME:
+                    case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
                             UsernameController.getInstance().showHall();
                             name = msg.getClientName();
@@ -74,14 +74,14 @@ public class Listener extends Thread {
                         }
                         if (msg.getPlayerAction() == PlayerAction.INVITE){
                             //TODO SHOW WINDOWS, YOU HAS BEEN INVITED, YES OR NO
-                            }
+                        }
                         break;
                     case IN_ROOM:
                         if (msg.getPlayerAction() == PlayerAction.GAME_WAITING){
                             Set<String> keys_player = msg.getPlayerList().keySet();
                             Iterator<String> iterator_player = keys_player.iterator();
                             TableController.getInstance().resetPlayerStatus();
-                            while (iterator_player.hasNext()) {            
+                            while (iterator_player.hasNext()) {
                                 String key_player = iterator_player.next();
                                 String playerStatus = msg.getPlayerList().get(key_player);
                                 TableController.getInstance().refreshPlayerStatus(key_player,playerStatus);
@@ -118,11 +118,11 @@ public class Listener extends Thread {
                             Iterator<String> iterator_score = keys_score.iterator();
                             while (iterator_score.hasNext()) {
                                 String key_score = iterator_score.next();
-                                }
                             }
-                            msg.getBoard();
+                        }
+                        msg.getBoard();
                         break;
-                    }
+                }
             }
         } catch (SocketException e) {
             LoginController.getInstance().connectionLost("Connection lost!");
