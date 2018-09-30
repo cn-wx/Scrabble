@@ -1,6 +1,5 @@
 package com.game;
 
-import com.messages.Message;
 import com.server.EachConnection;
 import com.server.ServerState;
 

@@ -457,7 +457,9 @@ public class TableController implements Initializable{
     //</editor-fold>
     private static TableController instance;
     private static Stage readyStage;
+    private static Stage timerStage;
     public static ReadyController readyController;
+    public static TimerController timerController;
 
     public TableController(){
         instance = this;
@@ -469,6 +471,10 @@ public class TableController implements Initializable{
 
     public Stage getReadyStage(){
         return readyStage;
+    }
+
+    public Stage getTimerStage() {
+        return timerStage;
     }
 
     @Override
@@ -542,36 +548,87 @@ public class TableController implements Initializable{
         });
     }
 
+    public void refreshPlayerTurn(String name,Boolean turn){
+        Platform.runLater(()->{
+            if (player1Name.getText().equals(name)){
+                if (turn){
+                    player1Turn.setImage(new Image(getClass().getClassLoader().getResource("images/true.png").toString()));
+                }else {
+                    player1Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
+                }
+            } else if (player2Name.getText().equals(name)){
+                if (turn){
+                    player2Turn.setImage(new Image(getClass().getClassLoader().getResource("images/true.png").toString()));
+                }else {
+                    player2Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
+                }
+            } else if (player3Name.getText().equals(name)){
+                if (turn){
+                    player3Turn.setImage(new Image(getClass().getClassLoader().getResource("images/true.png").toString()));
+                }else {
+                    player3Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
+                }
+            } else if (player4Name.getText().equals(name)){
+                if (turn){
+                    player4Turn.setImage(new Image(getClass().getClassLoader().getResource("images/true.png").toString()));
+                }else {
+                    player4Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
+                }
+            }
+        });
+    }
+
+    public void setAllReady(){
+        Platform.runLater(()->{
+            player1Ready.setVisible(false);
+            player2Ready.setVisible(false);
+            player3Ready.setVisible(false);
+            player4Ready.setVisible(false);
+        });
+    }
+
+    public void refreshPlayerScore(String name,String score){
+        Platform.runLater(()->{
+            if (player1Name.getText().equals(name)){
+                player1Score.setText(score);
+            } else if (player2Name.getText().equals(name)){
+                player2Score.setText(score);
+            } else if (player3Name.getText().equals(name)){
+                player3Score.setText(score);
+            } else if (player4Name.getText().equals(name)){
+                player4Score.setText(score);
+            }
+        });
+    }
+
     public void refreshPlayerStatus(String name,String status){
-        String playerName = name;
-        String readyStatus = status;
         Platform.runLater(()->{
             if (player1Name.getText().equals("Empty")){
-                player1Name.setText(playerName);
-                if (readyStatus.equals("NotReady")){
+                player1Name.setText(name);
+                if (status.equals("NotReady")){
                     player1Ready.setVisible(false);
-                }else if (readyStatus.equals("Ready")){
+                }else if (status.equals("Ready")){
                     player1Ready.setVisible(true);
                 }
             }else if (player2Name.getText().equals("Empty")){
-                player2Name.setText(playerName);
-                if (readyStatus.equals("NotReady")){
+                player2Name.setText(name);
+                if (status.equals("NotReady")){
                     player2Ready.setVisible(false);
-                }else if (readyStatus.equals("Ready")){
+                }else if (status.equals("Ready")){
                     player2Ready.setVisible(true);
                 }
             }else if (player3Name.getText().equals("Empty")){
-                player3Name.setText(playerName);
-                if (readyStatus.equals("NotReady")){
+                player3Name.setText(name);
+                if (status.equals("NotReady")){
                     player3Ready.setVisible(false);
-                }else if (readyStatus.equals("Ready")){
+                }else if (status.equals("Ready")){
                     player3Ready.setVisible(true);
                 }
             }else if (player4Name.getText().equals("Empty")){
-                player4Name.setText(playerName);
-                if (readyStatus.equals("NotReady")){
+                player4Name.setText(name);
+                if (status.equals("NotReady")){
                     player4Ready.setVisible(false);
-                }else if (readyStatus.equals("Ready")){
+                }else if (status.equals("Ready")){
                     player4Ready.setVisible(true);
                 }
             }
@@ -579,7 +636,6 @@ public class TableController implements Initializable{
     }
     @FXML
     public void showReadyStage() throws IOException {
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/ready.fxml"));
         Parent window = (Pane) fxmlLoader.load();
         readyController = fxmlLoader.getController();
@@ -599,6 +655,28 @@ public class TableController implements Initializable{
             readyStage.setScene(scene);
             readyStage.show();
         });
+    }
+
+    public void gameStart() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/timer.fxml"));
+        Parent window = (Pane) fxmlLoader.load();
+        timerController = fxmlLoader.getController();
+        Scene timerScene = new Scene(window);
+        timerScene.setFill(null);
+        Platform.runLater(()->{
+            timerStage = new Stage();
+            timerStage.initOwner(title.getScene().getWindow());
+            timerStage.initStyle(StageStyle.UNDECORATED);
+            timerStage.initStyle(StageStyle.TRANSPARENT);
+            timerStage.initModality(Modality.APPLICATION_MODAL);
+            timerStage.setWidth(TableWidth);
+            timerStage.setHeight(TableHeight);
+            timerStage.setX(HallController.getStage().getX());
+            timerStage.setY(HallController.getStage().getY());
+            timerStage.setScene(timerScene);
+            timerStage.show();
+        });
+        this.setAllReady();
     }
 
     @FXML

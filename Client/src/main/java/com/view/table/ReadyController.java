@@ -79,7 +79,7 @@ public class ReadyController implements Initializable {
     @FXML private void confirm(){
         // TODO - invitePlayer()
         String invitePlayer = playerName.getText();
-//        Game.invitePlayer(invitePlayer);
+        Game.invitePlayer(invitePlayer);
     }
 
     @FXML
@@ -90,8 +90,7 @@ public class ReadyController implements Initializable {
             inviteList.setVisible(true);
             inviteBox.setVisible(true);
             toggle = false;
-            // TODO - invite()
-
+            Game.invite();
         }else if (!toggle){
             vBox.setPadding(new Insets(300,0,0,0));
             inviteBtn.setText("INVITE");
