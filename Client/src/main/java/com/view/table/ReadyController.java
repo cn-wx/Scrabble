@@ -2,13 +2,17 @@ package com.view.table;
 
 import com.Game;
 import com.view.hall.HallController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -28,8 +32,12 @@ public class ReadyController implements Initializable {
     //</editor-fold>
     private double xOffset;
     private double yOffset;
-
+    public static ObservableList<String> data = FXCollections.observableArrayList();
     private boolean toggle = true;
+    @FXML private ListView inviteList;
+    @FXML private Label playerName;
+    @FXML private HBox inviteBox;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -52,6 +60,14 @@ public class ReadyController implements Initializable {
             borderPane.setCursor(Cursor.DEFAULT);
         });
         //</editor-fold>
+
+        playerName.setText("");
+        data.addAll("A","B","C","D","E");
+        inviteList.setItems(data);
+        inviteList.setVisible(false);
+        inviteBox.setVisible(false);
+        playerName.textProperty().bind(inviteList.getSelectionModel().selectedItemProperty());
+//        inviteList.getSelectionModel().selectedItemProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> playerName.setText(newValue));
     }
 
     @FXML
@@ -60,22 +76,29 @@ public class ReadyController implements Initializable {
         Game.ready();
     }
 
+    @FXML private void confirm(){
+        // TODO - invitePlayer()
+        String invitePlayer = playerName.getText();
+//        Game.invitePlayer(invitePlayer);
+    }
+
     @FXML
     private void invite(){
-        //TODO - invite
         if (toggle){
             inviteBtn.setText("CANCEL");
-            vBox.setPadding(new Insets(30,0,0,0));
-
+            vBox.setPadding(new Insets(60,0,0,0));
+            inviteList.setVisible(true);
+            inviteBox.setVisible(true);
             toggle = false;
+            // TODO - invite()
+
         }else if (!toggle){
             vBox.setPadding(new Insets(300,0,0,0));
             inviteBtn.setText("INVITE");
-
-
+            inviteList.setVisible(false);
+            inviteBox.setVisible(false);
             toggle = true;
         }
-
     }
 
     // return to game hall

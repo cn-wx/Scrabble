@@ -216,7 +216,7 @@ public class HallController implements Initializable {
 
     @FXML
     public void help(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("HELP");
         alert.setHeaderText("Click a table to join the game");
         alert.setContentText("Please click a table on the left.");

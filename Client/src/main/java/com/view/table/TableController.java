@@ -603,7 +603,33 @@ public class TableController implements Initializable{
 
     @FXML
     private void confirm() {
+        String [] board = new String[40];
+        for (int i = 0;i<40;i++){
+            board[i] = "0";
+        }
+        board[23] = "T";
+        board[22] = "S";
+        board[21] = "O";
+        board[20] = "L";
+        board[19] = "K";
+        Game.horizontal(22,board);
         //TODO - send to server (playerStatus = inGame, playerAction = game_content)
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Direction Confirmation");
+            alert.setHeaderText("Please choose a direction:");
+            alert.setContentText("Choose your option.");
+            ButtonType buttonTypeH = new ButtonType("Horizontal");
+            ButtonType buttonTypeV = new ButtonType("Vertical");
+            ButtonType buttonTypeCancel = new ButtonType("Let me think", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeCancel);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == buttonTypeH){
+                // TODO - user chose "Horizontal"
+            } else if (result.get() == buttonTypeV) {
+                // TODO - user chose "Vertical"
+            }
+        });
     }
 
     @FXML
@@ -613,7 +639,15 @@ public class TableController implements Initializable{
 
     @FXML
     private void help(){
-        //TODO - UI - <help>
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Welcome to Scrabble");
+            alert.setHeaderText("About Scrabble:");
+            alert.setContentText(" ·The players turn by turn can place alphabet tiles on the grid to form a word.\r\n\r\n· The player who places the associated letter"
+                    + " will get points equal to the length of the word.\r\n\r\n· The word is considered valid if all the other players vote in favour of the word."
+                    + "\r\n\r\n ·The game ends when there is no place in the grid.");
+            alert.showAndWait();
+        });
     }
 
     // return to game hall
