@@ -27,18 +27,27 @@ public class Message implements Serializable{
     private int tableId;
     private int votingNum;
     private static final long serialVersionUID = 1L;
+    private Map<String,String> gameInfo;
+    private String[] gameResult;
+
 
 
     public GameStatus getGameStatus() {
         return gameStatus;
     }
 
+    public void setVotingResult(boolean votingResult){
+        this.votingResult = votingResult;
+    }
+    public boolean getVotingResult(){
+        return votingResult;
+    }
     public void setPlayerScore(Map<String,Integer> playerScore){
         this.playerScore = playerScore;
     }
 
     public Map<String,Integer> getPlayerScore(){
-        return getPlayerScore();
+        return playerScore;
     }
 
     public void setBoard(String[] board) {

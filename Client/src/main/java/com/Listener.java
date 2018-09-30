@@ -73,8 +73,8 @@ public class Listener extends Thread {
                             }
                         }
                         if (msg.getPlayerAction() == PlayerAction.INVITE){
-
-                        }
+                            //TODO SHOW WINDOWS, YOU HAS BEEN INVITED, YES OR NO
+                            }
                         break;
                     case IN_ROOM:
                         if (msg.getPlayerAction() == PlayerAction.GAME_WAITING){
@@ -87,12 +87,22 @@ public class Listener extends Thread {
                                 TableController.getInstance().refreshPlayerStatus(key_player,playerStatus);
                             }
                         }
+                        if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
+                            Set<String> keys_invitePlayer = msg.getPlayerList().keySet();
+                            Iterator<String> iterator_invitePlayer = keys_invitePlayer.iterator();
+                            while (iterator_invitePlayer.hasNext()) {
+                                String key_player = iterator_invitePlayer.next();
+                                //TODO SHOW the player in the invite list.
+                            }
+                        }
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
                             //TODO show game will start in 3 sec.
+                            Game.gameStart();
                         }
                         break;
                     case IN_GAME:
                         if (msg.getPlayerAction() == PlayerAction.GAME_CONTENT) {
+                            //TODO SHOW GAME INFROMATION, INCLUDE SCORE, TRUN, BOARD
                             Set<String> keys_player = msg.getPlayerList().keySet();
                             Iterator<String> iterator_player = keys_player.iterator();
                             while (iterator_player.hasNext()) {
@@ -113,32 +123,6 @@ public class Listener extends Thread {
                             msg.getBoard();
                         break;
                     }
-                /*StringTokenizer st = new StringTokenizer(msg, "|");
-                String operation = st.nextToken();
-                String msg = st.nextToken();
-                if (operation.equals("hallplayer")){
-                    //TODO referesh playerlist
-                }
-                if (operation.equals("halltable")){
-                    //TODO referesh table list
-                }
-                if (operation.equals("gameplay")){
-                    //TODO referesh game playerlist
-                }
-                if (operation.equals("voting")){
-                    Game.voting(msg);
-                }
-                if (operation.equals("gamestart")){
-                    //TODO show game start message
-                }
-                if (operation.equals("turn")){
-                    if (msg.equals("yourturn")){
-                        Game.turn = true;
-                    }
-                    else{
-                        Game.turn =false;
-                    }
-                }*/
             }
         } catch (SocketException e) {
             LoginController.getInstance().connectionLost("Connection lost!");
@@ -146,11 +130,4 @@ public class Listener extends Thread {
             e.printStackTrace();
         }
     }
-    public Message getMessage(){
-        return msg;
-    }
-    public static boolean checkNameValid(){
-        return nameValid;
-    }
-
 }

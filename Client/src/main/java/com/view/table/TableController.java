@@ -603,6 +603,16 @@ public class TableController implements Initializable{
 
     @FXML
     private void confirm() {
+        String [] board = new String[40];
+        for (int i = 0;i<40;i++){
+            board[i] = "0";
+        }
+        board[23] = "T";
+        board[22] = "S";
+        board[21] = "O";
+        board[20] = "L";
+        board[19] = "K";
+        Game.horizontal(22,board);
         //TODO - send to server (playerStatus = inGame, playerAction = game_content)
     }
 
