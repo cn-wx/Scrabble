@@ -36,7 +36,7 @@ public class EachConnection implements Runnable {
     public EachConnection(Socket clientSocket, int clientNum) throws IOException{
         this.clientSocket = clientSocket;
         this.clientNum = clientNum;
-
+        clientAction = PlayerAction.CONNECT;
         out = clientSocket.getOutputStream();
         oos = new ObjectOutputStream(out);
 
