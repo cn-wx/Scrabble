@@ -104,7 +104,7 @@ public class EachConnection implements Runnable {
                 inHall.add(inhall);
             }
         }
-        broadCast(clients,toALL);
+        broadCast(inHall,toALL);
     }
     private void table_information() {
         Message toPlayers = new Message();
