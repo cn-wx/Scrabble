@@ -77,6 +77,7 @@ public class ReadyController implements Initializable {
     }
 
     @FXML private void confirm(){
+        // TODO - invitePlayer()
         String invitePlayer = playerName.getText();
         Game.invitePlayer(invitePlayer);
     }

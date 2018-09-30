@@ -9,13 +9,10 @@ import com.view.login.LoginController;
 import com.view.table.TableController;
 import com.view.username.UsernameController;
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Tab;
 
 import java.io.*;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
 
@@ -109,8 +106,8 @@ public class Listener extends Thread {
                             }
                         }
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
-                            //TODO show game will start in 3 sec.
                             Game.gameStart();
+                            //show count down timer & start game
                             TableController.getInstance().gameStart();
                         }
                         break;

@@ -1,7 +1,6 @@
 package com.view.table;
 
 import com.Game;
-import com.model.exception.ExceptionDialog;
 import com.view.hall.HallController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -458,7 +457,9 @@ public class TableController implements Initializable{
     //</editor-fold>
     private static TableController instance;
     private static Stage readyStage;
+    private static Stage timerStage;
     public static ReadyController readyController;
+    public static TimerController timerController;
 
     public TableController(){
         instance = this;
@@ -470,6 +471,10 @@ public class TableController implements Initializable{
 
     public Stage getReadyStage(){
         return readyStage;
+    }
+
+    public Stage getTimerStage() {
+        return timerStage;
     }
 
     @Override
@@ -573,7 +578,7 @@ public class TableController implements Initializable{
         });
     }
 
-    public void gameStart(){
+    public void setAllReady(){
         Platform.runLater(()->{
             player1Ready.setVisible(false);
             player2Ready.setVisible(false);
@@ -631,7 +636,6 @@ public class TableController implements Initializable{
     }
     @FXML
     public void showReadyStage() throws IOException {
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/ready.fxml"));
         Parent window = (Pane) fxmlLoader.load();
         readyController = fxmlLoader.getController();
@@ -651,6 +655,28 @@ public class TableController implements Initializable{
             readyStage.setScene(scene);
             readyStage.show();
         });
+    }
+
+    public void gameStart() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/timer.fxml"));
+        Parent window = (Pane) fxmlLoader.load();
+        timerController = fxmlLoader.getController();
+        Scene timerScene = new Scene(window);
+        timerScene.setFill(null);
+        Platform.runLater(()->{
+            timerStage = new Stage();
+            timerStage.initOwner(title.getScene().getWindow());
+            timerStage.initStyle(StageStyle.UNDECORATED);
+            timerStage.initStyle(StageStyle.TRANSPARENT);
+            timerStage.initModality(Modality.APPLICATION_MODAL);
+            timerStage.setWidth(TableWidth);
+            timerStage.setHeight(TableHeight);
+            timerStage.setX(HallController.getStage().getX());
+            timerStage.setY(HallController.getStage().getY());
+            timerStage.setScene(timerScene);
+            timerStage.show();
+        });
+        this.setAllReady();
     }
 
     @FXML
