@@ -1,12 +1,6 @@
 package com.messages;
 
-import com.game.GameRoom;
-import com.server.EachConnection;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Message implements Serializable{

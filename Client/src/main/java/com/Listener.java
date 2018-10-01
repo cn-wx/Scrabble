@@ -9,16 +9,12 @@ import com.view.login.LoginController;
 import com.view.table.TableController;
 import com.view.username.UsernameController;
 import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.control.Tab;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.io.*;
-import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Listener extends Thread {
 
@@ -73,7 +69,19 @@ public class Listener extends Thread {
                             }
                         }
                         if (msg.getPlayerAction() == PlayerAction.INVITE){
-                            //TODO SHOW WINDOWS, YOU HAS BEEN INVITED, YES OR NO
+                            Platform.runLater(()->{
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("New Message");
+                                alert.setHeaderText("An invitation has been received.");
+                                alert.setContentText("Do you want to join the game?");
+                                ButtonType YES = new ButtonType("YES");
+                                ButtonType NO = new ButtonType("NO");
+                                alert.getButtonTypes().setAll(YES, NO);
+                                Optional<ButtonType> result = alert.showAndWait();
+                                if (result.get() == YES) {
+                                    //TODO - Join the game
+                                }
+                            });
                         }
                         break;
                     case IN_ROOM:
@@ -90,19 +98,22 @@ public class Listener extends Thread {
                         if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
                             Set<String> keys_invitePlayer = msg.getPlayerList().keySet();
                             Iterator<String> iterator_invitePlayer = keys_invitePlayer.iterator();
+                            List<String> inviteList = new ArrayList<>();
                             while (iterator_invitePlayer.hasNext()) {
                                 String key_player = iterator_invitePlayer.next();
+                                inviteList.add(key_player);
                                 //TODO SHOW the player in the invite list.
                             }
                         }
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
-                            //TODO show game will start in 3 sec.
                             Game.gameStart();
+                            //show count down timer & start game
+                            TableController.getInstance().gameStart();
                         }
                         break;
                     case IN_GAME:
                         if (msg.getPlayerAction() == PlayerAction.GAME_CONTENT) {
-                            //TODO SHOW GAME INFROMATION, INCLUDE SCORE, TRUN, BOARD
+                            // Player name & turn
                             Set<String> keys_player = msg.getPlayerList().keySet();
                             Iterator<String> iterator_player = keys_player.iterator();
                             while (iterator_player.hasNext()) {
@@ -113,11 +124,16 @@ public class Listener extends Thread {
                                 else{
                                     Game.turn = false;
                                 }
+                                TableController.getInstance().refreshPlayerTurn(key_player,Game.turn);
                             }
+
+                            // Player name & score
                             Set<String> keys_score = msg.getPlayerScore().keySet();
                             Iterator<String> iterator_score = keys_score.iterator();
                             while (iterator_score.hasNext()) {
                                 String key_score = iterator_score.next();
+                                String score = msg.getPlayerScore().get(key_score).toString();
+                                TableController.getInstance().refreshPlayerScore(key_score,score);
                             }
                         }
                         msg.getBoard();
