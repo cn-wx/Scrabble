@@ -68,8 +68,7 @@ public class HallController implements Initializable {
     public void refreshTableNum(int tableName, int playerInTable){
         String name = "tableNum"+tableName;
         String players = Integer.toString(playerInTable);
-        // <editor-fold defaultstate="collapsed" desc="//Refresh players in Table">
-
+        // <editor-fold defaultstate = "collapsed" desc = "Refresh players in Table" >
         Platform.runLater(()->{
             if (name.equals(tableNum1.getId())){
                 tableNum1.setText(players);
@@ -107,9 +106,9 @@ public class HallController implements Initializable {
     private double xOffset;
     private double yOffset;
     public Scene scene;
-    private static HallController instance;
     private static Stage stage;
     public static String tableNumber;
+    private static HallController instance;
 
     public HallController() {
         instance = this;
@@ -216,7 +215,7 @@ public class HallController implements Initializable {
 
     @FXML
     public void help(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("HELP");
         alert.setHeaderText("Click a table to join the game");
         alert.setContentText("Please click a table on the left.");

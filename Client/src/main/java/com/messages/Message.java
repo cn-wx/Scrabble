@@ -1,19 +1,15 @@
 package com.messages;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Message implements Serializable{
+
     private String[] board;
     private Map<String,Integer> playerScore;
     private Map<String,String> connectedClients;
     private Map<Integer,Integer> createdGames;
     private Map<String,String> playerList;
-    private Map<String,String> gameInfo;
-    private  Map<String,Integer> gameResult;
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
@@ -29,7 +25,6 @@ public class Message implements Serializable{
     private static final long serialVersionUID = 1L;
     private Map<String,String> gameInfo;
     private String[] gameResult;
-
 
 
     public GameStatus getGameStatus() {
@@ -57,7 +52,6 @@ public class Message implements Serializable{
     public String[] getBoard() {
         return board;
     }
-
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
     }
@@ -133,6 +127,22 @@ public class Message implements Serializable{
     public void setFeedBackMessage(String feedBackMessage) {
         this.feedBackMessage = feedBackMessage;
     }
+    /*
+    public List<GameRoom> getCreatedGames() {
+        return createdGames;
+    }
+
+    public void setCreatedGames(List<GameRoom> createdGames) {
+        this.createdGames = createdGames;
+    }*/
+
+    /*public EachConnection[] getPlayerList() {
+        return playerList;
+    }
+
+    public void setPlayerList(EachConnection[] playerList) {
+        this.playerList = playerList;
+    }*/
 
     public int getVotingNum() {
         return votingNum;
@@ -165,27 +175,5 @@ public class Message implements Serializable{
     public void setPlayerList(Map<String, String> playerList) {
         this.playerList = playerList;
     }
-
-    public Map<String, String> getGameInfo() {
-        return gameInfo;
-    }
-
-    public void setGameInfo(Map<String, String> gameInfo) {
-        this.gameInfo = gameInfo;
-    }
-    public Map<String, Integer> getGameResult() {
-        return gameResult;
-    }
-
-    public void setGameResult(Map<String, Integer> gameResult) {
-        this.gameResult = gameResult;
-    }
-
-    public boolean getVotingResult() {
-        return votingResult;
-    }
-
-    public void setVotingResult(boolean votingResult) {
-        this.votingResult = votingResult;
-    }
 }
+

@@ -1,7 +1,6 @@
 package com.server;
 import java.net.*;
 import java.io.*;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ public class Server {
 
     /* Setting up variables */
     private static int clientNum = 0; // use to track client number
-    private static int PORT = 8887;
+    private static int PORT = 8888;
     static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws Exception {

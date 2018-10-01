@@ -1,6 +1,5 @@
 package com;
 
-import com.model.exception.ExceptionDialog;
 import com.view.login.LoginController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -12,9 +11,7 @@ import javafx.stage.StageStyle;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
 import java.util.Random;
-import java.util.StringTokenizer;
 import com.messages.*;
 /**
  * @author xuwang < xuwang2@student.unimelb.edu.au >
