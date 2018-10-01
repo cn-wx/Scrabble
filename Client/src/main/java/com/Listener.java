@@ -44,7 +44,9 @@ public class Listener extends Thread {
                     case IN_HALL:
                         if (msg.getPlayerAction() == PlayerAction.JOIN_TABLE){
                             if ((msg.getFeedBackMessage()!=null) && (msg.getFeedBackMessage().equals("ValidTable"))) {
-                                Platform.runLater(()-> HallController.getInstance().showTable());
+                                Platform.runLater(()-> {
+                                    HallController.getInstance().showTable();
+                                });
                             }
                             else{
                                 HallController.getInstance().joinTableFailure();
@@ -143,11 +145,24 @@ public class Listener extends Thread {
                             TableController.getInstance().setBoard(msg.getBoard());
                         }
                         if(msg.getPlayerAction()== PlayerAction.VOTING){
-                            //show voting
-                            TableController.getInstance().voting();
+                            String name = msg.getClientName();
+                            String word = msg.getGameWord();
+                            TableController.getInstance().voting(name,word);
                         }
-
-
+                        if (msg.getGameStatus()==GameStatus.ENDING){
+                            String winner = msg.getGameResult();
+                            //show winner;
+                            Platform.runLater(()->{
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Game Result");
+                                alert.setHeaderText("Winner");
+                                alert.setContentText(winner);
+                                alert.showAndWait();
+                                HallController.getStage().close();
+                                Game.getPrimaryStage().show();
+                                Game.returnToHall();
+                            });
+                        }
                         break;
                 }
             }

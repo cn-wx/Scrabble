@@ -1552,10 +1552,12 @@ public class TableController implements Initializable{
                 }
             });
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Not your turn!");
-            alert.setContentText("Please wait for others...");
-            alert.showAndWait();
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Not your turn!");
+                alert.setContentText("Please wait for others...");
+                alert.showAndWait();
+            });
         }
     }
 
@@ -1571,21 +1573,23 @@ public class TableController implements Initializable{
         }
     }
 
-    public void voting(){
-        Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
-        alert1.setTitle("Voting Confirmation");
-        alert1.setHeaderText("Do you want to vote for this word ?");
-        alert1.setContentText("Do you really think this is a word ?");
-        ButtonType buttonyes = new ButtonType("Yes");
-        ButtonType buttonno = new ButtonType("No");
-        alert1.getButtonTypes().setAll(buttonyes,buttonno);
-        Optional<ButtonType> result1 = alert1.showAndWait();
-        if(result1.get()==buttonyes) {
-            Game.voting(true);
-        }
-        else if(result1.get()==buttonno) {
-            Game.voting(false);
-        }
+    public void voting(String name,String word){
+        Platform.runLater(()->{
+            Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert1.setTitle("Voting Confirmation");
+            alert1.setHeaderText("Do you want to vote for this word ?");
+            alert1.setContentText("Do you really think this is a word ?");
+            ButtonType buttonyes = new ButtonType("Yes");
+            ButtonType buttonno = new ButtonType("No");
+            alert1.getButtonTypes().setAll(buttonyes,buttonno);
+            Optional<ButtonType> result1 = alert1.showAndWait();
+            if(result1.get()==buttonyes) {
+                Game.voting(true,name,word);
+            }
+            else if(result1.get()==buttonno) {
+                Game.voting(false,name,word);
+            }
+        });
     }
 
     @FXML
