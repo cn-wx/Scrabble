@@ -6,5 +6,5 @@ package com.messages;
  * @date 2018/9/22 23:10
  */
 public enum GameStatus {
-    ALL_READY,NOT_ALLREADY
+    ALL_READY,NOT_ALLREADY,ENDING
 }

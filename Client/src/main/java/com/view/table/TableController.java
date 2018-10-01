@@ -1585,7 +1585,7 @@ public class TableController implements Initializable{
         }
     }
 
-    public void voting(){
+    public void voting(String name,String word){
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
@@ -1596,10 +1596,10 @@ public class TableController implements Initializable{
             alert1.getButtonTypes().setAll(buttonyes,buttonno);
             Optional<ButtonType> result1 = alert1.showAndWait();
             if(result1.get()==buttonyes) {
-                Game.voting(true);
+                Game.voting(true,name,word);
             }
             else if(result1.get()==buttonno) {
-                Game.voting(false);
+                Game.voting(false,name,word);
             }
         });
     }

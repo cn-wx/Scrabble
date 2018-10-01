@@ -149,10 +149,12 @@ public class Game extends Application {
         sendmsg(message);
     }
 
-    public static void voting(boolean votingResult) {
+    public static void voting(boolean votingResult,String name,String word) {
         Message message = new Message();
         message.setPlayerStatus(PlayerStatus.IN_GAME);
         message.setPlayerAction(PlayerAction.VOTING);
+        message.setClientName(name);
+        message.setGameWord(word);
         message.setVotingResult(votingResult);
         sendmsg(message);
     }
@@ -218,7 +220,7 @@ public class Game extends Application {
         int index = location;
         while ((index < 20) && (!board[index-20].equals("0"))){
             index = index - 20;
-            word = board[index] +word;
+            word = board[index] + word;
         }
         index = location;
         while ((index >379) && (!board[index+20].equals("0"))){
