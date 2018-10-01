@@ -31,6 +31,7 @@ public class GameRoom {
     private String[] board;
     private Map<String, Integer> playerScore = new HashMap();
     private boolean gameStart = false;
+    private ArrayList<String> sequenceList = new ArrayList<>();
 
     public GameRoom(int clientNum, int tableId) {
         addPlayer(clientNum);
@@ -49,7 +50,7 @@ public class GameRoom {
     public void initialBoard() {
         board = new String[400];
         for (int i = 0; i < 400; i++) {
-            board[i] = "0";
+            board[i] = "";
         }
     }
 
@@ -76,6 +77,8 @@ public class GameRoom {
                 playerList[numOfPlayer] = client;
                 playerStatus.put(client.getClientName(), "NotReady");
                 playerScore.put(client.getClientName(), 0);
+                // add name to the sequence list
+                sequenceList.add(client.getClientName());
             }
         }
         this.numOfPlayer += 1;
@@ -85,6 +88,8 @@ public class GameRoom {
         int index = indexOf(clientNum);
         playerStatus.remove(name);
         playerScore.remove(name);
+        // remove name from the sequence list
+        sequenceList.remove(name);
         if (index != -1) {
             playerList[index] = null;
             for (int x = 0; x < numOfPlayer; x++) {
@@ -100,9 +105,12 @@ public class GameRoom {
         playerStatus.replace(name, "Ready");
     }
 
-    public void turnPass() {
-        int index = totalTurn % numOfPlayer - 1;
-        playerTurn(playerList[index].getClientName());
+    public void turnPass(String name) {
+        int index = sequenceList.indexOf(name)+1;
+        if (index >numOfPlayer-1){
+            index = 0;
+        }
+        playerTurn(sequenceList.get(index));
     }
 
     public void playerTurn(String name) {
@@ -128,10 +136,10 @@ public class GameRoom {
     }
 
     public String votingResult() {
-        if (turnNum == 4 && votingNum == MAXIMUM_PLAYER_NUMBER) {
+        if (turnNum == 4 && votingNum == numOfPlayer) {
             setTurnNum(0);
             return "Accept";
-        } else if (turnNum == 4 && votingNum != MAXIMUM_PLAYER_NUMBER) {
+        } else if (turnNum == 4 && votingNum != numOfPlayer) {
             setTurnNum(0);
             return "Reject";
         } else {
@@ -140,17 +148,12 @@ public class GameRoom {
     }
 
     public String passResult() {
-        if (turnNum == 4 && passNum == MAXIMUM_PLAYER_NUMBER) {
-            setTurnNum(0);
+        if (passNum == numOfPlayer) {
             return "GameEnd";
-        } else if (turnNum == 4 && passNum != MAXIMUM_PLAYER_NUMBER) {
-            setTurnNum(0);
-            return "GameContinue";
         } else {
-            return "inProgress";
+            return "GameContinue";
         }
     }
-
 
     public boolean gameEnd() {
         if (numOfPlayer < MINIMUM_PLAYER_NUMBER || spaceRemain == 0) {
@@ -239,9 +242,7 @@ public class GameRoom {
     }
 
     public void pass() {
-        addOneTurn();
         this.passNum += 1;
-        this.turnNum += 1;
     }
 
     public int getTotalTurn() {
@@ -294,4 +295,10 @@ public class GameRoom {
             return value * (reverse);     // reverse the value return from ascComparator and get desc one
         }
     }
+
+    public void setPassNum(int passNum) {
+        this.passNum = passNum;
+    }
+
+
 }
