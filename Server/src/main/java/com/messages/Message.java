@@ -10,7 +10,7 @@ public class Message implements Serializable{
     private Map<Integer,Integer> createdGames;
     private Map<String,String> playerList;
     private Map<String,String> gameInfo;
-    private Map<String,Integer> gameResult;
+    private String gameResult;
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
@@ -33,6 +33,8 @@ public class Message implements Serializable{
     public void setPlayerScore(Map<String,Integer> playerScore){
         this.playerScore = playerScore;
     }
+
+
 
     public Map<String,Integer> getPlayerScore(){
         return getPlayerScore();
@@ -162,19 +164,19 @@ public class Message implements Serializable{
         this.gameInfo = gameInfo;
     }
 
-    public Map<String,Integer> getGameResult() {
-        return gameResult;
-    }
-
-    public void setGameResult(Map<String,Integer> gameResult) {
-        this.gameResult = gameResult;
-    }
-
     public boolean getVotingResult() {
         return votingResult;
     }
 
     public void setVotingResult(boolean votingResult) {
         this.votingResult = votingResult;
+    }
+
+    public String getGameResult() {
+        return gameResult;
+    }
+
+    public void setGameResult(String gameResult) {
+        this.gameResult = gameResult;
     }
 }

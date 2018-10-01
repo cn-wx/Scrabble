@@ -1,5 +1,6 @@
 package com.game;
 
+import com.messages.PlayerStatus;
 import com.server.EachConnection;
 import com.server.ServerState;
 
@@ -21,11 +22,12 @@ public class GameRoom {
     private OutputStream out;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-    private int votingNum = 0;
+    private int votingYes = 0;
     private int spaceRemain = 400;
-    private int turnNum = 0;
+    private int votingNum = 0;
     private int passNum = 0;
     private int totalTurn = 0;
+    private boolean ending = false;
     private Map<String, String> playerStatus = new HashMap();
     private String[] board;
     private Map<String, Integer> playerScore = new HashMap();
@@ -38,7 +40,7 @@ public class GameRoom {
         this.tableId = tableId;
     }
 
-    public void initialGame() {
+    public synchronized void initialGame() {
         addOneTurn();
         for (String key : playerStatus.keySet()) {
             playerStatus.replace(key, "NotTurn");
@@ -57,7 +59,7 @@ public class GameRoom {
         board[index] = character;
     }
 
-    public String[] getBoard() {
+    public synchronized String[] getBoard() {
         return board;
     }
 
@@ -65,11 +67,11 @@ public class GameRoom {
         playerScore.replace(name, score);
     }
 
-    public Map<String, Integer> getPlayerScore() {
+    public synchronized Map<String, Integer> getPlayerScore() {
         return playerScore;
     }
 
-    public void addPlayer(int clientNum) {
+    public synchronized void addPlayer(int clientNum) {
         List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
         for (EachConnection client : clients) {
             if (client.getClientNum() == clientNum) {
@@ -83,10 +85,15 @@ public class GameRoom {
         this.numOfPlayer += 1;
     }
 
-    public void deletePlayer(int clientNum, String name) {
+    public synchronized int getScore(String name) {
+        return playerScore.get(name);
+    }
+
+    public synchronized void deletePlayer(int clientNum, String name) {
         int index = indexOf(clientNum);
         playerStatus.remove(name);
         playerScore.remove(name);
+        this.numOfPlayer -= 1;
         // remove name from the sequence list
         sequenceList.remove(name);
         if (index != -1) {
@@ -97,22 +104,21 @@ public class GameRoom {
                 }
             }
         }
-        this.numOfPlayer -= 1;
     }
 
-    public void playerReady(String name) {
+    public synchronized void playerReady(String name) {
         playerStatus.replace(name, "Ready");
     }
 
-    public void turnPass(String name) {
-        int index = sequenceList.indexOf(name)+1;
-        if (index >numOfPlayer-1){
+    public synchronized void turnPass(String name) {
+        int index = sequenceList.indexOf(name) + 1;
+        if (index > numOfPlayer - 1) {
             index = 0;
         }
         playerTurn(sequenceList.get(index));
     }
 
-    public void playerTurn(String name) {
+    public synchronized void playerTurn(String name) {
         playerStatus.replace(name, "Turn");
         for (String key : playerStatus.keySet()) {
             if (!key.equals(name)) {
@@ -121,7 +127,7 @@ public class GameRoom {
         }
     }
 
-    public Map getPlayerStatus() {
+    public synchronized Map getPlayerStatus() {
         return playerStatus;
     }
 
@@ -134,19 +140,19 @@ public class GameRoom {
         return -1;
     }
 
-    public String votingResult() {
-        if (turnNum == 4 && votingNum == numOfPlayer) {
-            setTurnNum(0);
-            return "Accept";
-        } else if (turnNum == 4 && votingNum != numOfPlayer) {
-            setTurnNum(0);
-            return "Reject";
+    public synchronized String votingResult() {
+        if (votingNum == numOfPlayer) {
+            if (votingYes == numOfPlayer) {
+                return "Accept";
+            } else {
+                return "Reject";
+            }
         } else {
             return "inProgress";
         }
     }
 
-    public String passResult() {
+    public synchronized String passResult() {
         if (passNum == numOfPlayer) {
             return "GameEnd";
         } else {
@@ -154,36 +160,43 @@ public class GameRoom {
         }
     }
 
-    public boolean gameEnd() {
-        if (numOfPlayer < MINIMUM_PLAYER_NUMBER || spaceRemain == 0) {
+    public synchronized boolean gameEnd() {
+        if (numOfPlayer == 1 || spaceRemain == 0) {
             return true;
         }
         return false;
     }
 
     //TODO gameResult format
-    public Map<String, Integer> gameResult() {
-        EachConnection[] ranks = new EachConnection[numOfPlayer];
-        System.arraycopy(playerList, 0, ranks, 0, numOfPlayer);
-        Arrays.sort(ranks, new descComparator());               // ranking on DESC
-        int rank = 1;
-        Map<String, Integer> resultF = new HashMap<>();
-        for (int i = 0; i < numOfPlayer; i++) {
-            if (ranks[i].getScore() > ranks[i].getScore()) {
-                resultF.put(ranks[i].getClientName(), rank);
-                rank += 1;
-            } else {
-                resultF.put(ranks[i].getClientName(), rank);
+    public synchronized String gameResult() {
+        String winner = "";
+        int max = 0;
+        List<String> winnerList = new ArrayList<>();
+        for (String key : playerScore.keySet()) {
+            if (max < playerScore.get(key)) {
+                max = playerScore.get(key);
             }
         }
-        return resultF;
+        for (String key : playerScore.keySet()) {
+            if (playerScore.get(key) == max) {
+                winnerList.add(key);
+            }
+        }
+        for (int i = 0; i < winnerList.size(); i++) {
+            winner = winner + winnerList.get(i) + " & ";
+        }
+        winner = winner.substring(0,winner.length()-3);
+        ending = true;
+        return winner;
     }
+
+
 
     public int getTableId() {
         return tableId;
     }
 
-    public int getNumOfPlayer() {
+    public synchronized int getNumOfPlayer() {
         return numOfPlayer;
     }
 
@@ -207,8 +220,8 @@ public class GameRoom {
         return spaceRemain;
     }
 
-    public void setSpaceRemain(int spaceRemain) {
-        this.spaceRemain = spaceRemain;
+    public void SpaceRemain() {
+        this.spaceRemain -= 1;
     }
 
     public EachConnection[] getPlayerList() {
@@ -223,24 +236,14 @@ public class GameRoom {
         return votingNum;
     }
 
-    public void voting() {
+    public synchronized void voting(boolean voting) {
         this.votingNum += 1;
-        this.turnNum += 1;
+        if (voting){
+            this.votingYes+= 1;
+        }
     }
 
-    public int getTurnNum() {
-        return turnNum;
-    }
-
-    public void setTurnNum(int turnNum) {
-        this.turnNum = turnNum;
-    }
-
-    public int getPassNum() {
-        return passNum;
-    }
-
-    public void pass() {
+    public synchronized void pass() {
         this.passNum += 1;
     }
 
@@ -264,40 +267,31 @@ public class GameRoom {
         this.gameStart = gameStart;
     }
 
-    private int nameCompare(String s1, String s2) {   // method using for customized comparison functions below
-        int bigger = 1, smaller = -1, equal = 0;
-        if (s1.compareTo(s2) > 0)
-            return bigger;
-        else if (s1.compareTo(s2) < 0)
-            return smaller;
-        return equal;
+    public int getVotingYes() {
+        return votingYes;
     }
 
-    private int winRateCompare(double w1, double w2) { // method using for customized comparison functions below
-        int bigger = 1, smaller = -1, equal = 0;
-        if (w1 > w2)
-            return bigger;
-        else if (w1 < w2)
-            return smaller;
-        return equal;
+    public void setVotingYes(int votingYes) {
+        this.votingYes = votingYes;
     }
 
+    public void setVotingNum(int votingNum) {
+        this.votingNum = votingNum;
+    }
 
-    class descComparator implements Comparator<EachConnection> {
-        int equal = 0, reverse = -1;
-        // comparison function using for sort array in descending order
-        @Override
-        public int compare(EachConnection p1, EachConnection p2) {
-            int value = winRateCompare(p1.getScore(), p2.getClientNum());
-            if (value == equal)         // if win rate is equal, sort in alphabetical order
-                return nameCompare(p1.getClientName(), p2.getClientName());
-            return value * (reverse);     // reverse the value return from ascComparator and get desc one
-        }
+    public int getPassNum() {
+        return passNum;
     }
 
     public void setPassNum(int passNum) {
         this.passNum = passNum;
     }
 
+    public boolean isEnding() {
+        return ending;
+    }
 
+    public void setEnding(boolean ending) {
+        this.ending = ending;
+    }
 }
