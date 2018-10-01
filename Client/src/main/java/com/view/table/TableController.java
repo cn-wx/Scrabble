@@ -22,6 +22,7 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -463,6 +464,7 @@ public class TableController implements Initializable{
     private static Stage timerStage;
     public static ReadyController readyController;
     public static TimerController timerController;
+    private int index;
 
     public TableController(){
         instance = this;
@@ -535,8 +537,8 @@ public class TableController implements Initializable{
         this.setBoard(board);
     }
 
-
     public void setBoard(String[] board){
+        this.board = board;
         T0.setText(board[0]);
         T1.setText(board[1]);
         T2.setText(board[2]);
@@ -737,7 +739,7 @@ public class TableController implements Initializable{
         T197.setText(board[197]);
         T198.setText(board[198]);
         T199.setText(board[199]);
-        T200.setText(board[0]);
+        T200.setText(board[200]);
         T201.setText(board[201]);
         T202.setText(board[202]);
         T203.setText(board[203]);
@@ -937,8 +939,6 @@ public class TableController implements Initializable{
         T397.setText(board[397]);
         T398.setText(board[398]);
         T399.setText(board[399]);
-
-
     }
 
     public String[] getBoard(){
@@ -1346,10 +1346,9 @@ public class TableController implements Initializable{
         return gameBoard;
     }
 
-    public void compare(){
+    public boolean compare(){
         String[] newBoard = this.getBoard();
         int number = 0;
-        int index = 0;
         for (int i =0;i<400;i++){
             if (!newBoard[i].equals(board[i])) {
                 number++;
@@ -1357,9 +1356,13 @@ public class TableController implements Initializable{
             }
         }
         if (number != 1){
-            //TODO show error
+            setBoard(board);
+            return false;
+            //Clean board TODO show error
         }
         else{
+            board = getBoard();
+            return true;
             //TODO Game.sendCharacter(index,);
         }
     }
@@ -1517,16 +1520,6 @@ public class TableController implements Initializable{
 
     @FXML
     private void confirm() {
-        String [] board = new String[40];
-        for (int i = 0;i<40;i++){
-            board[i] = "0";
-        }
-        board[23] = "T";
-        board[22] = "S";
-        board[21] = "O";
-        board[20] = "L";
-        board[19] = "K";
-        Game.horizontal(22,board);
         //TODO - send to server (playerStatus = inGame, playerAction = game_content)
         Platform.runLater(()->{
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1538,9 +1531,19 @@ public class TableController implements Initializable{
             ButtonType buttonTypeCancel = new ButtonType("Let me think", ButtonBar.ButtonData.CANCEL_CLOSE);
             alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeCancel);
             Optional<ButtonType> result = alert.showAndWait();
+            String word =null;
             if (result.get() == buttonTypeH){
+                if (compare() == true){
+                    word = Game.horizontal(index,getBoard());
+                    Game.sendCharacter(index,getBoard()[index],word);
+                }
+
                 // TODO - user chose "Horizontal"
             } else if (result.get() == buttonTypeV) {
+                if (compare() == true){
+                    word = Game.horizontal(index,getBoard());
+                    Game.sendCharacter(index,getBoard()[index],word);
+                }
                 // TODO - user chose "Vertical"
             }
         });
@@ -1548,6 +1551,7 @@ public class TableController implements Initializable{
 
     @FXML
     private void pass(){
+        Game.pass();
         //TODO - send to server (playerStatus = inGame, playerAction = pass)
     }
 

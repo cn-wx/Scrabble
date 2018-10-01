@@ -18,7 +18,7 @@ import java.util.*;
 
 public class Listener extends Thread {
 
-    private static boolean nameValid;
+
     private ObjectInputStream ois;
     public static String name;
     public static Message msg = null;
@@ -68,7 +68,7 @@ public class Listener extends Thread {
                                 HallController.getInstance().refreshTableNum(tableKey, playerInTable);
                             }
                         }
-                        if (msg.getPlayerAction() == PlayerAction.INVITE){
+                        if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
                             Platform.runLater(()->{
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("New Message");
@@ -79,7 +79,7 @@ public class Listener extends Thread {
                                 alert.getButtonTypes().setAll(YES, NO);
                                 Optional<ButtonType> result = alert.showAndWait();
                                 if (result.get() == YES) {
-                                    //TODO - Join the game
+                                    Game.entryTable(msg.getTableId());
                                 }
                             });
                         }
@@ -95,14 +95,13 @@ public class Listener extends Thread {
                                 TableController.getInstance().refreshPlayerStatus(key_player,playerStatus);
                             }
                         }
-                        if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
+                        if (msg.getPlayerAction() == PlayerAction.INVITE){
                             Set<String> keys_invitePlayer = msg.getPlayerList().keySet();
                             Iterator<String> iterator_invitePlayer = keys_invitePlayer.iterator();
                             List<String> inviteList = new ArrayList<>();
                             while (iterator_invitePlayer.hasNext()) {
                                 String key_player = iterator_invitePlayer.next();
                                 inviteList.add(key_player);
-                                //TODO SHOW the player in the invite list.
                             }
                         }
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
@@ -126,7 +125,6 @@ public class Listener extends Thread {
                                 }
                                 TableController.getInstance().refreshPlayerTurn(key_player,Game.turn);
                             }
-
                             // Player name & score
                             Set<String> keys_score = msg.getPlayerScore().keySet();
                             Iterator<String> iterator_score = keys_score.iterator();
@@ -135,8 +133,13 @@ public class Listener extends Thread {
                                 String score = msg.getPlayerScore().get(key_score).toString();
                                 TableController.getInstance().refreshPlayerScore(key_score,score);
                             }
+                            TableController.getInstance().setBoard(msg.getBoard());
                         }
-                        msg.getBoard();
+                        if(msg.getPlayerAction()== PlayerAction.VOTING){
+                            //show voting
+                        }
+
+
                         break;
                 }
             }
