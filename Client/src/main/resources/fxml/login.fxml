@@ -57,12 +57,12 @@
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin></Button>
-            <TextField fx:id="hostAddressTF" prefHeight="40.0" prefWidth="246.0" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField stylesheets="@../css/global.css" fx:id="hostAddressTF" prefHeight="40.0" prefWidth="246.0" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="20.0" right="20.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="portNumberTF" prefHeight="40.0" prefWidth="246.0" text="8888" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <TextField stylesheets="@../css/global.css" fx:id="portNumberTF" prefHeight="40.0" prefWidth="246.0" text="8888" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
