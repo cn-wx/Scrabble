@@ -465,6 +465,7 @@ public class TableController implements Initializable{
     public static ReadyController readyController;
     public static TimerController timerController;
     private int index;
+    private static Boolean myTurn;
 
     public TableController(){
         instance = this;
@@ -1363,7 +1364,6 @@ public class TableController implements Initializable{
         else{
             board = getBoard();
             return true;
-            //TODO Game.sendCharacter(index,);
         }
     }
     public void resetPlayerStatus(){
@@ -1415,6 +1415,10 @@ public class TableController implements Initializable{
                 }
             }
         });
+    }
+
+    public void isPlayerTurn(Boolean turn){
+
     }
 
     public void setAllReady(){
@@ -1520,39 +1524,68 @@ public class TableController implements Initializable{
 
     @FXML
     private void confirm() {
-        //TODO - send to server (playerStatus = inGame, playerAction = game_content)
-        Platform.runLater(()->{
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Direction Confirmation");
-            alert.setHeaderText("Please choose a direction:");
-            alert.setContentText("Choose your option.");
-            ButtonType buttonTypeH = new ButtonType("Horizontal");
-            ButtonType buttonTypeV = new ButtonType("Vertical");
-            ButtonType buttonTypeCancel = new ButtonType("Let me think", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeCancel);
-            Optional<ButtonType> result = alert.showAndWait();
-            String word =null;
-            if (result.get() == buttonTypeH){
-                if (compare() == true){
-                    word = Game.horizontal(index,getBoard());
-                    Game.sendCharacter(index,getBoard()[index],word);
-                }
+        if (Game.turn){
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Direction Confirmation");
+                alert.setHeaderText("Please choose a direction:");
+                alert.setContentText("Choose your option.");
+                ButtonType buttonTypeH = new ButtonType("Horizontal");
+                ButtonType buttonTypeV = new ButtonType("Vertical");
+                ButtonType buttonTypeCancel = new ButtonType("Let me think", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeCancel);
+                Optional<ButtonType> result = alert.showAndWait();
+                String word =null;
+                if (result.get() == buttonTypeH){
+                    if (compare() == true){
+                        word = Game.horizontal(index,getBoard());
+                        Game.sendCharacter(index,getBoard()[index],word);
+                    }
 
-                // TODO - user chose "Horizontal"
-            } else if (result.get() == buttonTypeV) {
-                if (compare() == true){
-                    word = Game.horizontal(index,getBoard());
-                    Game.sendCharacter(index,getBoard()[index],word);
+                    // TODO - user chose "Horizontal"
+                } else if (result.get() == buttonTypeV) {
+                    if (compare() == true){
+                        word = Game.horizontal(index,getBoard());
+                        Game.sendCharacter(index,getBoard()[index],word);
+                    }
+                    // TODO - user chose "Vertical"
                 }
-                // TODO - user chose "Vertical"
-            }
-        });
+            });
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Not your turn!");
+            alert.setContentText("Please wait for others...");
+            alert.showAndWait();
+        }
     }
 
     @FXML
     private void pass(){
-        Game.pass();
-        //TODO - send to server (playerStatus = inGame, playerAction = pass)
+        if (Game.turn){
+            Game.pass();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Not your turn!");
+            alert.setContentText("Please wait for others...");
+            alert.showAndWait();
+        }
+    }
+
+    public void voting(){
+        Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+        alert1.setTitle("Voting Confirmation");
+        alert1.setHeaderText("Do you want to vote for this word ?");
+        alert1.setContentText("Do you really think this is a word ?");
+        ButtonType buttonyes = new ButtonType("Yes");
+        ButtonType buttonno = new ButtonType("No");
+        alert1.getButtonTypes().setAll(buttonyes,buttonno);
+        Optional<ButtonType> result1 = alert1.showAndWait();
+        if(result1.get()==buttonyes) {
+            Game.voting(true);
+        }
+        else if(result1.get()==buttonno) {
+            Game.voting(false);
+        }
     }
 
     @FXML

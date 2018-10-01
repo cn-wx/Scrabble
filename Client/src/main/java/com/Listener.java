@@ -117,13 +117,20 @@ public class Listener extends Thread {
                             Iterator<String> iterator_player = keys_player.iterator();
                             while (iterator_player.hasNext()) {
                                 String key_player = iterator_player.next();
+                                boolean turn = false;
                                 if (msg.getPlayerList().get(key_player).equals("Turn")){
-                                    Game.turn = true;
+                                    turn = true;
                                 }
                                 else{
-                                    Game.turn = false;
+                                    turn = false;
                                 }
-                                TableController.getInstance().refreshPlayerTurn(key_player,Game.turn);
+                                TableController.getInstance().refreshPlayerTurn(key_player,turn);
+                            }
+                            if (msg.getPlayerList().get(name).equals("Turn")){
+                                Game.turn = true;
+                            }
+                            else{
+                                Game.turn = false;
                             }
                             // Player name & score
                             Set<String> keys_score = msg.getPlayerScore().keySet();
@@ -137,6 +144,7 @@ public class Listener extends Thread {
                         }
                         if(msg.getPlayerAction()== PlayerAction.VOTING){
                             //show voting
+                            TableController.getInstance().voting();
                         }
 
 
