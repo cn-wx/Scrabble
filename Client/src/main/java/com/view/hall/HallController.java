@@ -170,7 +170,7 @@ public class HallController implements Initializable {
         Game.getPrimaryStage().setIconified(true);
     }
 
-    private void enterTable(int tableName) throws IOException{
+    public void enterTable(int tableName) throws IOException{
         tableNumber = "Table "+String.valueOf(tableName);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/table.fxml"));

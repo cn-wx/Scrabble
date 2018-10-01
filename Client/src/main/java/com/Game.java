@@ -56,7 +56,6 @@ public class Game extends Application {
     public static boolean turn = false;
     public static Listener m1;
 
-
     public void start(Stage primaryStage) throws Exception {
         primaryStageObj = primaryStage;
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/login.fxml"));
