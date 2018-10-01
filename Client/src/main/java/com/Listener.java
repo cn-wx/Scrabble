@@ -146,8 +146,6 @@ public class Listener extends Thread {
                             //show voting
                             TableController.getInstance().voting();
                         }
-
-
                         break;
                 }
             }

@@ -1358,8 +1358,13 @@ public class TableController implements Initializable{
         }
         if (number != 1){
             setBoard(board);
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Input Error!");
+                alert.setContentText("You can only enter one letter during your turn.");
+                alert.showAndWait();
+            });
             return false;
-            //Clean board TODO show error
         }
         else{
             board = getBoard();
@@ -1415,10 +1420,6 @@ public class TableController implements Initializable{
                 }
             }
         });
-    }
-
-    public void isPlayerTurn(Boolean turn){
-
     }
 
     public void setAllReady(){
@@ -1536,26 +1537,37 @@ public class TableController implements Initializable{
                 alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeCancel);
                 Optional<ButtonType> result = alert.showAndWait();
                 String word =null;
+                String inputRegex = "^[a-zA-Z]{1}$";
+                // user chose "Horizontal"
                 if (result.get() == buttonTypeH){
                     if (compare() == true){
-                        word = Game.horizontal(index,getBoard());
-                        Game.sendCharacter(index,getBoard()[index],word);
+                        if (!getBoard()[index].matches(inputRegex)){
+                            Platform.runLater(()->{
+                                Alert alert1 = new Alert(Alert.AlertType.ERROR);
+                                alert1.setHeaderText("Input Error!");
+                                alert1.setContentText("You can only enter one letter in the box.");
+                                alert1.showAndWait();
+                            });
+                        } else {
+                            word = Game.horizontal(index,getBoard());
+                            Game.sendCharacter(index,getBoard()[index].toUpperCase(),word);
+                        }
                     }
-
-                    // TODO - user chose "Horizontal"
+                    // user chose "Vertical"
                 } else if (result.get() == buttonTypeV) {
                     if (compare() == true){
                         word = Game.horizontal(index,getBoard());
                         Game.sendCharacter(index,getBoard()[index],word);
                     }
-                    // TODO - user chose "Vertical"
                 }
             });
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Not your turn!");
-            alert.setContentText("Please wait for others...");
-            alert.showAndWait();
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Not your turn!");
+                alert.setContentText("Please wait for others...");
+                alert.showAndWait();
+            });
         }
     }
 
@@ -1564,28 +1576,32 @@ public class TableController implements Initializable{
         if (Game.turn){
             Game.pass();
         }else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Not your turn!");
-            alert.setContentText("Please wait for others...");
-            alert.showAndWait();
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Not your turn!");
+                alert.setContentText("Please wait for others...");
+                alert.showAndWait();
+            });
         }
     }
 
     public void voting(){
-        Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
-        alert1.setTitle("Voting Confirmation");
-        alert1.setHeaderText("Do you want to vote for this word ?");
-        alert1.setContentText("Do you really think this is a word ?");
-        ButtonType buttonyes = new ButtonType("Yes");
-        ButtonType buttonno = new ButtonType("No");
-        alert1.getButtonTypes().setAll(buttonyes,buttonno);
-        Optional<ButtonType> result1 = alert1.showAndWait();
-        if(result1.get()==buttonyes) {
-            Game.voting(true);
-        }
-        else if(result1.get()==buttonno) {
-            Game.voting(false);
-        }
+        Platform.runLater(()->{
+            Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert1.setTitle("Voting Confirmation");
+            alert1.setHeaderText("Do you want to vote for this word ?");
+            alert1.setContentText("Do you really think this is a word ?");
+            ButtonType buttonyes = new ButtonType("Yes");
+            ButtonType buttonno = new ButtonType("No");
+            alert1.getButtonTypes().setAll(buttonyes,buttonno);
+            Optional<ButtonType> result1 = alert1.showAndWait();
+            if(result1.get()==buttonyes) {
+                Game.voting(true);
+            }
+            else if(result1.get()==buttonno) {
+                Game.voting(false);
+            }
+        });
     }
 
     @FXML
