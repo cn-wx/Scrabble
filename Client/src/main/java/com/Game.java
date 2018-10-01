@@ -218,12 +218,12 @@ public class Game extends Application {
     public static String vertical(int location,String[] board){
         String word = board[location];
         int index = location;
-        while ((index < 20) && (!board[index-20].equals(""))){
+        while (!(index < 20) && (!board[index-20].equals(""))){
             index = index - 20;
             word = board[index] + word;
         }
         index = location;
-        while ((index >379) && (!board[index+20].equals(""))){
+        while (!(index >379) && (!board[index+20].equals(""))){
             index = index + 20;
             word = board[index] +word;
         }
