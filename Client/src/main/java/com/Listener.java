@@ -166,10 +166,9 @@ public class Listener extends Thread {
                         break;
                 }
             }
-        } catch (SocketException e) {
-            LoginController.getInstance().connectionLost("Connection lost!");
         } catch (Exception e) {
             e.printStackTrace();
+            LoginController.getInstance().connectionLost("Connection lost!");
         }
     }
 }
