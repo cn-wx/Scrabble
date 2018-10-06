@@ -3,8 +3,6 @@ package com.view.table;
 import com.Game;
 import com.view.hall.HallController;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,7 +34,7 @@ import java.util.ResourceBundle;
  */
 public class TableController implements Initializable{
 
-    public static String[] board = new String[400];
+    private static String[] board = new String[400];
     public static final int TableWidth = 1100;
     public static final int TableHeight = 825;
     private double xOffset;
@@ -492,16 +490,13 @@ public class TableController implements Initializable{
     @FXML private TextField T398;
     @FXML private TextField T399;
     //</editor-fold>
+    private List<TextField> textFields = new ArrayList<>();
+    private List<Button> letterButtons = new ArrayList<>();
     private static TableController instance;
     private static Stage readyStage;
     private static Stage timerStage;
-    public static ReadyController readyController;
-    public static TimerController timerController;
-    private int index;
-    private static Boolean myTurn;
-    private List<TextField> textFields = new ArrayList<>();
-    private List<Button> letterButtons = new ArrayList<>();
     private static String chosenLetter;
+    private int index;
     private int letterIndex;
 
     public TableController(){
@@ -539,46 +534,15 @@ public class TableController implements Initializable{
             borderPane.setCursor(Cursor.DEFAULT);
         });
         //</editor-fold>
-        //<editor-fold defaultstate="collapsed" desc="//Initialize Player Status">
-
-        // player name
-        String emptyPlayerName = "Empty";
-        player1Name.setText(emptyPlayerName);
-        player2Name.setText(emptyPlayerName);
-        player3Name.setText(emptyPlayerName);
-        player4Name.setText(emptyPlayerName);
-
-        //player score
-        String emptyPlayerScore = "0";
-        player1Score.setText(emptyPlayerScore);
-        player2Score.setText(emptyPlayerScore);
-        player3Score.setText(emptyPlayerScore);
-        player4Score.setText(emptyPlayerScore);
-
-        //player ready
-        player1Ready.setVisible(false);
-        player2Ready.setVisible(false);
-        player3Ready.setVisible(false);
-        player4Ready.setVisible(false);
-
-        //player turn                                              change src to "images/true.png" to show green light
-        player1Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
-        player2Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
-        player3Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
-        player4Turn.setImage(new Image(getClass().getClassLoader().getResource("images/false.png").toString()));
-
-        //</editor-fold>
-
-        for (int i = 0; i<400; i ++){
-            board[i]="";
-        }
         stageOne();
-
+        resetPlayerStatus();
+        for (int i = 0; i<400; i ++){ board[i]=""; }
         setTextFields();
-        this.setBoard(board);
+        setBoard(board);
         setLetterButtons();
         for (int i = 0; i < 26 ; i++) {
             int finalI = i;
+            // When Letters Clicked
             letterButtons.get(i).addEventHandler(MouseEvent.MOUSE_CLICKED,(MouseEvent e)->{
                 chosenLetter=letterButtons.get(finalI).getText();
                 letterIndex = finalI;
@@ -592,6 +556,7 @@ public class TableController implements Initializable{
         }
         for (int i = 0; i < 400; i++) {
             int finalI = i;
+            //When Board Clicked
             textFields.get(i).addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e)->{
                 if (chosenLetter!=null){
                     textFields.get(finalI).setText(chosenLetter);
@@ -604,465 +569,10 @@ public class TableController implements Initializable{
         }
     }
 
-    private void stageOne(){
-        tileBox.setVisible(true);
-        confirmBtn.setVisible(false);
-        selectWordBtn.setVisible(false);
-        clearBtn.setVisible(false);
-        passBtn.setVisible(true);
-    }
-    private void stageTwo(){
-        tileBox.setVisible(false);
-        passBtn.setVisible(true);
-        selectWordBtn.setVisible(true);
-        confirmBtn.setVisible(true);
-        clearBtn.setVisible(true);
-    }
-
-    public void setLetterButtons(){
-        letterButtons.add(A);
-        letterButtons.add(B);
-        letterButtons.add(C);
-        letterButtons.add(D);
-        letterButtons.add(E);
-        letterButtons.add(F);
-        letterButtons.add(G);
-        letterButtons.add(H);
-        letterButtons.add(I);
-        letterButtons.add(J);
-        letterButtons.add(K);
-        letterButtons.add(L);
-        letterButtons.add(M);
-        letterButtons.add(N);
-        letterButtons.add(O);
-        letterButtons.add(P);
-        letterButtons.add(Q);
-        letterButtons.add(R);
-        letterButtons.add(S);
-        letterButtons.add(T);
-        letterButtons.add(U);
-        letterButtons.add(V);
-        letterButtons.add(W);
-        letterButtons.add(X);
-        letterButtons.add(Y);
-        letterButtons.add(Z);
-        for (int i = 0; i <26 ; i++) {
-            letterButtons.get(i).setStyle("-fx-background-color: rgb(196,218,212);-fx-hgap:5px;-fx-vgap: 5px;-fx-border-radius: 3px;-fx-border-color: gray;-fx-border-width: 4px;");
-        }
-    }
-
-    @FXML public void clearBtnAction(){
-        stageOne();
-        setBoard(board);
-    }
-
-
-    public void setTextFields(){
-        textFields.add(T0);
-        textFields.add(T1);
-        textFields.add(T2);
-        textFields.add(T3);
-        textFields.add(T4);
-        textFields.add(T5);
-        textFields.add(T6);
-        textFields.add(T7);
-        textFields.add(T8);
-        textFields.add(T9);
-        textFields.add(T10);
-        textFields.add(T11);
-        textFields.add(T12);
-        textFields.add(T13);
-        textFields.add(T14);
-        textFields.add(T15);
-        textFields.add(T16);
-        textFields.add(T17);
-        textFields.add(T18);
-        textFields.add(T19);
-        textFields.add(T20);
-        textFields.add(T21);
-        textFields.add(T22);
-        textFields.add(T23);
-        textFields.add(T24);
-        textFields.add(T25);
-        textFields.add(T26);
-        textFields.add(T27);
-        textFields.add(T28);
-        textFields.add(T29);
-        textFields.add(T30);
-        textFields.add(T31);
-        textFields.add(T32);
-        textFields.add(T33);
-        textFields.add(T34);
-        textFields.add(T35);
-        textFields.add(T36);
-        textFields.add(T37);
-        textFields.add(T38);
-        textFields.add(T39);
-        textFields.add(T40);
-        textFields.add(T41);
-        textFields.add(T42);
-        textFields.add(T43);
-        textFields.add(T44);
-        textFields.add(T45);
-        textFields.add(T46);
-        textFields.add(T47);
-        textFields.add(T48);
-        textFields.add(T49);
-        textFields.add(T50);
-        textFields.add(T51);
-        textFields.add(T52);
-        textFields.add(T53);
-        textFields.add(T54);
-        textFields.add(T55);
-        textFields.add(T56);
-        textFields.add(T57);
-        textFields.add(T58);
-        textFields.add(T59);
-        textFields.add(T60);
-        textFields.add(T61);
-        textFields.add(T62);
-        textFields.add(T63);
-        textFields.add(T64);
-        textFields.add(T65);
-        textFields.add(T66);
-        textFields.add(T67);
-        textFields.add(T68);
-        textFields.add(T69);
-        textFields.add(T70);
-        textFields.add(T71);
-        textFields.add(T72);
-        textFields.add(T73);
-        textFields.add(T74);
-        textFields.add(T75);
-        textFields.add(T76);
-        textFields.add(T77);
-        textFields.add(T78);
-        textFields.add(T79);
-        textFields.add(T80);
-        textFields.add(T81);
-        textFields.add(T82);
-        textFields.add(T83);
-        textFields.add(T84);
-        textFields.add(T85);
-        textFields.add(T86);
-        textFields.add(T87);
-        textFields.add(T88);
-        textFields.add(T89);
-        textFields.add(T90);
-        textFields.add(T91);
-        textFields.add(T92);
-        textFields.add(T93);
-        textFields.add(T94);
-        textFields.add(T95);
-        textFields.add(T96);
-        textFields.add(T97);
-        textFields.add(T98);
-        textFields.add(T99);
-        textFields.add(T100);
-        textFields.add(T101);
-        textFields.add(T102);
-        textFields.add(T103);
-        textFields.add(T104);
-        textFields.add(T105);
-        textFields.add(T106);
-        textFields.add(T107);
-        textFields.add(T108);
-        textFields.add(T109);
-        textFields.add(T110);
-        textFields.add(T111);
-        textFields.add(T112);
-        textFields.add(T113);
-        textFields.add(T114);
-        textFields.add(T115);
-        textFields.add(T116);
-        textFields.add(T117);
-        textFields.add(T118);
-        textFields.add(T119);
-        textFields.add(T120);
-        textFields.add(T121);
-        textFields.add(T122);
-        textFields.add(T123);
-        textFields.add(T124);
-        textFields.add(T125);
-        textFields.add(T126);
-        textFields.add(T127);
-        textFields.add(T128);
-        textFields.add(T129);
-        textFields.add(T130);
-        textFields.add(T131);
-        textFields.add(T132);
-        textFields.add(T133);
-        textFields.add(T134);
-        textFields.add(T135);
-        textFields.add(T136);
-        textFields.add(T137);
-        textFields.add(T138);
-        textFields.add(T139);
-        textFields.add(T140);
-        textFields.add(T141);
-        textFields.add(T142);
-        textFields.add(T143);
-        textFields.add(T144);
-        textFields.add(T145);
-        textFields.add(T146);
-        textFields.add(T147);
-        textFields.add(T148);
-        textFields.add(T149);
-        textFields.add(T150);
-        textFields.add(T151);
-        textFields.add(T152);
-        textFields.add(T153);
-        textFields.add(T154);
-        textFields.add(T155);
-        textFields.add(T156);
-        textFields.add(T157);
-        textFields.add(T158);
-        textFields.add(T159);
-        textFields.add(T160);
-        textFields.add(T161);
-        textFields.add(T162);
-        textFields.add(T163);
-        textFields.add(T164);
-        textFields.add(T165);
-        textFields.add(T166);
-        textFields.add(T167);
-        textFields.add(T168);
-        textFields.add(T169);
-        textFields.add(T170);
-        textFields.add(T171);
-        textFields.add(T172);
-        textFields.add(T173);
-        textFields.add(T174);
-        textFields.add(T175);
-        textFields.add(T176);
-        textFields.add(T177);
-        textFields.add(T178);
-        textFields.add(T179);
-        textFields.add(T180);
-        textFields.add(T181);
-        textFields.add(T182);
-        textFields.add(T183);
-        textFields.add(T184);
-        textFields.add(T185);
-        textFields.add(T186);
-        textFields.add(T187);
-        textFields.add(T188);
-        textFields.add(T189);
-        textFields.add(T190);
-        textFields.add(T191);
-        textFields.add(T192);
-        textFields.add(T193);
-        textFields.add(T194);
-        textFields.add(T195);
-        textFields.add(T196);
-        textFields.add(T197);
-        textFields.add(T198);
-        textFields.add(T199);
-        textFields.add(T200);
-        textFields.add(T201);
-        textFields.add(T202);
-        textFields.add(T203);
-        textFields.add(T204);
-        textFields.add(T205);
-        textFields.add(T206);
-        textFields.add(T207);
-        textFields.add(T208);
-        textFields.add(T209);
-        textFields.add(T210);
-        textFields.add(T211);
-        textFields.add(T212);
-        textFields.add(T213);
-        textFields.add(T214);
-        textFields.add(T215);
-        textFields.add(T216);
-        textFields.add(T217);
-        textFields.add(T218);
-        textFields.add(T219);
-        textFields.add(T220);
-        textFields.add(T221);
-        textFields.add(T222);
-        textFields.add(T223);
-        textFields.add(T224);
-        textFields.add(T225);
-        textFields.add(T226);
-        textFields.add(T227);
-        textFields.add(T228);
-        textFields.add(T229);
-        textFields.add(T230);
-        textFields.add(T231);
-        textFields.add(T232);
-        textFields.add(T233);
-        textFields.add(T234);
-        textFields.add(T235);
-        textFields.add(T236);
-        textFields.add(T237);
-        textFields.add(T238);
-        textFields.add(T239);
-        textFields.add(T240);
-        textFields.add(T241);
-        textFields.add(T242);
-        textFields.add(T243);
-        textFields.add(T244);
-        textFields.add(T245);
-        textFields.add(T246);
-        textFields.add(T247);
-        textFields.add(T248);
-        textFields.add(T249);
-        textFields.add(T250);
-        textFields.add(T251);
-        textFields.add(T252);
-        textFields.add(T253);
-        textFields.add(T254);
-        textFields.add(T255);
-        textFields.add(T256);
-        textFields.add(T257);
-        textFields.add(T258);
-        textFields.add(T259);
-        textFields.add(T260);
-        textFields.add(T261);
-        textFields.add(T262);
-        textFields.add(T263);
-        textFields.add(T264);
-        textFields.add(T265);
-        textFields.add(T266);
-        textFields.add(T267);
-        textFields.add(T268);
-        textFields.add(T269);
-        textFields.add(T270);
-        textFields.add(T271);
-        textFields.add(T272);
-        textFields.add(T273);
-        textFields.add(T274);
-        textFields.add(T275);
-        textFields.add(T276);
-        textFields.add(T277);
-        textFields.add(T278);
-        textFields.add(T279);
-        textFields.add(T280);
-        textFields.add(T281);
-        textFields.add(T282);
-        textFields.add(T283);
-        textFields.add(T284);
-        textFields.add(T285);
-        textFields.add(T286);
-        textFields.add(T287);
-        textFields.add(T288);
-        textFields.add(T289);
-        textFields.add(T290);
-        textFields.add(T291);
-        textFields.add(T292);
-        textFields.add(T293);
-        textFields.add(T294);
-        textFields.add(T295);
-        textFields.add(T296);
-        textFields.add(T297);
-        textFields.add(T298);
-        textFields.add(T299);
-        textFields.add(T300);
-        textFields.add(T301);
-        textFields.add(T302);
-        textFields.add(T303);
-        textFields.add(T304);
-        textFields.add(T305);
-        textFields.add(T306);
-        textFields.add(T307);
-        textFields.add(T308);
-        textFields.add(T309);
-        textFields.add(T310);
-        textFields.add(T311);
-        textFields.add(T312);
-        textFields.add(T313);
-        textFields.add(T314);
-        textFields.add(T315);
-        textFields.add(T316);
-        textFields.add(T317);
-        textFields.add(T318);
-        textFields.add(T319);
-        textFields.add(T320);
-        textFields.add(T321);
-        textFields.add(T322);
-        textFields.add(T323);
-        textFields.add(T324);
-        textFields.add(T325);
-        textFields.add(T326);
-        textFields.add(T327);
-        textFields.add(T328);
-        textFields.add(T329);
-        textFields.add(T330);
-        textFields.add(T331);
-        textFields.add(T332);
-        textFields.add(T333);
-        textFields.add(T334);
-        textFields.add(T335);
-        textFields.add(T336);
-        textFields.add(T337);
-        textFields.add(T338);
-        textFields.add(T339);
-        textFields.add(T340);
-        textFields.add(T341);
-        textFields.add(T342);
-        textFields.add(T343);
-        textFields.add(T344);
-        textFields.add(T345);
-        textFields.add(T346);
-        textFields.add(T347);
-        textFields.add(T348);
-        textFields.add(T349);
-        textFields.add(T350);
-        textFields.add(T351);
-        textFields.add(T352);
-        textFields.add(T353);
-        textFields.add(T354);
-        textFields.add(T355);
-        textFields.add(T356);
-        textFields.add(T357);
-        textFields.add(T358);
-        textFields.add(T359);
-        textFields.add(T360);
-        textFields.add(T361);
-        textFields.add(T362);
-        textFields.add(T363);
-        textFields.add(T364);
-        textFields.add(T365);
-        textFields.add(T366);
-        textFields.add(T367);
-        textFields.add(T368);
-        textFields.add(T369);
-        textFields.add(T370);
-        textFields.add(T371);
-        textFields.add(T372);
-        textFields.add(T373);
-        textFields.add(T374);
-        textFields.add(T375);
-        textFields.add(T376);
-        textFields.add(T377);
-        textFields.add(T378);
-        textFields.add(T379);
-        textFields.add(T380);
-        textFields.add(T381);
-        textFields.add(T382);
-        textFields.add(T383);
-        textFields.add(T384);
-        textFields.add(T385);
-        textFields.add(T386);
-        textFields.add(T387);
-        textFields.add(T388);
-        textFields.add(T389);
-        textFields.add(T390);
-        textFields.add(T391);
-        textFields.add(T392);
-        textFields.add(T393);
-        textFields.add(T394);
-        textFields.add(T395);
-        textFields.add(T396);
-        textFields.add(T397);
-        textFields.add(T398);
-        textFields.add(T399);
-    }
-
-    public void setEditable(int location){
+    private void setEditable(int location){
         textFields.get(location).getStyleClass().add("NotEditable");
     }
+
     public void setBoard(String[] board){
         for (int i =0;i<400;i++){
           textFields.get(i).setText(board[i]);
@@ -1072,7 +582,8 @@ public class TableController implements Initializable{
         }
         this.board = board;
     }
-    public String[] getBoard(){
+
+    private String[] getBoard(){
         String[] newBoard = new String [400];
         for (int i = 0; i<400; i++){
             newBoard[i] = textFields.get(i).getText();
@@ -1080,7 +591,7 @@ public class TableController implements Initializable{
         return newBoard;
     }
 
-    public boolean compare(){
+    private boolean compare(){
         String[] newBoard = this.getBoard();
         int number = 0;
         for (int i =0;i<400;i++){
@@ -1104,20 +615,18 @@ public class TableController implements Initializable{
             return true;
         }
     }
+
+    // Reset Players' Information including Name, Score and Ready Status
     public void resetPlayerStatus(){
         Platform.runLater(()->{
-            String emptyPlayerName = "Empty";
-            player1Name.setText(emptyPlayerName);
-            player2Name.setText(emptyPlayerName);
-            player3Name.setText(emptyPlayerName);
-            player4Name.setText(emptyPlayerName);
-
-            String emptyPlayerScore = "0";
-            player1Score.setText(emptyPlayerScore);
-            player2Score.setText(emptyPlayerScore);
-            player3Score.setText(emptyPlayerScore);
-            player4Score.setText(emptyPlayerScore);
-
+            player1Name.setText("Empty");
+            player2Name.setText("Empty");
+            player3Name.setText("Empty");
+            player4Name.setText("Empty");
+            player1Score.setText("0");
+            player2Score.setText("0");
+            player3Score.setText("0");
+            player4Score.setText("0");
             player1Ready.setVisible(false);
             player2Ready.setVisible(false);
             player3Ready.setVisible(false);
@@ -1125,6 +634,7 @@ public class TableController implements Initializable{
         });
     }
 
+    // Update Players' Turn
     public void refreshPlayerTurn(String name,Boolean turn){
         Platform.runLater(()->{
             if (player1Name.getText().equals(name)){
@@ -1155,7 +665,8 @@ public class TableController implements Initializable{
         });
     }
 
-    public void setAllReady(){
+    // All Players Ready -> set Ready status to invisible
+    private void setAllReady(){
         Platform.runLater(()->{
             player1Ready.setVisible(false);
             player2Ready.setVisible(false);
@@ -1164,6 +675,7 @@ public class TableController implements Initializable{
         });
     }
 
+    // Update Player's Score
     public void refreshPlayerScore(String name,String score){
         Platform.runLater(()->{
             if (player1Name.getText().equals(name)){
@@ -1178,6 +690,7 @@ public class TableController implements Initializable{
         });
     }
 
+    // Refresh Player's ready or not Status
     public void refreshPlayerStatus(String name,String status){
         Platform.runLater(()->{
             if (player1Name.getText().equals("Empty")){
@@ -1211,33 +724,32 @@ public class TableController implements Initializable{
             }
         });
     }
-    @FXML
-    public void showReadyStage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/ready.fxml"));
-        Parent window = (Pane) fxmlLoader.load();
-        readyController = fxmlLoader.getController();
-        readyController.title.setText(HallController.tableNumber);
-        Scene scene = new Scene(window);
-        scene.setFill(null);
 
-        Platform.runLater(() -> {
-            readyStage = new Stage();
-            // Paternity
-            readyStage.initOwner(title.getScene().getWindow());
-            readyStage.initStyle(StageStyle.UNDECORATED);
-            readyStage.initStyle(StageStyle.TRANSPARENT);
-            readyStage.initModality(Modality.APPLICATION_MODAL);
-            readyStage.setWidth(TableWidth);
-            readyStage.setHeight(TableHeight);
-            readyStage.setScene(scene);
-            readyStage.show();
+    // Voting Confirmation
+    public void voting(String name,String word){
+        Platform.runLater(()->{
+            Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert1.setTitle("Voting Confirmation");
+            alert1.setHeaderText("Do you want to vote for this word ?");
+            alert1.setContentText("Do you really think this is a word ?");
+            ButtonType buttonyes = new ButtonType("Yes");
+            ButtonType buttonno = new ButtonType("No");
+            alert1.getButtonTypes().setAll(buttonyes,buttonno);
+            Optional<ButtonType> result1 = alert1.showAndWait();
+            if(result1.get()==buttonyes) {
+                Game.voting(true,name,word);
+            }
+            else if(result1.get()==buttonno) {
+                Game.voting(false,name,word);
+            }
         });
     }
 
+    // Show 3 2 1 count down
     public void gameStart() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/timer.fxml"));
         Parent window = (Pane) fxmlLoader.load();
-        timerController = fxmlLoader.getController();
+        TimerController timerController = fxmlLoader.getController();
         Scene timerScene = new Scene(window);
         timerScene.setFill(null);
         Platform.runLater(()->{
@@ -1256,8 +768,166 @@ public class TableController implements Initializable{
         this.setAllReady();
     }
 
-    @FXML
-    private void confirm() {
+    // Initialize textFields
+    private void setTextFields(){
+        textFields.add(T0);textFields.add(T1);textFields.add(T2);textFields.add(T3);textFields.add(T4);
+        textFields.add(T5);textFields.add(T6);textFields.add(T7);textFields.add(T8);textFields.add(T9);
+        textFields.add(T10);textFields.add(T11);textFields.add(T12);textFields.add(T13);textFields.add(T14);
+        textFields.add(T15);textFields.add(T16);textFields.add(T17);textFields.add(T18);textFields.add(T19);
+        textFields.add(T20);textFields.add(T21);textFields.add(T22);textFields.add(T23);textFields.add(T24);
+        textFields.add(T25);textFields.add(T26);textFields.add(T27);textFields.add(T28);textFields.add(T29);
+        textFields.add(T30);textFields.add(T31);textFields.add(T32);textFields.add(T33);textFields.add(T34);
+        textFields.add(T35);textFields.add(T36);textFields.add(T37);textFields.add(T38);textFields.add(T39);
+        textFields.add(T40);textFields.add(T41);textFields.add(T42);textFields.add(T43);textFields.add(T44);
+        textFields.add(T45);textFields.add(T46);textFields.add(T47);textFields.add(T48);textFields.add(T49);
+        textFields.add(T50);textFields.add(T51);textFields.add(T52);textFields.add(T53);textFields.add(T54);
+        textFields.add(T55);textFields.add(T56);textFields.add(T57);textFields.add(T58);textFields.add(T59);
+        textFields.add(T60);textFields.add(T61);textFields.add(T62);textFields.add(T63);textFields.add(T64);
+        textFields.add(T65);textFields.add(T66);textFields.add(T67);textFields.add(T68);textFields.add(T69);
+        textFields.add(T70);textFields.add(T71);textFields.add(T72);textFields.add(T73);textFields.add(T74);
+        textFields.add(T75);textFields.add(T76);textFields.add(T77);textFields.add(T78);textFields.add(T79);
+        textFields.add(T80);textFields.add(T81);textFields.add(T82);textFields.add(T83);textFields.add(T84);
+        textFields.add(T85);textFields.add(T86);textFields.add(T87);textFields.add(T88);textFields.add(T89);
+        textFields.add(T90);textFields.add(T91);textFields.add(T92);textFields.add(T93);textFields.add(T94);
+        textFields.add(T95);textFields.add(T96);textFields.add(T97);textFields.add(T98);textFields.add(T99);
+        textFields.add(T100);textFields.add(T101);textFields.add(T102);textFields.add(T103);textFields.add(T104);
+        textFields.add(T105);textFields.add(T106);textFields.add(T107);textFields.add(T108);textFields.add(T109);
+        textFields.add(T110);textFields.add(T111);textFields.add(T112);textFields.add(T113);textFields.add(T114);
+        textFields.add(T115);textFields.add(T116);textFields.add(T117);textFields.add(T118);textFields.add(T119);
+        textFields.add(T120);textFields.add(T121);textFields.add(T122);textFields.add(T123);textFields.add(T124);
+        textFields.add(T125);textFields.add(T126);textFields.add(T127);textFields.add(T128);textFields.add(T129);
+        textFields.add(T130);textFields.add(T131);textFields.add(T132);textFields.add(T133);textFields.add(T134);
+        textFields.add(T135);textFields.add(T136);textFields.add(T137);textFields.add(T138);textFields.add(T139);
+        textFields.add(T140);textFields.add(T141);textFields.add(T142);textFields.add(T143);textFields.add(T144);
+        textFields.add(T145);textFields.add(T146);textFields.add(T147);textFields.add(T148);textFields.add(T149);
+        textFields.add(T150);textFields.add(T151);textFields.add(T152);textFields.add(T153);textFields.add(T154);
+        textFields.add(T155);textFields.add(T156);textFields.add(T157);textFields.add(T158);textFields.add(T159);
+        textFields.add(T160);textFields.add(T161);textFields.add(T162);textFields.add(T163);textFields.add(T164);
+        textFields.add(T165);textFields.add(T166);textFields.add(T167);textFields.add(T168);textFields.add(T169);
+        textFields.add(T170);textFields.add(T171);textFields.add(T172);textFields.add(T173);textFields.add(T174);
+        textFields.add(T175);textFields.add(T176);textFields.add(T177);textFields.add(T178);textFields.add(T179);
+        textFields.add(T180);textFields.add(T181);textFields.add(T182);textFields.add(T183);textFields.add(T184);
+        textFields.add(T185);textFields.add(T186);textFields.add(T187);textFields.add(T188);textFields.add(T189);
+        textFields.add(T190);textFields.add(T191);textFields.add(T192);textFields.add(T193);textFields.add(T194);
+        textFields.add(T195);textFields.add(T196);textFields.add(T197);textFields.add(T198);textFields.add(T199);
+        textFields.add(T200);textFields.add(T201);textFields.add(T202);textFields.add(T203);textFields.add(T204);
+        textFields.add(T205);textFields.add(T206);textFields.add(T207);textFields.add(T208);textFields.add(T209);
+        textFields.add(T210);textFields.add(T211);textFields.add(T212);textFields.add(T213);textFields.add(T214);
+        textFields.add(T215);textFields.add(T216);textFields.add(T217);textFields.add(T218);textFields.add(T219);
+        textFields.add(T220);textFields.add(T221);textFields.add(T222);textFields.add(T223);textFields.add(T224);
+        textFields.add(T225);textFields.add(T226);textFields.add(T227);textFields.add(T228);textFields.add(T229);
+        textFields.add(T230);textFields.add(T231);textFields.add(T232);textFields.add(T233);textFields.add(T234);
+        textFields.add(T235);textFields.add(T236);textFields.add(T237);textFields.add(T238);textFields.add(T239);
+        textFields.add(T240);textFields.add(T241);textFields.add(T242);textFields.add(T243);textFields.add(T244);
+        textFields.add(T245);textFields.add(T246);textFields.add(T247);textFields.add(T248);textFields.add(T249);
+        textFields.add(T250);textFields.add(T251);textFields.add(T252);textFields.add(T253);textFields.add(T254);
+        textFields.add(T255);textFields.add(T256);textFields.add(T257);textFields.add(T258);textFields.add(T259);
+        textFields.add(T260);textFields.add(T261);textFields.add(T262);textFields.add(T263);textFields.add(T264);
+        textFields.add(T265);textFields.add(T266);textFields.add(T267);textFields.add(T268);textFields.add(T269);
+        textFields.add(T270);textFields.add(T271);textFields.add(T272);textFields.add(T273);textFields.add(T274);
+        textFields.add(T275);textFields.add(T276);textFields.add(T277);textFields.add(T278);textFields.add(T279);
+        textFields.add(T280);textFields.add(T281);textFields.add(T282);textFields.add(T283);textFields.add(T284);
+        textFields.add(T285);textFields.add(T286);textFields.add(T287);textFields.add(T288);textFields.add(T289);
+        textFields.add(T290);textFields.add(T291);textFields.add(T292);textFields.add(T293);textFields.add(T294);
+        textFields.add(T295);textFields.add(T296);textFields.add(T297);textFields.add(T298);textFields.add(T299);
+        textFields.add(T300);textFields.add(T301);textFields.add(T302);textFields.add(T303);textFields.add(T304);
+        textFields.add(T305);textFields.add(T306);textFields.add(T307);textFields.add(T308);textFields.add(T309);
+        textFields.add(T310);textFields.add(T311);textFields.add(T312);textFields.add(T313);textFields.add(T314);
+        textFields.add(T315);textFields.add(T316);textFields.add(T317);textFields.add(T318);textFields.add(T319);
+        textFields.add(T320);textFields.add(T321);textFields.add(T322);textFields.add(T323);textFields.add(T324);
+        textFields.add(T325);textFields.add(T326);textFields.add(T327);textFields.add(T328);textFields.add(T329);
+        textFields.add(T330);textFields.add(T331);textFields.add(T332);textFields.add(T333);textFields.add(T334);
+        textFields.add(T335);textFields.add(T336);textFields.add(T337);textFields.add(T338);textFields.add(T339);
+        textFields.add(T340);textFields.add(T341);textFields.add(T342);textFields.add(T343);textFields.add(T344);
+        textFields.add(T345);textFields.add(T346);textFields.add(T347);textFields.add(T348);textFields.add(T349);
+        textFields.add(T350);textFields.add(T351);textFields.add(T352);textFields.add(T353);textFields.add(T354);
+        textFields.add(T355);textFields.add(T356);textFields.add(T357);textFields.add(T358);textFields.add(T359);
+        textFields.add(T360);textFields.add(T361);textFields.add(T362);textFields.add(T363);textFields.add(T364);
+        textFields.add(T365);textFields.add(T366);textFields.add(T367);textFields.add(T368);textFields.add(T369);
+        textFields.add(T370);textFields.add(T371);textFields.add(T372);textFields.add(T373);textFields.add(T374);
+        textFields.add(T375);textFields.add(T376);textFields.add(T377);textFields.add(T378);textFields.add(T379);
+        textFields.add(T380);textFields.add(T381);textFields.add(T382);textFields.add(T383);textFields.add(T384);
+        textFields.add(T385);textFields.add(T386);textFields.add(T387);textFields.add(T388);textFields.add(T389);
+        textFields.add(T390);textFields.add(T391);textFields.add(T392);textFields.add(T393);textFields.add(T394);
+        textFields.add(T395);textFields.add(T396);textFields.add(T397);textFields.add(T398);textFields.add(T399);
+    }
+
+    // Initialize letterButtons
+    private void setLetterButtons(){
+        letterButtons.add(A);
+        letterButtons.add(B);
+        letterButtons.add(C);
+        letterButtons.add(D);
+        letterButtons.add(E);
+        letterButtons.add(F);
+        letterButtons.add(G);
+        letterButtons.add(H);
+        letterButtons.add(I);
+        letterButtons.add(J);
+        letterButtons.add(K);
+        letterButtons.add(L);
+        letterButtons.add(M);
+        letterButtons.add(N);
+        letterButtons.add(O);
+        letterButtons.add(P);
+        letterButtons.add(Q);
+        letterButtons.add(R);
+        letterButtons.add(S);
+        letterButtons.add(T);
+        letterButtons.add(U);
+        letterButtons.add(V);
+        letterButtons.add(W);
+        letterButtons.add(X);
+        letterButtons.add(Y);
+        letterButtons.add(Z);
+        for (int i = 0; i <26 ; i++) {
+            letterButtons.get(i).setStyle("-fx-background-color: rgb(196,218,212);-fx-hgap:5px;-fx-vgap: 5px;-fx-border-radius: 3px;-fx-border-color: gray;-fx-border-width: 4px;");
+        }
+    }
+
+    // Stage 1 - put letter on the board
+    private void stageOne(){
+        tileBox.setVisible(true);
+        confirmBtn.setVisible(false);
+        selectWordBtn.setVisible(false);
+        clearBtn.setVisible(false);
+        passBtn.setVisible(true);
+    }
+
+    // Stage 2 - Clear or Select word
+    private void stageTwo(){
+        tileBox.setVisible(false);
+        passBtn.setVisible(true);
+        selectWordBtn.setVisible(true);
+        confirmBtn.setVisible(true);
+        clearBtn.setVisible(true);
+    }
+
+    // Show Ready Scene
+    @FXML public void showReadyStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/ready.fxml"));
+        Parent window = (Pane) fxmlLoader.load();
+        ReadyController readyController = fxmlLoader.getController();
+        readyController.title.setText(HallController.tableNumber);
+        Scene scene = new Scene(window);
+        scene.setFill(null);
+
+        Platform.runLater(() -> {
+            readyStage = new Stage();
+            // Paternity
+            readyStage.initOwner(title.getScene().getWindow());
+            readyStage.initStyle(StageStyle.UNDECORATED);
+            readyStage.initStyle(StageStyle.TRANSPARENT);
+            readyStage.initModality(Modality.APPLICATION_MODAL);
+            readyStage.setWidth(TableWidth);
+            readyStage.setHeight(TableHeight);
+            readyStage.setScene(scene);
+            readyStage.show();
+        });
+    }
+
+    // Confirm Button Action
+    @FXML private void confirm() {
         if (Game.turn){
             Platform.runLater(()->{
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1304,8 +974,14 @@ public class TableController implements Initializable{
         }
     }
 
-    @FXML
-    private void pass(){
+    // Clear Button Action
+    @FXML private void clearBtnAction(){
+        stageOne();
+        setBoard(board);
+    }
+
+    // Pass Button Action
+    @FXML private void pass(){
         if (Game.turn){
             Game.pass();
         }else {
@@ -1318,27 +994,8 @@ public class TableController implements Initializable{
         }
     }
 
-    public void voting(String name,String word){
-        Platform.runLater(()->{
-            Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
-            alert1.setTitle("Voting Confirmation");
-            alert1.setHeaderText("Do you want to vote for this word ?");
-            alert1.setContentText("Do you really think this is a word ?");
-            ButtonType buttonyes = new ButtonType("Yes");
-            ButtonType buttonno = new ButtonType("No");
-            alert1.getButtonTypes().setAll(buttonyes,buttonno);
-            Optional<ButtonType> result1 = alert1.showAndWait();
-            if(result1.get()==buttonyes) {
-                Game.voting(true,name,word);
-            }
-            else if(result1.get()==buttonno) {
-                Game.voting(false,name,word);
-            }
-        });
-    }
-
-    @FXML
-    private void help(){
+    // Help Button Action
+    @FXML private void help(){
         Platform.runLater(()->{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Welcome to Scrabble");
@@ -1351,7 +1008,7 @@ public class TableController implements Initializable{
     }
 
     // return to game hall
-    public void returnHall() {
+    @FXML private void returnHall() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Exit");
         alert.setHeaderText("Confirmation");
@@ -1365,7 +1022,7 @@ public class TableController implements Initializable{
     }
 
     // Minimize Window
-    public void minimizeWindow(){
+    @FXML private void minimizeWindow(){
         HallController.getStage().setIconified(true);
     }
 
