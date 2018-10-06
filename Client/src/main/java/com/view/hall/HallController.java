@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
  */
 public class HallController implements Initializable {
 
-    //<editor-fold defaultstate="collapsed" desc="// initialize for Game Hall (Do not open)" >
+    //<editor-fold defaultstate="collapsed" desc="// Initialize for Game Hall" >
     @FXML private BorderPane borderPane;
     @FXML private TableView<Player> playerList;
     @FXML private TableColumn username;
@@ -160,13 +160,13 @@ public class HallController implements Initializable {
     }
 
     // Terminates Application
-    public void closeSystem(){
+    @FXML private void closeSystem(){
         Platform.exit();
         System.exit(0);
     }
 
     // Minimize Window
-    public void minimizeWindow(){
+    @FXML private void minimizeWindow(){
         Game.getPrimaryStage().setIconified(true);
     }
 
