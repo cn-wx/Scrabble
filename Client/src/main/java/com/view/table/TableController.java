@@ -744,7 +744,7 @@ public class TableController implements Initializable{
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
-            alert1.setHeaderText("Voting Confirmation");
+            alert1.setHeaderText("Voting ");
             alert1.setContentText("Do you really think < "+word+" > is a word ?");
             for (int i=0; i<wordLocation.size();i++){
                 textFields.get(wordLocation.get(i)).getStyleClass().add("Voting");
@@ -964,13 +964,14 @@ public class TableController implements Initializable{
         if (Game.turn){
             Platform.runLater(()->{
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Direction Confirmation");
+                alert.setTitle("Word Confirmation");
                 alert.setHeaderText("Please choose a direction:");
                 alert.setContentText("Choose your option.");
                 ButtonType buttonTypeH = new ButtonType("Horizontal");
                 ButtonType buttonTypeV = new ButtonType("Vertical");
+                ButtonType buttonTypeS = new ButtonType("Single letter");
                 ButtonType buttonTypeCancel = new ButtonType("Let me think", ButtonBar.ButtonData.CANCEL_CLOSE);
-                alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeCancel);
+                alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeS, buttonTypeCancel);
                 Optional<ButtonType> result = alert.showAndWait();
                 String word =null;
                 String inputRegex = "^[a-zA-Z]{1}$";
@@ -995,6 +996,9 @@ public class TableController implements Initializable{
                         word = Game.vertical(index,getBoard());
                         Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word);
                     }
+                    // user chose "Single letter"
+                } else if (result.get() == buttonTypeS) {
+                    //TODO single letter
                 }
             });
         } else {
