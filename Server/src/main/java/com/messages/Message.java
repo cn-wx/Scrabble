@@ -1,6 +1,7 @@
 package com.messages;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Message implements Serializable{
@@ -15,6 +16,8 @@ public class Message implements Serializable{
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
     private String gameCharacter;
+    private int characterLocation;
+    private ArrayList<Integer> wordLocation;
     private int gameLocation;
     private String gameWord;
     private String clientName;
@@ -178,5 +181,21 @@ public class Message implements Serializable{
 
     public void setGameResult(String gameResult) {
         this.gameResult = gameResult;
+    }
+
+    public int getCharacterLocation() {
+        return characterLocation;
+    }
+
+    public void setCharacterLocation(int characterLocation) {
+        this.characterLocation = characterLocation;
+    }
+
+    public ArrayList<Integer> getWordLocation() {
+        return wordLocation;
+    }
+
+    public void setWordLocation(ArrayList<Integer> wordLocation) {
+        this.wordLocation = wordLocation;
     }
 }

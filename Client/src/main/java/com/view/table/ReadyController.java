@@ -2,12 +2,14 @@ package com.view.table;
 
 import com.Game;
 import com.view.hall.HallController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -16,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -37,6 +40,15 @@ public class ReadyController implements Initializable {
     @FXML private ListView inviteList;
     @FXML private Label playerName;
     @FXML private HBox inviteBox;
+    private static ReadyController instance;
+
+    public ReadyController() {
+        instance = this;
+    }
+
+    public static ReadyController getInstance() {
+        return instance;
+    }
 
 
     @Override
@@ -62,12 +74,18 @@ public class ReadyController implements Initializable {
         //</editor-fold>
 
         playerName.setText("");
-        data.addAll("A","B","C","D","E");
         inviteList.setItems(data);
         inviteList.setVisible(false);
         inviteBox.setVisible(false);
         playerName.textProperty().bind(inviteList.getSelectionModel().selectedItemProperty());
-//        inviteList.getSelectionModel().selectedItemProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> playerName.setText(newValue));
+    }
+
+    public void updateInviteList(List<String> playerInHall){
+        Platform.runLater(()->{
+            data.clear();
+            data.addAll(playerInHall);
+            inviteList.setItems(data);
+        });
     }
 
     @FXML
@@ -76,10 +94,28 @@ public class ReadyController implements Initializable {
         Game.ready();
     }
 
+    public void invitationRejected(String feedbackMsg){
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Invitation Rejected");
+            alert.setHeaderText("Invitation rejected!");
+            alert.setContentText(feedbackMsg);
+            alert.showAndWait();
+            Game.invite();
+        });
+    }
+
     @FXML private void confirm(){
-        // TODO - invitePlayer()
         String invitePlayer = playerName.getText();
         Game.invitePlayer(invitePlayer);
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText("The invitation to <"+invitePlayer+"> has been send successfully!");
+            alert.setContentText("Waiting for reply...");
+            alert.showAndWait();
+            Game.invite();
+        });
     }
 
     @FXML

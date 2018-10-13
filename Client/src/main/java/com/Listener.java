@@ -6,6 +6,7 @@ import com.messages.PlayerAction;
 import com.model.player.Player;
 import com.view.hall.HallController;
 import com.view.login.LoginController;
+import com.view.table.ReadyController;
 import com.view.table.TableController;
 import com.view.username.UsernameController;
 import javafx.application.Platform;
@@ -71,19 +72,7 @@ public class Listener extends Thread {
                             }
                         }
                         if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
-                            Platform.runLater(()->{
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                                alert.setTitle("New Message");
-                                alert.setHeaderText("An invitation has been received.");
-                                alert.setContentText("Do you want to join the game?");
-                                ButtonType YES = new ButtonType("YES");
-                                ButtonType NO = new ButtonType("NO");
-                                alert.getButtonTypes().setAll(YES, NO);
-                                Optional<ButtonType> result = alert.showAndWait();
-                                if (result.get() == YES) {
-                                    Game.entryTable(msg.getTableId());
-                                }
-                            });
+                            HallController.getInstance().beInvited(msg.getTableId(),msg.getClientName());
                         }
                         break;
                     case IN_ROOM:
@@ -105,7 +94,13 @@ public class Listener extends Thread {
                                 String key_player = iterator_invitePlayer.next();
                                 inviteList.add(key_player);
                             }
+                            ReadyController.getInstance().updateInviteList(inviteList);
                         }
+                        if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
+                            String feedbackMsg = msg.getFeedBackMessage();
+                            ReadyController.getInstance().invitationRejected(feedbackMsg);
+                        }
+
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
                             Game.gameStart();
                             //show count down timer & start game

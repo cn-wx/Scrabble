@@ -201,6 +201,16 @@ public class Game extends Application {
         message.setGameStatus(GameStatus.ALL_READY);
         sendmsg(message);
     }
+
+    //TODO
+    public static void inviteReject(){
+        Message message = new Message();
+//        message.setClientName();
+        message.setPlayerStatus(PlayerStatus.IN_ROOM);
+        message.setPlayerAction(PlayerAction.INVITE_REJECT);
+        sendmsg(message);
+    }
+
     public static String horizontal(int location,String[] board){
         String word = board[location];
         int index = location;

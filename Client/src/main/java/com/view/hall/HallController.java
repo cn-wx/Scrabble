@@ -12,13 +12,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -63,6 +63,7 @@ public class HallController implements Initializable {
     @FXML public Label tableNum10;
     @FXML public Label tableNum11;
     @FXML public Label tableNum12;
+    @FXML public VBox inviteList;
     //</editor-fold>
 
     public void refreshTableNum(int tableName, int playerInTable){
@@ -157,12 +158,54 @@ public class HallController implements Initializable {
 
         username.setCellValueFactory(new PropertyValueFactory<>("username"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
     }
 
     // Terminates Application
     @FXML private void closeSystem(){
         Platform.exit();
         System.exit(0);
+    }
+
+    public void beInvited(int tableId,String inviter){
+        Platform.runLater(()->{
+            Button acceptBtn = new Button("Accept");
+            Button rejectBtn = new Button("Reject");
+            Label inviteName = new Label(inviter);
+            inviteName.setStyle("-fx-font-size: 16px;");
+            HBox hBox = new HBox();
+            hBox.setSpacing(10);
+            hBox.getChildren().addAll(acceptBtn,rejectBtn,inviteName);
+
+            inviteList.getChildren().add(hBox);
+
+            acceptBtn.addEventHandler(MouseEvent.MOUSE_CLICKED,(MouseEvent e)->{
+                tableNumber = "Table "+String.valueOf(tableId);
+
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/table.fxml"));
+                Parent window = null;
+                try {
+                    window = (Pane) fxmlLoader.load();
+
+                    tableController = fxmlLoader.getController();
+                    tableController.title.setText(tableNumber);
+
+                    Game.entryTable(tableId);
+                    this.scene = new Scene(window);
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+                inviteList.getChildren().clear();
+            });
+
+            rejectBtn.addEventHandler(MouseEvent.MOUSE_CLICKED,(MouseEvent e)->{
+                //TODO
+//                Game.inviteReject();
+                inviteList.getChildren().clear();
+
+            });
+
+        });
     }
 
     // Minimize Window

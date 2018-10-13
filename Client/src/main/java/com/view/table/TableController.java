@@ -60,7 +60,6 @@ public class TableController implements Initializable{
     @FXML private ImageView player4Turn;
     @FXML private HBox tileBox;
     @FXML private Button confirmBtn;
-    @FXML private Button selectWordBtn;
     @FXML private Button clearBtn;
     @FXML private Button passBtn;
     @FXML private Button A;
@@ -730,7 +729,7 @@ public class TableController implements Initializable{
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
-            alert1.setHeaderText("Do you want to vote for this word ?");
+            alert1.setHeaderText("Do you want to vote for word: < "+word+" > ?");
             alert1.setContentText("Do you really think this is a word ?");
             ButtonType buttonyes = new ButtonType("Yes");
             ButtonType buttonno = new ButtonType("No");
@@ -889,7 +888,6 @@ public class TableController implements Initializable{
     private void stageOne(){
         tileBox.setVisible(true);
         confirmBtn.setVisible(false);
-        selectWordBtn.setVisible(false);
         clearBtn.setVisible(false);
         passBtn.setVisible(true);
     }
@@ -898,7 +896,6 @@ public class TableController implements Initializable{
     private void stageTwo(){
         tileBox.setVisible(false);
         passBtn.setVisible(true);
-        selectWordBtn.setVisible(true);
         confirmBtn.setVisible(true);
         clearBtn.setVisible(true);
     }
