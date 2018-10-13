@@ -970,7 +970,7 @@ public class TableController implements Initializable{
                 ButtonType buttonTypeH = new ButtonType("Horizontal");
                 ButtonType buttonTypeV = new ButtonType("Vertical");
                 ButtonType buttonTypeS = new ButtonType("Single letter");
-                ButtonType buttonTypeCancel = new ButtonType("Let me think", ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
                 alert.getButtonTypes().setAll(buttonTypeH, buttonTypeV, buttonTypeS, buttonTypeCancel);
                 Optional<ButtonType> result = alert.showAndWait();
                 String word =null;
