@@ -97,8 +97,8 @@ public class ReadyController implements Initializable {
     public void invitationRejected(String feedbackMsg){
         Platform.runLater(()->{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Invitation Rejected");
-            alert.setHeaderText("Invitation rejected!");
+            alert.setTitle("Invitation Feedback");
+            alert.setHeaderText("Invitation Feedback");
             alert.setContentText(feedbackMsg);
             alert.showAndWait();
 //            Game.invite();
@@ -107,15 +107,18 @@ public class ReadyController implements Initializable {
 
     @FXML private void confirm(){
         String invitePlayer = playerName.getText();
-        Game.invitePlayer(invitePlayer);
-        Platform.runLater(()->{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText("The invitation to <"+invitePlayer+"> has been send successfully!");
-            alert.setContentText("Waiting for reply...");
-            alert.showAndWait();
-            Game.invite();
-        });
+        if (invitePlayer == null){
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error");
+                alert.setContentText("Please choose one player to invite");
+                alert.showAndWait();
+            });
+        }
+        else{
+            Game.invitePlayer(invitePlayer);
+        }
     }
 
     @FXML

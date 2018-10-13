@@ -271,25 +271,63 @@ public class EachConnection implements Runnable {
                         toClient.setClientName(this.clientName);
                         toClient.setTableId(this.tableId);
                         client.write(toClient);
+                        Message toSender = new Message();
+                        toSender.setPlayerStatus(PlayerStatus.IN_ROOM);
+                        toSender.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
+                        toSender.setFeedBackMessage("The invitation to <"+name + "> has been send success");
+                        List<EachConnection> inHall = new ArrayList<>();
+                        for (EachConnection inhall : clients){
+                            if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
+                                inHall.add(inhall);
+                            }
+                        }
+                        Map<String,String> inviteList = new HashMap<>();
+                        for(EachConnection player : inHall){
+                            inviteList.put(player.getClientName(),player.getClientName());
+                        }
+                        toSender.setPlayerList(inviteList);
+                        oos.writeObject(toSender);
                     }else{
                         toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
-                        toClient.setPlayerAction(PlayerAction.INVITE_PLAYER);
-                        toClient.setFeedBackMessage("<"+name + "> cannot be invited.");
+                        toClient.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
+                        List<EachConnection> inHall = new ArrayList<>();
+                        for (EachConnection inhall : clients){
+                            if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
+                                inHall.add(inhall);
+                            }
+                        }
+                        Map<String,String> inviteList = new HashMap<>();
+                        for(EachConnection player : inHall){
+                            inviteList.put(player.getClientName(),player.getClientName());
+                        }
+                        toClient.setPlayerList(inviteList);
+                        toClient.setFeedBackMessage("<"+name + "> cannot be invited now.");
                         oos.writeObject(toClient);
                     }
                 }
             }
         }
 
-        if (m.getPlayerAction() == PlayerAction.INVITE_REJECT){
+        if (m.getPlayerAction() == PlayerAction.INVITE_FEEDBACK){
             String name = m.getClientName();
             Message toClient = new Message();
             List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
             toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
-            toClient.setPlayerAction(PlayerAction.INVITE_PLAYER);
+            toClient.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
             toClient.setFeedBackMessage("<"+this.clientName + "> rejected your invitation.");
             for (EachConnection client : clients) {
                 if (client.getClientName().equals(name)) {
+                    List<EachConnection> inHall = new ArrayList<>();
+                    for (EachConnection inhall : clients){
+                        if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
+                            inHall.add(inhall);
+                        }
+                    }
+                    Map<String,String> inviteList = new HashMap<>();
+                    for(EachConnection player : inHall){
+                        inviteList.put(player.getClientName(),player.getClientName());
+                    }
+                    toClient.setPlayerList(inviteList);
                     client.write(toClient);
                 }
             }
@@ -354,7 +392,7 @@ public class EachConnection implements Runnable {
     }
     private synchronized void inGame(Message m){
         switch (m.getPlayerAction()){
-            case SET_CHARACTER:
+            case SET_WORD:
                 GameRoom game = getCurrentGame();
                 game.setPassNum(0);
                 game.setVotingNum(0);
