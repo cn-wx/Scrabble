@@ -746,12 +746,12 @@
  <right>
   <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
    <children>
-    <Button mnemonicParsing="false" onAction="#help" prefHeight="45.0" prefWidth="170.0" text="Help">
+    <Button mnemonicParsing="false" onAction="#help" prefHeight="45.0" prefWidth="170.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="Help">
      <VBox.margin>
       <Insets left="15.0" top="20.0" />
      </VBox.margin>
     </Button>
-    <Button layoutX="25.0" layoutY="301.0" mnemonicParsing="false" onAction="#returnHall" prefHeight="45.0" prefWidth="170.0" text="Give Up">
+    <Button layoutX="25.0" layoutY="301.0" mnemonicParsing="false" onAction="#returnHall" prefHeight="45.0" prefWidth="170.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="Give Up">
      <VBox.margin>
       <Insets left="15.0" top="20.0" />
      </VBox.margin>
@@ -812,15 +812,15 @@
                      </right></BorderPane>
       <HBox prefHeight="81.0" prefWidth="967.0">
        <children>
-        <Button fx:id="confirmBtn" mnemonicParsing="false" onAction="#confirm" prefHeight="50.0" prefWidth="150.0" text="Confirm">
+        <Button fx:id="confirmBtn" mnemonicParsing="false" onAction="#confirm" prefHeight="50.0" prefWidth="150.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="Confirm">
                            <HBox.margin>
                               <Insets left="50.0" right="50.0" top="15.0" />
                            </HBox.margin></Button>
-        <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearBtnAction" prefHeight="50.0" prefWidth="150.0" text="Clear">
+        <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearBtnAction" prefHeight="50.0" prefWidth="150.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="Clear">
                            <HBox.margin>
                               <Insets left="50.0" right="50.0" top="15.0" />
                            </HBox.margin></Button>
-        <Button fx:id="passBtn" mnemonicParsing="false" onAction="#pass" prefHeight="50.0" prefWidth="150.0" text="Pass">
+        <Button fx:id="passBtn" mnemonicParsing="false" onAction="#pass" prefHeight="50.0" prefWidth="150.0" styleClass="radiusBtn" stylesheets="@../css/global.css" text="Pass">
                            <HBox.margin>
                               <Insets left="50.0" top="15.0" />
                            </HBox.margin></Button>
