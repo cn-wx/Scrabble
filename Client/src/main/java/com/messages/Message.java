@@ -1,6 +1,7 @@
 package com.messages;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Message implements Serializable{
@@ -24,7 +25,16 @@ public class Message implements Serializable{
     private int votingNum;
     private static final long serialVersionUID = 1L;
     private String gameResult;
+    private ArrayList<Integer> wordLocation;
 
+
+
+    public void setWordlocation(ArrayList<Integer> wordLocation){
+        this.wordLocation = wordLocation;
+    }
+    public ArrayList<Integer> getWordlocation(){
+        return wordLocation;
+    }
     public String getGameResult(){
         return gameResult;
     }

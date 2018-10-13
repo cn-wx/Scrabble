@@ -72,7 +72,7 @@ public class Listener extends Thread {
                             }
                         }
                         if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
-                            HallController.getInstance().beInvited(msg.getTableId(),msg.getClientName());
+                            Game.updateInvite(msg.getClientName(),msg.getTableId());
                         }
                         break;
                     case IN_ROOM:
@@ -96,10 +96,17 @@ public class Listener extends Thread {
                             }
                             ReadyController.getInstance().updateInviteList(inviteList);
                         }
-                        if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
+                        if (msg.getPlayerAction() == PlayerAction.INVITE_FEEDBACK){
                             String feedbackMsg = msg.getFeedBackMessage();
                             ReadyController.getInstance().invitationRejected(feedbackMsg);
-//                            ReadyController.getInstance().updateInviteList(inviteList);
+                            Set<String> keys_invitePlayer = msg.getPlayerList().keySet();
+                            Iterator<String> iterator_invitePlayer = keys_invitePlayer.iterator();
+                            List<String> inviteList = new ArrayList<>();
+                            while (iterator_invitePlayer.hasNext()) {
+                                String key_player = iterator_invitePlayer.next();
+                                inviteList.add(key_player);
+                            }
+                            ReadyController.getInstance().updateInviteList(inviteList);
                         }
 
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
@@ -143,7 +150,12 @@ public class Listener extends Thread {
                         if(msg.getPlayerAction()== PlayerAction.VOTING){
                             String name = msg.getClientName();
                             String word = msg.getGameWord();
-                            TableController.getInstance().voting(name,word);
+                            if (name.equals(this.name)){
+                                Game.voting(true,name,word);
+                            }
+                            else {
+                                TableController.getInstance().voting(name, word,msg.getWordlocation());
+                            }
                         }
                         if (msg.getGameStatus()==GameStatus.ENDING){
                             String winner = msg.getGameResult();

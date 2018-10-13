@@ -557,12 +557,23 @@ public class TableController implements Initializable{
             int finalI = i;
             //When Board Clicked
             textFields.get(i).addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e)->{
-                if (chosenLetter!=null){
-                    textFields.get(finalI).setText(chosenLetter);
-                    chosenLetter=null;
-                    letterButtons.get(letterIndex).setStyle("-fx-background-color: rgb(196,218,212);-fx-hgap:5px;-fx-vgap: 5px;-fx-border-radius: 3px;-fx-border-color: gray;-fx-border-width: 4px;");
-                    stageTwo();
-                    //TODO - select word
+                    if (chosenLetter!=null){
+                        if ((!board[finalI].isEmpty()) &&(Game.turn)){
+                            Platform.runLater(()->{
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setHeaderText("Input Error!");
+                                alert.setContentText("This grid has been occupied!");
+                                alert.showAndWait();
+                            });
+                        }
+                        else{
+                            textFields.get(finalI).setText(chosenLetter);
+                            chosenLetter=null;
+                            letterButtons.get(letterIndex).setStyle("-fx-background-color: rgb(196,218,212);-fx-hgap:5px;-fx-vgap: 5px;-fx-border-radius: 3px;-fx-border-color: gray;-fx-border-width: 4px;");
+                            stageTwo();
+                            //TODO - select word
+
+                    }
                 }
             });
         }
@@ -725,21 +736,30 @@ public class TableController implements Initializable{
     }
 
     // Voting Confirmation
-    public void voting(String name,String word){
+    public void voting(String name,String word,ArrayList<Integer> wordLocation){
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
             alert1.setHeaderText("Do you want to vote for word: < "+word+" > ?");
             alert1.setContentText("Do you really think this is a word ?");
+            for (int i=0; i<wordLocation.size();i++){
+                textFields.get(wordLocation.get(i)).setStyle("-fx-background-color: rgb(196,218,212);");
+            }
             ButtonType buttonyes = new ButtonType("Yes");
             ButtonType buttonno = new ButtonType("No");
             alert1.getButtonTypes().setAll(buttonyes,buttonno);
             Optional<ButtonType> result1 = alert1.showAndWait();
             if(result1.get()==buttonyes) {
                 Game.voting(true,name,word);
+                for (int i=0; i<wordLocation.size();i++){
+                    textFields.get(wordLocation.get(i)).getStyleClass().add("NotEditable");
+                }
             }
             else if(result1.get()==buttonno) {
                 Game.voting(false,name,word);
+                for (int i=0; i<wordLocation.size();i++){
+                    textFields.get(wordLocation.get(i)).getStyleClass().add("NotEditable");
+                }
             }
         });
     }
@@ -950,14 +970,14 @@ public class TableController implements Initializable{
                             });
                         } else {
                             word = Game.horizontal(index,getBoard());
-                            Game.sendCharacter(index,getBoard()[index].toUpperCase(),word);
+                            Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word);
                         }
                     }
                     // user chose "Vertical"
                 } else if (result.get() == buttonTypeV) {
                     if (compare() == true){
                         word = Game.vertical(index,getBoard());
-                        Game.sendCharacter(index,getBoard()[index].toUpperCase(),word);
+                        Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word);
                     }
                 }
             });
