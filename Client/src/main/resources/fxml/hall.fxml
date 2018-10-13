@@ -371,11 +371,13 @@
                         <TableColumn fx:id="status" prefWidth="146.0" text="Status" />
                      </columns>
                   </TableView>
-                  <Label prefHeight="20.0" prefWidth="149.0" text="Invitation:">
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Label>
+                  <HBox prefHeight="60.0" prefWidth="302.0">
+                     <children>
+                        <Label prefHeight="49.0" prefWidth="170.0" text="Invitation:" />
+                        <Label layoutX="10.0" layoutY="10.0" prefHeight="49.0" prefWidth="90.0" text="Player" />
+                        <Label layoutX="136.0" layoutY="10.0" prefHeight="49.0" prefWidth="84.0" text="Table" />
+                     </children>
+                  </HBox>
                   <ScrollPane prefHeight="200.0" prefWidth="200.0">
                      <content>
                         <VBox fx:id="inviteList" prefHeight="200.0" prefWidth="280.0" />

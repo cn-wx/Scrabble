@@ -172,10 +172,12 @@ public class HallController implements Initializable {
             Button acceptBtn = new Button("Accept");
             Button rejectBtn = new Button("Reject");
             Label inviteName = new Label(inviter);
-            inviteName.setStyle("-fx-font-size: 16px;");
+            inviteName.setStyle("-fx-font-size: 16px");
+            Label table = new Label(Integer.toString(tableId));
+            table.setStyle("-fx-font-size: 16px");
             HBox hBox = new HBox();
             hBox.setSpacing(10);
-            hBox.getChildren().addAll(acceptBtn,rejectBtn,inviteName);
+            hBox.getChildren().addAll(acceptBtn,rejectBtn,inviteName,table);
 
             inviteList.getChildren().add(hBox);
 
@@ -200,7 +202,7 @@ public class HallController implements Initializable {
 
             rejectBtn.addEventHandler(MouseEvent.MOUSE_CLICKED,(MouseEvent e)->{
                 //TODO
-//                Game.inviteReject();
+                Game.inviteReject();
                 inviteList.getChildren().clear();
 
             });

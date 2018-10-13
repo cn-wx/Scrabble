@@ -101,7 +101,7 @@ public class ReadyController implements Initializable {
             alert.setHeaderText("Invitation rejected!");
             alert.setContentText(feedbackMsg);
             alert.showAndWait();
-            Game.invite();
+//            Game.invite();
         });
     }
 
