@@ -133,9 +133,11 @@ public class Listener extends Thread {
                             }
                             if (msg.getPlayerList().get(name).equals("Turn")){
                                 Game.turn = true;
+                                TableController.getInstance().stageOne();
                             }
                             else{
                                 Game.turn = false;
+                                TableController.getInstance().stageZero();
                             }
                             // Player name & score
                             Set<String> keys_score = msg.getPlayerScore().keySet();

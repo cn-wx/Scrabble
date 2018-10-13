@@ -533,7 +533,7 @@ public class TableController implements Initializable{
             borderPane.setCursor(Cursor.DEFAULT);
         });
         //</editor-fold>
-        stageOne();
+        stageZero();
         resetPlayerStatus();
         for (int i = 0; i<400; i ++){ board[i]=""; }
         setTextFields();
@@ -905,7 +905,13 @@ public class TableController implements Initializable{
     }
 
     // Stage 1 - put letter on the board
-    private void stageOne(){
+    public void stageZero(){
+        tileBox.setVisible(false);
+        confirmBtn.setVisible(false);
+        clearBtn.setVisible(false);
+        passBtn.setVisible(false);
+    }
+    public void stageOne(){
         tileBox.setVisible(true);
         confirmBtn.setVisible(false);
         clearBtn.setVisible(false);
@@ -913,6 +919,7 @@ public class TableController implements Initializable{
     }
 
     // Stage 2 - Clear or Select word
+
     private void stageTwo(){
         tileBox.setVisible(false);
         passBtn.setVisible(true);
@@ -1001,6 +1008,7 @@ public class TableController implements Initializable{
     @FXML private void pass(){
         if (Game.turn){
             Game.pass();
+            stageZero();
         }else {
             Platform.runLater(()->{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
