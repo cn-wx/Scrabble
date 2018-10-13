@@ -205,7 +205,7 @@ public class Game extends Application {
     //TODO
     public static void inviteReject(){
         Message message = new Message();
-//        message.setClientName();
+        message.setClientName("test");
         message.setPlayerStatus(PlayerStatus.IN_ROOM);
         message.setPlayerAction(PlayerAction.INVITE_REJECT);
         sendmsg(message);

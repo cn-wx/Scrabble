@@ -99,6 +99,7 @@ public class Listener extends Thread {
                         if (msg.getPlayerAction() == PlayerAction.INVITE_PLAYER){
                             String feedbackMsg = msg.getFeedBackMessage();
                             ReadyController.getInstance().invitationRejected(feedbackMsg);
+//                            ReadyController.getInstance().updateInviteList(inviteList);
                         }
 
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
