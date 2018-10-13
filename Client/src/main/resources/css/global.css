@@ -135,3 +135,6 @@
 .NotEditable{
     -fx-background-color: skyblue;
 }
+.Voting{
+    -fx-background-color: rgb(63,160,180);
+}

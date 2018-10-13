@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -488,6 +489,7 @@ public class TableController implements Initializable{
     @FXML private TextField T397;
     @FXML private TextField T398;
     @FXML private TextField T399;
+    @FXML private Label label;
     //</editor-fold>
     private List<TextField> textFields = new ArrayList<>();
     private List<Button> letterButtons = new ArrayList<>();
@@ -534,11 +536,13 @@ public class TableController implements Initializable{
         });
         //</editor-fold>
         stageZero();
+        label.setVisible(false);
         resetPlayerStatus();
         for (int i = 0; i<400; i ++){ board[i]=""; }
         setTextFields();
         setBoard(board);
         setLetterButtons();
+
         for (int i = 0; i < 26 ; i++) {
             int finalI = i;
             // When Letters Clicked
@@ -740,10 +744,10 @@ public class TableController implements Initializable{
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
-            alert1.setHeaderText("Do you want to vote for word: < "+word+" > ?");
-            alert1.setContentText("Do you really think this is a word ?");
+            alert1.setHeaderText("Voting Confirmation");
+            alert1.setContentText("Do you really think < "+word+" > is a word ?");
             for (int i=0; i<wordLocation.size();i++){
-                textFields.get(wordLocation.get(i)).setStyle("-fx-background-color: rgb(196,218,212);");
+                textFields.get(wordLocation.get(i)).getStyleClass().add("Voting");
             }
             ButtonType buttonyes = new ButtonType("Yes");
             ButtonType buttonno = new ButtonType("No");
@@ -752,12 +756,14 @@ public class TableController implements Initializable{
             if(result1.get()==buttonyes) {
                 Game.voting(true,name,word);
                 for (int i=0; i<wordLocation.size();i++){
+                    textFields.get(wordLocation.get(i)).getStyleClass().remove("Voting");
                     textFields.get(wordLocation.get(i)).getStyleClass().add("NotEditable");
                 }
             }
             else if(result1.get()==buttonno) {
                 Game.voting(false,name,word);
                 for (int i=0; i<wordLocation.size();i++){
+                    textFields.get(wordLocation.get(i)).getStyleClass().remove("Voting");
                     textFields.get(wordLocation.get(i)).getStyleClass().add("NotEditable");
                 }
             }
@@ -910,12 +916,14 @@ public class TableController implements Initializable{
         confirmBtn.setVisible(false);
         clearBtn.setVisible(false);
         passBtn.setVisible(false);
+        label.setVisible(true);
     }
     public void stageOne(){
         tileBox.setVisible(true);
         confirmBtn.setVisible(false);
         clearBtn.setVisible(false);
         passBtn.setVisible(true);
+        label.setVisible(false);
     }
 
     // Stage 2 - Clear or Select word
@@ -925,6 +933,7 @@ public class TableController implements Initializable{
         passBtn.setVisible(true);
         confirmBtn.setVisible(true);
         clearBtn.setVisible(true);
+        label.setVisible(false);
     }
 
     // Show Ready Scene

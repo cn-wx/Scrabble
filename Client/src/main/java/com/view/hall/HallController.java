@@ -180,11 +180,11 @@ public class HallController implements Initializable {
                 Button rejectBtn = new Button("Reject");
                 Label inviteName = new Label(inviter);
                 inviteName.setStyle("-fx-font-size: 16px");
-                Label table = new Label(Integer.toString(tableId));
+                Label table = new Label(Integer.toString(tableId)+"\t");
                 table.setStyle("-fx-font-size: 16px");
                 HBox hBox = new HBox();
                 hBox.setSpacing(10);
-                hBox.getChildren().addAll(acceptBtn,rejectBtn,inviteName,table);
+                hBox.getChildren().addAll(acceptBtn,rejectBtn,table,inviteName);
 
                 inviteList.getChildren().add(hBox);
 

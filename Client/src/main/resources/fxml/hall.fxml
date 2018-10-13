@@ -373,9 +373,9 @@
                   </TableView>
                   <HBox prefHeight="60.0" prefWidth="302.0">
                      <children>
-                        <Label prefHeight="49.0" prefWidth="170.0" text="Invitation:" />
-                        <Label layoutX="10.0" layoutY="10.0" prefHeight="49.0" prefWidth="90.0" text="Player" />
-                        <Label layoutX="136.0" layoutY="10.0" prefHeight="49.0" prefWidth="84.0" text="Table" />
+                        <Label prefHeight="49.0" prefWidth="139.0" text="Invitation:" />
+                        <Label layoutX="10.0" layoutY="10.0" prefHeight="49.0" prefWidth="72.0" text="Table" />
+                        <Label layoutX="136.0" layoutY="10.0" prefHeight="49.0" prefWidth="63.0" text="Player" />
                      </children>
                   </HBox>
                   <ScrollPane prefHeight="200.0" prefWidth="200.0">

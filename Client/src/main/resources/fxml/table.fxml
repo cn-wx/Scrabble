@@ -801,9 +801,15 @@
       <Insets left="50.0" />
      </padding>
     </HBox>
-    <HBox prefHeight="100.0" prefWidth="200.0">
+    <HBox fx:id="buttonBox" prefHeight="100.0" prefWidth="200.0">
      <children>
-      <BorderPane prefHeight="83.0" prefWidth="350.0" />
+      <BorderPane fx:id="controllerBox" prefHeight="83.0" prefWidth="641.0">
+                     <right>
+                        <Label fx:id="label" text="Not Your Turn !" textFill="#f89406" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font size="44.0" />
+                           </font></Label>
+                     </right></BorderPane>
       <HBox prefHeight="81.0" prefWidth="967.0">
        <children>
         <Button fx:id="confirmBtn" mnemonicParsing="false" onAction="#confirm" prefHeight="50.0" prefWidth="150.0" text="Confirm">
