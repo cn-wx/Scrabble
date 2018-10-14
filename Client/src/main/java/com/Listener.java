@@ -3,6 +3,7 @@ package com;
 import com.messages.GameStatus;
 import com.messages.Message;
 import com.messages.PlayerAction;
+import com.messages.PlayerStatus;
 import com.model.player.Player;
 import com.view.hall.HallController;
 import com.view.login.LoginController;
@@ -35,6 +36,7 @@ public class Listener extends Thread {
                 switch (msg.getPlayerStatus()){
                     case SET_NAME:
                         if (msg.getFeedBackMessage().equals("ValidName")){
+                            Game.playerStatus = PlayerStatus.IN_HALL;
                             UsernameController.getInstance().showHall();
                             name = msg.getClientName();
                         }
@@ -45,6 +47,7 @@ public class Listener extends Thread {
                     case IN_HALL:
                         if (msg.getPlayerAction() == PlayerAction.JOIN_TABLE){
                             if ((msg.getFeedBackMessage()!=null) && (msg.getFeedBackMessage().equals("ValidTable"))) {
+                                Game.playerStatus = PlayerStatus.IN_ROOM;
                                 Platform.runLater(()-> {
                                     HallController.getInstance().showTable();
                                 });
@@ -110,6 +113,8 @@ public class Listener extends Thread {
                         }
 
                         if (msg.getGameStatus() == GameStatus.ALL_READY){
+                            Game.playerStatus = PlayerStatus.IN_GAME;
+                            Game.inGame = true;
                             Game.gameStart();
                             //show count down timer & start game
                             TableController.getInstance().gameStart();
@@ -147,12 +152,22 @@ public class Listener extends Thread {
                                 String score = msg.getPlayerScore().get(key_score).toString();
                                 TableController.getInstance().refreshPlayerScore(key_score,score);
                             }
+                            String[] oldboard = TableController.getInstance().getOldBoard();
+                            String[] newboard = msg.getBoard();
+                            int setCharacter = -1;
+                            for (int i = 0; i<400;i++){
+                                if (!oldboard[i].equals(newboard[i])){
+                                    setCharacter = i;
+                                }
+                            }
                             TableController.getInstance().setBoard(msg.getBoard());
+                            TableController.getInstance().setCharacter(setCharacter);
                         }
                         if(msg.getPlayerAction()== PlayerAction.VOTING){
                             String name = msg.getClientName();
                             String word = msg.getGameWord();
                             if (name.equals(this.name)){
+                                TableController.getInstance().colorWord(msg.getDirection(),msg.getGameLocation());
                                 Game.voting(true,name,word);
                             }
                             else {
@@ -171,6 +186,8 @@ public class Listener extends Thread {
                                 HallController.getStage().close();
                                 Game.getPrimaryStage().show();
                                 Game.returnToHall();
+                                Game.playerStatus = PlayerStatus.IN_HALL;
+                                Game.inGame = false;
                             });
                         }
                         break;
