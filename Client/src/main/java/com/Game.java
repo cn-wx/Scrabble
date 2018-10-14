@@ -48,7 +48,8 @@ public class Game extends Application {
             "Yasuo", "Yorick", "Zed", "Ziggs", "Zilean", "Zoe", "Zyra"
     };
     //</editor-fold>
-
+    public static boolean inGame;
+    public static PlayerStatus playerStatus;
     private static Stage primaryStageObj;
     public static final int LoginWidth = 500;
     public static final int LoginHeight = 600;
@@ -90,6 +91,7 @@ public class Game extends Application {
             ois = new ObjectInputStream(in);
             m1 = new Listener(ois);
             m1.start();
+            playerStatus = PlayerStatus.LOG_IN;
         } catch (IOException e) {
             LoginController.getInstance().loginFailure("Could not connect to server");
         }
@@ -170,7 +172,7 @@ public class Game extends Application {
         message.setClientName(name);
         message.setGameWord(word);
         message.setVotingResult(votingResult);
-        sendmsg(message);
+        if (Game.inGame){sendmsg(message);}
     }
 
     public static void invitePlayer(String name) {

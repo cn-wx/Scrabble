@@ -264,50 +264,54 @@ public class EachConnection implements Runnable {
             String name = m.getClientName();
             Message toClient = new Message();
             List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
+            boolean playerExist = false;
             for (EachConnection client : clients) {
-                if (client.getClientName().equals(name)) {
-                    if (client.getClientStatus().equals(PlayerStatus.IN_HALL)){
-                        toClient.setPlayerStatus(PlayerStatus.IN_HALL);
-                        toClient.setPlayerAction(PlayerAction.INVITE_PLAYER);
-                        toClient.setClientName(this.clientName);
-                        toClient.setTableId(this.tableId);
-                        client.write(toClient);
-                        Message toSender = new Message();
-                        toSender.setPlayerStatus(PlayerStatus.IN_ROOM);
-                        toSender.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
-                        toSender.setFeedBackMessage("The invitation to <"+name + "> has been send success");
-                        List<EachConnection> inHall = new ArrayList<>();
-                        for (EachConnection inhall : clients){
-                            if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
-                                inHall.add(inhall);
+                    if (client.getClientName().equals(name)) {
+                        if (client.getClientStatus().equals(PlayerStatus.IN_HALL)){
+                            playerExist = true;
+                            toClient.setPlayerStatus(PlayerStatus.IN_HALL);
+                            toClient.setPlayerAction(PlayerAction.INVITE_PLAYER);
+                            toClient.setClientName(this.clientName);
+                            toClient.setTableId(this.tableId);
+                            client.write(toClient);
+                            Message toSender = new Message();
+                            toSender.setPlayerStatus(PlayerStatus.IN_ROOM);
+                            toSender.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
+                            toSender.setFeedBackMessage("The invitation to <" + name + "> has been send success");
+                            List<EachConnection> inHall = new ArrayList<>();
+                            for (EachConnection inhall : clients) {
+                                if (inhall.getClientStatus() == PlayerStatus.IN_HALL) {
+                                    inHall.add(inhall);
+                                }
                             }
-                        }
-                        Map<String,String> inviteList = new HashMap<>();
-                        for(EachConnection player : inHall){
-                            inviteList.put(player.getClientName(),player.getClientName());
-                        }
-                        toSender.setPlayerList(inviteList);
-                        oos.writeObject(toSender);
-                    }else{
-                        toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
-                        toClient.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
-                        List<EachConnection> inHall = new ArrayList<>();
-                        for (EachConnection inhall : clients){
-                            if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
-                                inHall.add(inhall);
+                            Map<String, String> inviteList = new HashMap<>();
+                            for (EachConnection player : inHall) {
+                                inviteList.put(player.getClientName(), player.getClientName());
                             }
+                            toSender.setPlayerList(inviteList);
+                            oos.writeObject(toSender);
                         }
-                        Map<String,String> inviteList = new HashMap<>();
-                        for(EachConnection player : inHall){
-                            inviteList.put(player.getClientName(),player.getClientName());
-                        }
-                        toClient.setPlayerList(inviteList);
-                        toClient.setFeedBackMessage("<"+name + "> cannot be invited now.");
-                        oos.writeObject(toClient);
                     }
                 }
+            if (playerExist == false) {
+                toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
+                toClient.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
+                List<EachConnection> inHall = new ArrayList<>();
+                for (EachConnection inhall : clients) {
+                    if (inhall.getClientStatus() == PlayerStatus.IN_HALL) {
+                        inHall.add(inhall);
+                    }
+                }
+                Map<String, String> inviteList = new HashMap<>();
+                for (EachConnection player : inHall) {
+                    inviteList.put(player.getClientName(), player.getClientName());
+                }
+                toClient.setPlayerList(inviteList);
+                toClient.setFeedBackMessage("<" + name + "> cannot be invited now.");
+                oos.writeObject(toClient);
             }
         }
+
 
         if (m.getPlayerAction() == PlayerAction.INVITE_FEEDBACK){
             String name = m.getClientName();
@@ -462,14 +466,11 @@ public class EachConnection implements Runnable {
                 game.SpaceRemain();
                 toPlayers.setVotingResult(true);
                 game.turnPass(name);
-
                 if (!game.gameEnd()){
                     toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
                     toPlayers.setPlayerAction(PlayerAction.VOTING);
                     game_information();
                 }else{
-                    //TODO Game END part
-                    // return game result
                     if(!game.isEnding()){
                         gameResult(game.gameResult());
                     }

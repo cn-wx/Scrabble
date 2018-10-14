@@ -499,6 +499,8 @@ public class TableController implements Initializable{
     private static String chosenLetter;
     private int index;
     private int letterIndex;
+    private String[] oldboard = new String[400];
+
 
     public TableController(){
         instance = this;
@@ -584,20 +586,35 @@ public class TableController implements Initializable{
     }
 
     private void setEditable(int location){
+        if (textFields.get(location).getStyleClass().contains("Voting")) {
+            textFields.get(location).getStyleClass().remove("Voting");
+        }
         textFields.get(location).getStyleClass().add("NotEditable");
     }
-
+    public void setCharacter(int setCharacter){
+        for (int i = 0; i<400; i++){
+            if (textFields.get(i).getStyleClass().contains("Border")){
+                textFields.get(i).getStyleClass().remove("Border");
+            }
+        }
+        if (setCharacter != -1)
+        {textFields.get(setCharacter).getStyleClass().add("Border");}
+    }
     public void setBoard(String[] board){
         for (int i =0;i<400;i++){
           textFields.get(i).setText(board[i]);
           if (!board[i].equals("")){
               setEditable(i);
-            }
+          }
         }
         this.board = board;
+        this.oldboard = board;
+    }
+    public String[] getOldBoard(){
+        return oldboard;
     }
 
-    private String[] getBoard(){
+    public String[] getBoard(){
         String[] newBoard = new String [400];
         for (int i = 0; i<400; i++){
             newBoard[i] = textFields.get(i).getText();
@@ -740,38 +757,41 @@ public class TableController implements Initializable{
     }
 
     // Voting Confirmation
+    public void colorWord(boolean direction, int index){
+        if (direction){
+            Game.horizontal(index,board);
+        }
+        else{
+            Game.vertical(index,board);
+        }
+        for (int i=0; i<Game.wordLocation.size();i++){
+            textFields.get(Game.wordLocation.get(i)).getStyleClass().add("Voting");
+        }
+    }
+    public void colorRecover(boolean direction, int index){
+        for (int i=0; i<Game.wordLocation.size();i++){
+            textFields.get(Game.wordLocation.get(i)).getStyleClass().remove("Voting");
+            textFields.get(Game.wordLocation.get(i)).getStyleClass().add("NotEditable");
+        }
+    }
     public void voting(String name,String word,boolean direction,int index){
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
             alert1.setHeaderText("Voting ");
             alert1.setContentText("Do you really think < "+word+" > is a word ?");
-            if (direction){
-                Game.horizontal(index,board);
-            }
-            else{
-                Game.vertical(index,board);
-            }
-            for (int i=0; i<Game.wordLocation.size();i++){
-                textFields.get(Game.wordLocation.get(i)).getStyleClass().add("Voting");
-            }
+            colorWord(direction,index);
             ButtonType buttonyes = new ButtonType("Yes");
             ButtonType buttonno = new ButtonType("No");
             alert1.getButtonTypes().setAll(buttonyes,buttonno);
             Optional<ButtonType> result1 = alert1.showAndWait();
             if(result1.get()==buttonyes) {
                 Game.voting(true,name,word);
-                for (int i=0; i<Game.wordLocation.size();i++){
-                    textFields.get(Game.wordLocation.get(i)).getStyleClass().remove("Voting");
-                    textFields.get(Game.wordLocation.get(i)).getStyleClass().add("NotEditable");
-                }
+                //colorRecover(direction,index);
             }
             else if(result1.get()==buttonno) {
                 Game.voting(false,name,word);
-                for (int i=0; i<Game.wordLocation.size();i++){
-                    textFields.get(Game.wordLocation.get(i)).getStyleClass().remove("Voting");
-                    textFields.get(Game.wordLocation.get(i)).getStyleClass().add("NotEditable");
-                }
+                //colorRecover(direction,index);
             }
         });
     }
@@ -993,6 +1013,7 @@ public class TableController implements Initializable{
                             });
                         } else {
                             word = Game.horizontal(index,getBoard());
+                            textFields.get(index).getStyleClass().add("Border");
                             Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word,true);
                         }
                     }
@@ -1000,6 +1021,7 @@ public class TableController implements Initializable{
                 } else if (result.get() == buttonTypeV) {
                     if (compare() == true){
                         word = Game.vertical(index,getBoard());
+                        textFields.get(index).getStyleClass().add("Border");
                         Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word,false);
                     }
                     // user chose "Single letter"
@@ -1064,6 +1086,7 @@ public class TableController implements Initializable{
             HallController.getStage().close();
             Game.getPrimaryStage().show();
             Game.returnToHall();
+            Game.inGame = false;
         }
     }
 

@@ -208,6 +208,7 @@ public class HallController implements Initializable {
 
                         tableController = fxmlLoader.getController();
                         tableController.title.setText(tableNumber);
+                        Game.entryTable(tableId);
                         for (String rejKey:Game.inviteList.keySet()){
                             if (Game.inviteList.get(rejKey) != tableId)
                             {
@@ -217,7 +218,6 @@ public class HallController implements Initializable {
                                 Game.inviteAccept(rejKey);
                             }
                         }
-                        Game.entryTable(tableId);
                         this.scene = new Scene(window);
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
