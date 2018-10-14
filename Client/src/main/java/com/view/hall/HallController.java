@@ -213,6 +213,9 @@ public class HallController implements Initializable {
                             {
                                 Game.inviteReject(rejKey);
                             }
+                            else{
+                                Game.inviteAccept(rejKey);
+                            }
                         }
                         Game.entryTable(tableId);
                         this.scene = new Scene(window);

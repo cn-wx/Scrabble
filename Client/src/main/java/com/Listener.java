@@ -156,7 +156,7 @@ public class Listener extends Thread {
                                 Game.voting(true,name,word);
                             }
                             else {
-                                TableController.getInstance().voting(name, word,msg.getWordlocation());
+                                TableController.getInstance().voting(name, word,msg.getDirection(),msg.getGameLocation());
                             }
                         }
                         if (msg.getGameStatus()==GameStatus.ENDING){

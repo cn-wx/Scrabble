@@ -11,10 +11,14 @@ public class Message implements Serializable{
     private Map<String,String> connectedClients;
     private Map<Integer,Integer> createdGames;
     private Map<String,String> playerList;
+    private Map<String,String> gameInfo;
+    private String gameResult;
     private PlayerAction playerAction;
     private GameStatus gameStatus;
     private PlayerStatus playerStatus;
     private String gameCharacter;
+    private int characterLocation;
+    private ArrayList<Integer> wordLocation;
     private int gameLocation;
     private String gameWord;
     private String clientName;
@@ -24,10 +28,14 @@ public class Message implements Serializable{
     private int tableId;
     private int votingNum;
     private static final long serialVersionUID = 1L;
-    private String gameResult;
-    private ArrayList<Integer> wordLocation;
+    private boolean direction;
 
-
+    public void setDirection(boolean direction){
+        this.direction=direction;
+    }
+    public boolean getDirection(){
+        return direction;
+    }
 
     public void setWordlocation(ArrayList<Integer> wordLocation){
         this.wordLocation = wordLocation;

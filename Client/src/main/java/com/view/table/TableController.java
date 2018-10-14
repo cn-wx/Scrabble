@@ -740,14 +740,20 @@ public class TableController implements Initializable{
     }
 
     // Voting Confirmation
-    public void voting(String name,String word,ArrayList<Integer> wordLocation){
+    public void voting(String name,String word,boolean direction,int index){
         Platform.runLater(()->{
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
             alert1.setTitle("Voting Confirmation");
             alert1.setHeaderText("Voting ");
             alert1.setContentText("Do you really think < "+word+" > is a word ?");
-            for (int i=0; i<wordLocation.size();i++){
-                textFields.get(wordLocation.get(i)).getStyleClass().add("Voting");
+            if (direction){
+                Game.horizontal(index,board);
+            }
+            else{
+                Game.vertical(index,board);
+            }
+            for (int i=0; i<Game.wordLocation.size();i++){
+                textFields.get(Game.wordLocation.get(i)).getStyleClass().add("Voting");
             }
             ButtonType buttonyes = new ButtonType("Yes");
             ButtonType buttonno = new ButtonType("No");
@@ -755,16 +761,16 @@ public class TableController implements Initializable{
             Optional<ButtonType> result1 = alert1.showAndWait();
             if(result1.get()==buttonyes) {
                 Game.voting(true,name,word);
-                for (int i=0; i<wordLocation.size();i++){
-                    textFields.get(wordLocation.get(i)).getStyleClass().remove("Voting");
-                    textFields.get(wordLocation.get(i)).getStyleClass().add("NotEditable");
+                for (int i=0; i<Game.wordLocation.size();i++){
+                    textFields.get(Game.wordLocation.get(i)).getStyleClass().remove("Voting");
+                    textFields.get(Game.wordLocation.get(i)).getStyleClass().add("NotEditable");
                 }
             }
             else if(result1.get()==buttonno) {
                 Game.voting(false,name,word);
-                for (int i=0; i<wordLocation.size();i++){
-                    textFields.get(wordLocation.get(i)).getStyleClass().remove("Voting");
-                    textFields.get(wordLocation.get(i)).getStyleClass().add("NotEditable");
+                for (int i=0; i<Game.wordLocation.size();i++){
+                    textFields.get(Game.wordLocation.get(i)).getStyleClass().remove("Voting");
+                    textFields.get(Game.wordLocation.get(i)).getStyleClass().add("NotEditable");
                 }
             }
         });
@@ -987,18 +993,20 @@ public class TableController implements Initializable{
                             });
                         } else {
                             word = Game.horizontal(index,getBoard());
-                            Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word);
+                            Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word,true);
                         }
                     }
                     // user chose "Vertical"
                 } else if (result.get() == buttonTypeV) {
                     if (compare() == true){
                         word = Game.vertical(index,getBoard());
-                        Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word);
+                        Game.sendWord(index,getBoard()[index].toUpperCase(),Game.wordLocation,word,false);
                     }
                     // user chose "Single letter"
                 } else if (result.get() == buttonTypeS) {
-                    //TODO single letter
+                    if (compare() == true) {
+                        Game.sendCharacter(index, board[index]);
+                    }
                 }
             });
         } else {
