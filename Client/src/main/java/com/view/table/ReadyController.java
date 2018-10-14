@@ -144,6 +144,7 @@ public class ReadyController implements Initializable {
         HallController.getStage().close();
         Game.getPrimaryStage().show();
         Game.returnToHall();
+        Game.inGame = false;
     }
 
     // Minimize Window
