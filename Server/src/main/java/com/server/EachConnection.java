@@ -76,6 +76,7 @@ public class EachConnection implements Runnable {
                 if (game.getNumOfPlayer() == 2){
                     game.deletePlayer(clientNum,clientName);
                     hall_information();
+                    table_information();
                     if (game.isGameStart()){
                         gameResult(game.gameResult());
                     }
@@ -314,12 +315,17 @@ public class EachConnection implements Runnable {
             List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
             toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
             toClient.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
-            toClient.setFeedBackMessage("<"+this.clientName + "> rejected your invitation.");
+            if (m.getFeedBackMessage().equals("R")){
+                toClient.setFeedBackMessage("<"+this.clientName + "> rejected your invitation.");
+            }
+            if (m.getFeedBackMessage().equals("A")){
+                toClient.setFeedBackMessage("<"+this.clientName + "> accepted your invitation.");
+            }
             for (EachConnection client : clients) {
                 if (client.getClientName().equals(name)) {
                     List<EachConnection> inHall = new ArrayList<>();
                     for (EachConnection inhall : clients){
-                        if (inhall.getClientStatus() == PlayerStatus.IN_HALL){
+                        if (inhall.getClientStatus() == PlayerStatus.IN_HALL && !(m.getFeedBackMessage().equals("A") && inhall.getClientName().equals(this.clientName))){
                             inHall.add(inhall);
                         }
                     }
@@ -343,6 +349,7 @@ public class EachConnection implements Runnable {
             if (game.getNumOfPlayer() == 2 && !game.isEnding()){
                 game.deletePlayer(clientNum, clientName);
                 hall_information();
+                table_information();
                 if (game.isGameStart()){
                     gameResult(game.gameResult());
                 }
@@ -392,6 +399,9 @@ public class EachConnection implements Runnable {
     }
     private synchronized void inGame(Message m){
         switch (m.getPlayerAction()){
+            case SET_CHARACTER:
+                singleCharacter(m);
+                break;
             case SET_WORD:
                 GameRoom game = getCurrentGame();
                 game.setPassNum(0);
@@ -407,7 +417,19 @@ public class EachConnection implements Runnable {
                 break;
         }
     }
-
+    private void singleCharacter(Message m){
+        GameRoom game = getCurrentGame();
+        game.addCharacter(m.getGameLocation(),m.getGameCharacter());
+        game.SpaceRemain();
+        game.turnPass(this.clientName);
+        if (!game.gameEnd()){
+            game_information();
+        }else{
+            if(!game.isEnding()){
+                gameResult(game.gameResult());
+            }
+        }
+    }
     private void gameContent(Message m){
         GameRoom game = getCurrentGame();
         EachConnection[] players = game.getPlayerList();
@@ -420,8 +442,9 @@ public class EachConnection implements Runnable {
         toPlayers.setClientName(this.clientName);
         toPlayers.setPlayerStatus(PlayerStatus.IN_GAME);
         toPlayers.setPlayerAction(PlayerAction.VOTING);
-        toPlayers.setCharacterLocation(m.getCharacterLocation());
+        toPlayers.setGameLocation(m.getGameLocation());
         toPlayers.setWordLocation(m.getWordLocation());
+        toPlayers.setDirection(m.getDirection());
         roombroadCast(players,toPlayers);
     }
 

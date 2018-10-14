@@ -27,7 +27,14 @@ public class Message implements Serializable{
     private int tableId;
     private int votingNum;
     private static final long serialVersionUID = 1L;
+    private boolean direction;
 
+    public void setDirection(boolean direction){
+        this.direction=direction;
+    }
+    public boolean getDirection(){
+        return direction;
+    }
 
     public GameStatus getGameStatus() {
         return gameStatus;

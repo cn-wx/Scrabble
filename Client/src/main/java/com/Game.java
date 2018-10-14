@@ -111,23 +111,7 @@ public class Game extends Application {
         }
         HallController.getInstance().beInvited(inviteList);
     }
-//    public static void sendcharacter(String character, String location, String word){
-//        sendmsg("setCharacter|" + character+" " + location +" "+word);
-//    }
-//    public static void passturn(){
-//        sendmsg("passturn");
-//    }
-//    public static void voting(String word){
-//        //TODO show the word
-//        boolean vote = true;
-//        //TODO get the voting result from UI.
-//        if (vote == true){
-//            sendmsg("votingresult|true");
-//        }
-//        else{
-//            sendmsg("votingresult|false");
-//        }
-//    }
+
 
     public static void sendmsg(Message msg) {
         try {
@@ -168,7 +152,7 @@ public class Game extends Application {
         message.setGameCharacter(character);
         sendmsg(message);
     }
-    public static void sendWord(int index, String character, ArrayList<Integer> wordLocation, String word) {
+    public static void sendWord(int index, String character, ArrayList<Integer> wordLocation, String word,boolean direction) {
         Message message = new Message();
         message.setPlayerStatus(PlayerStatus.IN_GAME);
         message.setPlayerAction(PlayerAction.SET_WORD);
@@ -176,6 +160,7 @@ public class Game extends Application {
         message.setGameCharacter(character);
         message.setGameWord(word);
         message.setWordlocation(wordLocation);
+        message.setDirection(direction);
         sendmsg(message);
     }
     public static void voting(boolean votingResult,String name,String word) {
@@ -237,24 +222,36 @@ public class Game extends Application {
         message.setPlayerStatus(PlayerStatus.IN_ROOM);
         message.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
         message.setClientName(name);
+        message.setFeedBackMessage("R");
         sendmsg(message);
     }
-
+    public static void inviteAccept(String name){
+        Message message = new Message();
+        message.setPlayerStatus(PlayerStatus.IN_ROOM);
+        message.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
+        message.setClientName(name);
+        message.setFeedBackMessage("A");
+        sendmsg(message);
+    }
     public static String horizontal(int location,String[] board){
         wordLocation.clear();
         wordLocation.add(location);
         String word = board[location];
-        int index = location;
-        while (((index-1) % 20 != 0)&&(!board[index-1].equals(""))){
-            index = index -1;
-            word = board[index] +word;
-            wordLocation.add(index);
+        int left =location / 20 *20;
+        int right = (location/20+1)*20-1;
+        for (int i = location; i>=left;i--){
+            if (board[i].equals("")){break;}
+            if (i != location) {
+                word = board[i] + word;
+                wordLocation.add(i);
+            }
         }
-        index = location;
-        while (((index+1 % 20) != 0) && (!board[index+1].equals(""))){
-            index = index+1;
-            word = word+board[index];
-            wordLocation.add(index);
+        for (int i = location; i<=right;i++){
+            if (board[i].equals("")){break;}
+            if (i != location) {
+                word = word + board[i];
+                wordLocation.add(i);
+            }
         }
         return word;
     }
@@ -262,17 +259,21 @@ public class Game extends Application {
         wordLocation.clear();
         wordLocation.add(location);
         String word = board[location];
-        int index = location;
-        while (!(index < 20) && (!board[index-20].equals(""))){
-            index = index - 20;
-            word = board[index] + word;
-            wordLocation.add(index);
+        int bot = 0;
+        int top = 400;
+        for (int i = location; i>=bot; i = i-20){
+            if (board[i].equals("")){break;}
+            if (i != location) {
+                word = board[i] + word;
+                wordLocation.add(i);
+            }
         }
-        index = location;
-        while (!(index >379) && (!board[index+20].equals(""))){
-            index = index + 20;
-            word = board[index] +word;
-            wordLocation.add(index);
+        for (int i = location; i<=top; i = i +20){
+            if (board[i].equals("")){break;}
+            if (i != location) {
+                word = word + board[i];
+                wordLocation.add(i);
+            }
         }
         return word;
     }
