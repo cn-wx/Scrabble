@@ -1,14 +1,6 @@
 # Scrabble Game  
-
-## How to import the project
-JDK required: 1.8
-### To Eclipse  
-import existing maven projects --> open the directory you downloaded --> finish
-### To IntelliJ IDEA  
-open directly --> open project structure --> set jdk to 1.8 and module as 8(Lambda)  
-## How to package  
-Maven required: 3.5 +  
-Command: ` mvn package `
+[![jdk](https://img.shields.io/badge/jdk-1.8-brightgreen.svg)](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+[![maven](https://img.shields.io/badge/maven-3.5%2B-brightgreen.svg)](https://maven.apache.org/download.cgi)  
 
 ## Introduction  
 Scrabble is a very popular crossword puzzle, multiple players place letters on one board to form a word to earn points, and the player with the highest total score will win the game. The purpose of this project is to develop a multiplayer online Scrabble game include the server and client by using Java programming language. The player opens the client to connect server and plays the game with other online players. Our design allowed multiplayer play multi-game at the same time. The system will automatically handle the player's actions and push the game's progress.  
