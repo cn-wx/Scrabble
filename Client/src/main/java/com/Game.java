@@ -262,7 +262,7 @@ public class Game extends Application {
         wordLocation.add(location);
         String word = board[location];
         int bot = 0;
-        int top = 400;
+        int top = 399;
         for (int i = location; i>=bot; i = i-20){
             if (board[i].equals("")){break;}
             if (i != location) {

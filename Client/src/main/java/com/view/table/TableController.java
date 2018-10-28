@@ -563,22 +563,21 @@ public class TableController implements Initializable{
             int finalI = i;
             //When Board Clicked
             textFields.get(i).addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e)->{
-                    if (chosenLetter!=null){
-                        if ((!board[finalI].isEmpty()) &&(Game.turn)){
-                            Platform.runLater(()->{
-                                Alert alert = new Alert(Alert.AlertType.ERROR);
-                                alert.setHeaderText("Input Error!");
-                                alert.setContentText("This grid has been occupied!");
-                                alert.showAndWait();
-                            });
-                        }
-                        else{
-                            textFields.get(finalI).setText(chosenLetter);
-                            chosenLetter=null;
-                            letterButtons.get(letterIndex).setStyle("-fx-background-color: rgb(196,218,212);-fx-hgap:5px;-fx-vgap: 5px;-fx-border-radius: 3px;-fx-border-color: gray;-fx-border-width: 4px;");
-                            stageTwo();
-                            //TODO - select word
-
+                if (chosenLetter!=null){
+                    if ((!board[finalI].isEmpty()) &&(Game.turn)){
+                        Platform.runLater(()->{
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setHeaderText("Input Error!");
+                            alert.setContentText("This grid has been occupied!");
+                            alert.showAndWait();
+                        });
+                    }
+                    else{
+                        textFields.get(finalI).setText(chosenLetter);
+                        chosenLetter=null;
+                        letterButtons.get(letterIndex).setStyle("-fx-background-color: rgb(196,218,212);-fx-hgap:5px;-fx-vgap: 5px;-fx-border-radius: 3px;-fx-border-color: gray;-fx-border-width: 4px;");
+                        stageTwo();
+                        //TODO - select word
                     }
                 }
             });
@@ -592,23 +591,27 @@ public class TableController implements Initializable{
         textFields.get(location).getStyleClass().add("NotEditable");
     }
     public void setCharacter(int setCharacter){
-        for (int i = 0; i<400; i++){
-            if (textFields.get(i).getStyleClass().contains("Border")){
-                textFields.get(i).getStyleClass().remove("Border");
+        Platform.runLater(()->{
+            for (int i = 0; i<400; i++){
+                if (textFields.get(i).getStyleClass().contains("Border")){
+                    textFields.get(i).getStyleClass().remove("Border");
+                }
             }
-        }
-        if (setCharacter != -1)
-        {textFields.get(setCharacter).getStyleClass().add("Border");}
+            if (setCharacter != -1)
+            {textFields.get(setCharacter).getStyleClass().add("Border");}
+        });
     }
     public void setBoard(String[] board){
-        for (int i =0;i<400;i++){
-          textFields.get(i).setText(board[i]);
-          if (!board[i].equals("")){
-              setEditable(i);
-          }
-        }
-        this.board = board;
-        this.oldboard = board;
+        Platform.runLater(()->{
+            for (int i =0;i<400;i++){
+                textFields.get(i).setText(board[i]);
+                if (!board[i].equals("")){
+                    setEditable(i);
+                }
+            }
+            this.board = board;
+            this.oldboard = board;
+        });
     }
     public String[] getOldBoard(){
         return oldboard;
@@ -758,15 +761,17 @@ public class TableController implements Initializable{
 
     // Voting Confirmation
     public void colorWord(boolean direction, int index){
-        if (direction){
-            Game.horizontal(index,board);
-        }
-        else{
-            Game.vertical(index,board);
-        }
-        for (int i=0; i<Game.wordLocation.size();i++){
-            textFields.get(Game.wordLocation.get(i)).getStyleClass().add("Voting");
-        }
+        Platform.runLater(()->{
+            if (direction){
+                Game.horizontal(index,board);
+            }
+            else{
+                Game.vertical(index,board);
+            }
+            for (int i=0; i<Game.wordLocation.size();i++){
+                textFields.get(Game.wordLocation.get(i)).getStyleClass().add("Voting");
+            }
+        });
     }
     public void colorRecover(boolean direction, int index){
         for (int i=0; i<Game.wordLocation.size();i++){

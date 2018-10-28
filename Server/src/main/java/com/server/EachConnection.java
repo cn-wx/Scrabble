@@ -66,31 +66,34 @@ public class EachConnection implements Runnable {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             if (clientName != null) {
                 ServerState.UserList.remove(clientName);
                 ServerState.clientList.remove(clientName);
             }
             if ((clientStatus == PlayerStatus.IN_GAME) || (clientStatus == PlayerStatus.IN_ROOM)) {
                 GameRoom game = getCurrentGame();
-                if (game.getNumOfPlayer() == 2){
-                    game.deletePlayer(clientNum,clientName);
-                    hall_information();
-                    table_information();
-                    if (game.isGameStart()){
-                        gameResult(game.gameResult());
-                    }
-                }else {
-                    if (game.getNumOfPlayer() <= 1) {
+                if (game.isGameStart()) {
+                    if (game.getNumOfPlayer() >= 2) {
+                        updateGameList();
                         game.deletePlayer(clientNum, clientName);
                         hall_information();
-                        ServerState.getGameInstance().gameDisconnected(game);
+                        game_information();
+                        if (!game.isEnding()) {
+                            gameResult(game.gameResult());
+                        }
                     } else {
-                        setClientStatus(PlayerStatus.LEAVING);
-                        game.deletePlayer(clientNum, clientName);
-                        updateGameList();
-                        table_information();
+                        if (game.getNumOfPlayer() <= 1) {
+                            game.deletePlayer(clientNum, clientName);
+                            hall_information();
+                            ServerState.getGameInstance().gameDisconnected(game);
+                        }
                     }
+                } else {
+                    game.deletePlayer(clientNum, clientName);
+                    updateGameList();
+                    hall_information();
+//                table_information();
                 }
             }
             setClientStatus(PlayerStatus.LEAVING);
@@ -266,33 +269,33 @@ public class EachConnection implements Runnable {
             List<EachConnection> clients = ServerState.getClientInstance().getConnectedClients();
             boolean playerExist = false;
             for (EachConnection client : clients) {
-                    if (client.getClientName().equals(name)) {
-                        if (client.getClientStatus().equals(PlayerStatus.IN_HALL)){
-                            playerExist = true;
-                            toClient.setPlayerStatus(PlayerStatus.IN_HALL);
-                            toClient.setPlayerAction(PlayerAction.INVITE_PLAYER);
-                            toClient.setClientName(this.clientName);
-                            toClient.setTableId(this.tableId);
-                            client.write(toClient);
-                            Message toSender = new Message();
-                            toSender.setPlayerStatus(PlayerStatus.IN_ROOM);
-                            toSender.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
-                            toSender.setFeedBackMessage("The invitation to <" + name + "> has been send success");
-                            List<EachConnection> inHall = new ArrayList<>();
-                            for (EachConnection inhall : clients) {
-                                if (inhall.getClientStatus() == PlayerStatus.IN_HALL) {
-                                    inHall.add(inhall);
-                                }
+                if (client.getClientName().equals(name)) {
+                    if (client.getClientStatus().equals(PlayerStatus.IN_HALL)){
+                        playerExist = true;
+                        toClient.setPlayerStatus(PlayerStatus.IN_HALL);
+                        toClient.setPlayerAction(PlayerAction.INVITE_PLAYER);
+                        toClient.setClientName(this.clientName);
+                        toClient.setTableId(this.tableId);
+                        client.write(toClient);
+                        Message toSender = new Message();
+                        toSender.setPlayerStatus(PlayerStatus.IN_ROOM);
+                        toSender.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
+                        toSender.setFeedBackMessage("The invitation to <" + name + "> has been send success");
+                        List<EachConnection> inHall = new ArrayList<>();
+                        for (EachConnection inhall : clients) {
+                            if (inhall.getClientStatus() == PlayerStatus.IN_HALL) {
+                                inHall.add(inhall);
                             }
-                            Map<String, String> inviteList = new HashMap<>();
-                            for (EachConnection player : inHall) {
-                                inviteList.put(player.getClientName(), player.getClientName());
-                            }
-                            toSender.setPlayerList(inviteList);
-                            oos.writeObject(toSender);
                         }
+                        Map<String, String> inviteList = new HashMap<>();
+                        for (EachConnection player : inHall) {
+                            inviteList.put(player.getClientName(), player.getClientName());
+                        }
+                        toSender.setPlayerList(inviteList);
+                        oos.writeObject(toSender);
                     }
                 }
+            }
             if (playerExist == false) {
                 toClient.setPlayerStatus(PlayerStatus.IN_ROOM);
                 toClient.setPlayerAction(PlayerAction.INVITE_FEEDBACK);
@@ -344,29 +347,33 @@ public class EachConnection implements Runnable {
         }
 
 
-        if (m.getPlayerAction() == PlayerAction.RETURN_HALL){
+        if (m.getPlayerAction() == PlayerAction.RETURN_HALL) {
             setClientStatus(PlayerStatus.IN_HALL);
             setClientAction(PlayerAction.HALL_WAITING);
-            ServerState.clientList.replace(clientName,"Online");
+            ServerState.clientList.replace(clientName, "Online");
             GameRoom game = getCurrentGame();
-
-            if (game.getNumOfPlayer() == 2 && !game.isEnding()){
-                game.deletePlayer(clientNum, clientName);
-                hall_information();
-                table_information();
-                if (game.isGameStart()){
-                    gameResult(game.gameResult());
-                }
-            }else {
-                if (game.getNumOfPlayer() <= 1) {
+            if (game.isGameStart()) {
+                if (game.getNumOfPlayer() >= 2) {
                     game.deletePlayer(clientNum, clientName);
+                    updateGameList();
                     hall_information();
-                    ServerState.getGameInstance().gameDisconnected(game);
+                    game_information();
+                    if (!game.isEnding()) {
+                        gameResult(game.gameResult());
+                    }
                 } else {
-                    game.deletePlayer(clientNum, clientName);
-                    hall_information();
-                    table_information();
+                    if (game.getNumOfPlayer() <= 1) {
+                        game.deletePlayer(clientNum, clientName);
+                        updateGameList();
+                        hall_information();
+                        ServerState.getGameInstance().gameDisconnected(game);
+                    }
                 }
+            } else {
+                game.deletePlayer(clientNum, clientName);
+                updateGameList();
+                hall_information();
+                //table_information();
             }
         }
 
@@ -426,14 +433,10 @@ public class EachConnection implements Runnable {
         game.addCharacter(m.getGameLocation(),m.getGameCharacter());
         game.SpaceRemain();
         game.turnPass(this.clientName);
-        if (!game.gameEnd()){
-            game_information();
-        }else{
-            if(!game.isEnding()){
-                gameResult(game.gameResult());
-            }
-        }
+        game_information();
     }
+
+
     private void gameContent(Message m){
         GameRoom game = getCurrentGame();
         EachConnection[] players = game.getPlayerList();
@@ -486,7 +489,6 @@ public class EachConnection implements Runnable {
                     toPlayers.setPlayerAction(PlayerAction.VOTING);
                     game_information();
                 }else{
-                    //TODO Game END part
                     // return game result
                     if(!game.isEnding()){
                         gameResult(game.gameResult());
@@ -618,6 +620,7 @@ public class EachConnection implements Runnable {
         toPlayers.setGameResult(result);
         EachConnection[] players = game.getPlayerList();
         roombroadCast(players,toPlayers);
+
     }
 
     public int getScore() {

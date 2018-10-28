@@ -103,6 +103,7 @@ public class GameRoom {
                     playerList[x] = playerList[x + 1];
                 }
             }
+            playerList[numOfPlayer] = null;
         }
     }
 
@@ -153,7 +154,7 @@ public class GameRoom {
     }
 
     public synchronized String passResult() {
-        if (passNum == numOfPlayer) {
+        if (passNum >= numOfPlayer) {
             return "GameEnd";
         } else {
             return "GameContinue";

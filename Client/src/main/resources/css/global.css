@@ -190,7 +190,7 @@
 }
 
 .Voting {
-    -fx-background-color: red;
+    -fx-background-color: rgb(255,104,82);
 }
 .Border{
     -fx-border-width: 2px;

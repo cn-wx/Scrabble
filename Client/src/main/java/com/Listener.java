@@ -63,9 +63,13 @@ public class Listener extends Thread {
                             while (iterator.hasNext()) {
                                 String key = iterator.next().toString();
                                 Player player = new Player(key, msg.getConnectedClients().get(key));
-                                HallController.getInstance().updateStatus(player);
+                                Platform.runLater(()->{
+                                    HallController.getInstance().updateStatus(player);
+                                });
                             }
-                            HallController.getInstance().refreshTable();
+                            Platform.runLater(()->{
+                                HallController.getInstance().refreshTable();
+                            });
                             Set<Integer> tableKeys = msg.getCreatedGames().keySet();
                             Iterator<Integer> iteratorTable = tableKeys.iterator();
                             while (iteratorTable.hasNext()) {
@@ -138,11 +142,15 @@ public class Listener extends Thread {
                             }
                             if (msg.getPlayerList().get(name).equals("Turn")){
                                 Game.turn = true;
-                                TableController.getInstance().stageOne();
+                                Platform.runLater(()->{
+                                    TableController.getInstance().stageOne();
+                                });
                             }
                             else{
                                 Game.turn = false;
-                                TableController.getInstance().stageZero();
+                                Platform.runLater(()->{
+                                    TableController.getInstance().stageZero();
+                                });
                             }
                             // Player name & score
                             Set<String> keys_score = msg.getPlayerScore().keySet();
@@ -169,6 +177,9 @@ public class Listener extends Thread {
                             if (name.equals(this.name)){
                                 TableController.getInstance().colorWord(msg.getDirection(),msg.getGameLocation());
                                 Game.voting(true,name,word);
+                                Platform.runLater(()->{
+                                    TableController.getInstance().stageZero();
+                                });
                             }
                             else {
                                 TableController.getInstance().voting(name, word,msg.getDirection(),msg.getGameLocation());
