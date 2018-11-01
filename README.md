@@ -8,3 +8,9 @@ The application was developed by using the concept of sockets for communication 
 
 ## Architecture  
 The system architecture is Client-Server architecture and used the classic two-tier model.  The Client has two thread one thread is for GUI and catches user’s operation then send to the Server, the other one is listening to the response from the Server and represent on the GUI. The Server used multi-thread, the server threading architectures is thread-per-connection. The main thread will always listen for the connection request, once the client connects to the server, the server will create a new thread for the client. The client will interact with the thread for it on the server. The broadcast will be used on Server to transfer message to Client.  
+
+## Contribution
+* [Ethan](https://github.com/Fannibals)
+* [Jun](https://github.com/godbyegg)
+* [Eric](https://github.com/yunfany)
+* [Shailee](https://github.com/shailee279)
